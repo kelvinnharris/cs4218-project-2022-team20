@@ -33,7 +33,7 @@ public class LsApplication implements LsInterface {
         }
 
         List<Path> paths;
-        if (folderName.length == 0 && isRecursive) {
+        if (folderName.length == 0) {
             String[] directories = new String[1];
             directories[0] = Environment.currentDirectory;
             paths = resolvePaths(directories);
@@ -81,9 +81,9 @@ public class LsApplication implements LsInterface {
      * Lists only the current directory's content and RETURNS. This does not account for recursive
      * mode in cwd.
      *
-     * @param isFoldersOnly
-     * @param isSortByExt
-     * @return
+     * @param isFoldersOnly - is folders output only
+     * @param isSortByExt - is sort by extension
+     * @return String
      */
     private String listCwdContent(Boolean isFoldersOnly, Boolean isSortByExt) throws LsException {
         String cwd = Environment.currentDirectory;
@@ -109,11 +109,24 @@ public class LsApplication implements LsInterface {
         StringBuilder result = new StringBuilder();
         for (Path path : paths) {
             try {
-                List<Path> contents = getContents(path, isFoldersOnly);
+                List<Path> contents;
+                if (Files.isDirectory(path) || !path.getParent().toString().equals(Environment.currentDirectory)) {
+                    contents = getContents(path, isFoldersOnly);
+                } else if (Files.exists(path)) {
+                    contents = new ArrayList<>();
+                } else {
+                    throw new InvalidDirectoryException(getRelativeToCwd(path).toString());
+                }
+
                 String formatted = formatContents(contents, isSortByExt);
                 String relativePath = getRelativeToCwd(path).toString();
                 result.append(StringUtils.isBlank(relativePath) ? PATH_CURR_DIR : relativePath);
-                result.append(":\n");
+                if (Files.isRegularFile(Path.of(relativePath))) {
+                    result.append("\n");
+                } else {
+                    result.append(":\n");
+                }
+
                 result.append(formatted);
 
                 if (!formatted.isEmpty()) {
@@ -123,15 +136,20 @@ public class LsApplication implements LsInterface {
                 result.append(StringUtils.STRING_NEWLINE);
 
                 // RECURSE!
-                if (isRecursive) {
-                    result.append(buildResult(contents, isFoldersOnly, isRecursive, isSortByExt));
+                if (isRecursive && contents.size() != 0) {
+                    String oldResult = buildResult(contents, isFoldersOnly, isRecursive, isSortByExt);
+                    result.append(oldResult);
+                    if (!oldResult.equals("")) {
+                        result.append(StringUtils.STRING_NEWLINE);
+                        result.append(StringUtils.STRING_NEWLINE);
+                    }
                 }
             } catch (InvalidDirectoryException e) {
                 // NOTE: This is pretty hackish IMO - we should find a way to change this
                 // If the user is in recursive mode, and if we resolve a file that isn't a directory
                 // we should not spew the error message.
                 //
-                // However the user might have written a command like `ls invalid1 valid1 -R`, what
+                // However, the user might have written a command like `ls invalid1 valid1 -R`, what
                 // do we do then?
                 if (!isRecursive) {
                     result.append(e.getMessage());
@@ -148,14 +166,31 @@ public class LsApplication implements LsInterface {
      *
      * @param contents    - list of items in a directory
      * @param isSortByExt - sorts folder contents alphabetically by file extension (characters after the last ‘.’ (without quotes)). Files with no extension are sorted first.
-     * @return
+     * @return String
      */
     private String formatContents(List<Path> contents, Boolean isSortByExt) {
-        // TODO: To implement sorting by extension
         List<String> fileNames = new ArrayList<>();
         for (Path path : contents) {
             fileNames.add(path.getFileName().toString());
         }
+
+        if (isSortByExt) {
+            fileNames.sort((a, b) -> {
+                String[] first = a.split("\\.");
+                String[] second = b.split("\\.");
+
+                if (first.length == 1 && second.length == 1) {
+                    return a.compareTo(b);
+                } else if (first.length == 1) {
+                    return -1;
+                } else if (second.length == 1) {
+                    return 1;
+                } else {
+                    return first[first.length - 1].compareTo(second[second.length - 1]);
+                }
+            });
+        }
+
 
         StringBuilder result = new StringBuilder();
         for (String fileName : fileNames) {
@@ -169,7 +204,7 @@ public class LsApplication implements LsInterface {
     /**
      * Gets the contents in a single specified directory.
      *
-     * @param directory
+     * @param directory - directory
      * @return List of files + directories in the passed directory.
      */
     private List<Path> getContents(Path directory, Boolean isFoldersOnly)
@@ -184,7 +219,12 @@ public class LsApplication implements LsInterface {
 
         List<Path> result = new ArrayList<>();
         File pwd = directory.toFile();
-        for (File f : pwd.listFiles()) {
+        File[] files = pwd.listFiles();
+        if (files == null) {
+            throw new InvalidDirectoryException(getRelativeToCwd(directory).toString());
+        }
+
+        for (File f : files) {
             if (isFoldersOnly && !f.isDirectory()) {
                 continue;
             }
@@ -202,13 +242,13 @@ public class LsApplication implements LsInterface {
     /**
      * Resolve all paths given as arguments into a list of Path objects for easy path management.
      *
-     * @param directories
+     * @param directories - directories
      * @return List of java.nio.Path objects
      */
     private List<Path> resolvePaths(String... directories) {
         List<Path> paths = new ArrayList<>();
-        for (int i = 0; i < directories.length; i++) {
-            paths.add(resolvePath(directories[i]));
+        for (String directory : directories) {
+            paths.add(resolvePath(directory));
         }
 
         return paths;
@@ -218,12 +258,14 @@ public class LsApplication implements LsInterface {
      * Converts a String into a java.nio.Path objects. Also resolves if the current path provided
      * is an absolute path.
      *
-     * @param directory
-     * @return
+     * @param directory - directory
+     * @return Path
      */
     private Path resolvePath(String directory) {
+        System.out.println("[F6] dir" + directory);
         if (directory.charAt(0) == '/') {
             // This is an absolute path
+            System.out.println("[F7] norm dir" + Paths.get(directory).normalize());
             return Paths.get(directory).normalize();
         }
 
@@ -233,8 +275,8 @@ public class LsApplication implements LsInterface {
     /**
      * Converts a path to a relative path to the current directory.
      *
-     * @param path
-     * @return
+     * @param path - path
+     * @return Path
      */
     private Path getRelativeToCwd(Path path) {
         return Paths.get(Environment.currentDirectory).relativize(path);

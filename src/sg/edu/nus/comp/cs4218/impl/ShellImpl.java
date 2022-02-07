@@ -15,6 +15,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.util.Objects;
 
 public class ShellImpl implements Shell {
 
@@ -27,21 +28,26 @@ public class ShellImpl implements Shell {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         Shell shell = new ShellImpl();
 
-        try {
-            String currentDirectory = Environment.currentDirectory;
-            String commandString;
-            System.out.print("> ");
+        while (true) {
             try {
-                commandString = reader.readLine();
-            } catch (IOException e) {
-                return; // Streams are closed, terminate process
-            }
+                String currentDirectory = Environment.currentDirectory;
+                System.out.print(currentDirectory + "> ");
+                String commandString;
 
-            if (!StringUtils.isBlank(commandString)) {
-                shell.parseAndEvaluate(commandString, System.out);
+                try {
+                    commandString = reader.readLine();
+                    System.out.println("[A1]:" + commandString);
+                } catch (IOException e) {
+                    return; // Streams are closed, terminate process
+                }
+
+                if (!StringUtils.isBlank(commandString)) {
+                    System.out.println("[A2]:" + commandString);
+                    shell.parseAndEvaluate(commandString, System.out);
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
             }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
         }
     }
 

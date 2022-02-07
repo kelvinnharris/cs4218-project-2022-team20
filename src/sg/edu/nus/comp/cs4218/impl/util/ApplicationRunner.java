@@ -12,14 +12,21 @@ import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
 
 
 public class ApplicationRunner {
-    public final static String APP_LS = "ls";
-    public final static String APP_WC = "wc";
+    public final static String APP_CAT = "cat";
+    public final static String APP_CP = "cp";
+    public final static String APP_CUT = "cut";
     public final static String APP_ECHO = "echo";
     public final static String APP_EXIT = "exit";
     public final static String APP_GREP = "grep";
+    public final static String APP_LS = "ls";
+    public final static String APP_RM = "rm";
+    public final static String APP_SORT = "sort";
+    public final static String APP_TEE = "tee";
+    public final static String APP_WC = "wc";
+
+    // EF2 Not implemented
     public final static String APP_PASTE = "paste";
     public final static String APP_CD = "cd";
-    public final static String APP_CAT = "cat";
 
     /**
      * Run the application as specified by the application command keyword and arguments.
@@ -39,25 +46,52 @@ public class ApplicationRunner {
         Application application;
 
         switch (app) {
-            case APP_LS:
-                application = new LsApplication();
+            case APP_CAT:
+                application = new CatApplication();
+                System.out.println("[CAT] CALLED");
                 break;
-            case APP_WC:
-                application = new WcApplication();
+            case APP_CP:
+                application = new CpApplication();
+                System.out.println("[CP] CALLED");
+                break;
+            case APP_CUT:
+                application = new CutApplication();
+                System.out.println("[CUT] CALLED");
                 break;
             case APP_ECHO:
                 application = new EchoApplication();
+                System.out.println("[ECHO] CALLED");
                 break;
             case APP_EXIT:
                 application = new ExitApplication();
+                System.out.println("[EXIT] CALLED");
+                break;
             case APP_GREP:
                 application = new GrepApplication();
-            case APP_CD:
-                application = new CdApplication();
+                System.out.println("[GREP] CALLED");
                 break;
-            case APP_CAT:
-                application = new CatApplication();
+            case APP_LS:
+                application = new LsApplication();
+                System.out.println("[LS] CALLED");
+                break;
+            case APP_RM:
+                application = new RmApplication();
+                System.out.println("[RM] CALLED");
+                break;
+            case APP_SORT:
+                application = new SortApplication();
+                System.out.println("[SORT] CALLED");
+                break;
+            case APP_TEE:
+                application = new TeeApplication();
+                System.out.println("[TEE] CALLED");
+                break;
+            case APP_WC:
+                application = new WcApplication();
+                System.out.println("[WC] CALLED");
+                break;
             default:
+                System.out.println("[ERROR]");
                 throw new ShellException(app + ": " + ERR_INVALID_APP);
         }
 

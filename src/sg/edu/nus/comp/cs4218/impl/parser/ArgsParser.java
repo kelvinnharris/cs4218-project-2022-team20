@@ -2,10 +2,7 @@ package sg.edu.nus.comp.cs4218.impl.parser;
 
 import sg.edu.nus.comp.cs4218.exception.InvalidArgsException;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FLAG_PREFIX;
 
@@ -32,6 +29,7 @@ public class ArgsParser {
      * @param args
      */
     public void parse(String... args) throws InvalidArgsException {
+        System.out.println("[E1]" + Arrays.toString(args));
         for (String arg : args) {
             if (arg.length() > 1 && arg.charAt(0) == CHAR_FLAG_PREFIX) {
                 // Treat the characters (excluding CHAR_FLAG_PREFIX) as individual flags.
