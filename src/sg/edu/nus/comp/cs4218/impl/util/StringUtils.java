@@ -48,14 +48,11 @@ public final class StringUtils {
      * 3. string contains only whitespace
      */
     public static boolean isBlank(String str) {
-        System.out.println("[B1]:" + str);
         if (str == null || str.isEmpty()) {
-            System.out.println("[B2]:" + str);
             return true;
         }
 
         if (str.trim().length() == 0) {
-            System.out.println("[B3]:" + str);
             return true;
         }
 

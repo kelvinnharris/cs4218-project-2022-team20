@@ -262,10 +262,8 @@ public class LsApplication implements LsInterface {
      * @return Path
      */
     private Path resolvePath(String directory) {
-        System.out.println("[F6] dir" + directory);
         if (directory.charAt(0) == '/') {
             // This is an absolute path
-            System.out.println("[F7] norm dir" + Paths.get(directory).normalize());
             return Paths.get(directory).normalize();
         }
 

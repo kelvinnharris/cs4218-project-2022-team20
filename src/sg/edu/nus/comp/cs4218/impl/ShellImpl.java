@@ -36,13 +36,11 @@ public class ShellImpl implements Shell {
 
                 try {
                     commandString = reader.readLine();
-                    System.out.println("[A1]:" + commandString);
                 } catch (IOException e) {
                     return; // Streams are closed, terminate process
                 }
 
                 if (!StringUtils.isBlank(commandString)) {
-                    System.out.println("[A2]:" + commandString);
                     shell.parseAndEvaluate(commandString, System.out);
                 }
             } catch (Exception e) {

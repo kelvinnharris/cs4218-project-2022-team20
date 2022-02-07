@@ -46,7 +46,6 @@ public final class CommandBuilder {
     public static Command parseCommand(String commandString, ApplicationRunner appRunner)
             throws ShellException {
         if (StringUtils.isBlank(commandString) || commandString.contains(STRING_NEWLINE)) {
-            System.out.println("[C1]");
             throw new ShellException(ERR_SYNTAX);
         }
 
@@ -62,7 +61,6 @@ public final class CommandBuilder {
 
             // no valid arguments found
             if (!matcher.find()) {
-                System.out.println("[C3]");
                 throw new ShellException(ERR_SYNTAX);
             }
 
@@ -70,36 +68,25 @@ public final class CommandBuilder {
             if (matcher.start() == 0) {
                 tokens.add(matcher.group());
                 commandSubstring = commandSubstring.substring(matcher.end());
-                System.out.println("[C4]" + commandSubstring);
                 continue;
-            }
-
-            for (String tok: tokens) {
-                System.out.println("[C5]" + tok);
             }
 
             // found a valid argument but not at the start of the command substring
             char firstChar = commandSubstring.charAt(0);
-            System.out.println("[C6]" + firstChar);
             commandSubstring = commandSubstring.substring(1);
-            System.out.println("[C7]" + commandSubstring);
 
             switch (firstChar) {
                 case CHAR_REDIR_INPUT:
-                    System.out.println("[D1]");
                     break;
                 case CHAR_REDIR_OUTPUT:
-                    System.out.println("[D2]");
                     // add as a separate token on its own
                     tokens.add(String.valueOf(firstChar));
                     break;
                 case CHAR_PIPE:
                     if (tokens.isEmpty()) {
-                        System.out.println("[D3]");
                         // cannot start a new command with pipe
                         throw new ShellException(ERR_SYNTAX);
                     } else {
-                        System.out.println("[D4]");
                         // add CallCommand as part of a PipeCommand
                         callCmdsForPipe.add(new CallCommand(tokens, appRunner, argumentResolver));
                         tokens = new LinkedList<>();
@@ -108,15 +95,12 @@ public final class CommandBuilder {
 
                 case CHAR_SEMICOLON:
                     if (tokens.isEmpty()) {
-                        System.out.println("[D5]");
                         // cannot start a new command with semicolon
                         throw new ShellException(ERR_SYNTAX);
                     } else if (callCmdsForPipe.isEmpty()) {
-                        System.out.println("[D6]");
                         // add CallCommand as part of a SequenceCommand
                         cmdsForSequence.add(new CallCommand(tokens, appRunner, argumentResolver));
                     } else {
-                        System.out.println("[D7]");
                         // add CallCommand as part of ongoing PipeCommand
                         callCmdsForPipe.add(new CallCommand(tokens, appRunner, argumentResolver));
 
@@ -127,7 +111,6 @@ public final class CommandBuilder {
                     break;
 
                 default:
-                    System.out.println("[D8]");
                     // encountered a mismatched quote
                     throw new ShellException(ERR_SYNTAX);
             }

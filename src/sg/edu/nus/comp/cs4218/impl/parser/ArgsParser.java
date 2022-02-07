@@ -29,7 +29,6 @@ public class ArgsParser {
      * @param args
      */
     public void parse(String... args) throws InvalidArgsException {
-        System.out.println("[E1]" + Arrays.toString(args));
         for (String arg : args) {
             if (arg.length() > 1 && arg.charAt(0) == CHAR_FLAG_PREFIX) {
                 // Treat the characters (excluding CHAR_FLAG_PREFIX) as individual flags.
