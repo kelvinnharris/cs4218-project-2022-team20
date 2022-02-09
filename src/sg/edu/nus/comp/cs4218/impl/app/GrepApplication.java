@@ -13,6 +13,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -50,7 +51,7 @@ public class GrepApplication implements GrepInterface {
         StringJoiner lineResults = new StringJoiner(STRING_NEWLINE);
         StringJoiner countResults = new StringJoiner(STRING_NEWLINE);
 
-        grepResultsFromFiles(pattern, isCaseInsensitive, lineResults, countResults, fileNames);
+        grepResultsFromFiles(pattern, isCaseInsensitive, isPrefixFileName, lineResults, countResults, fileNames);
 
         String results = "";
         if (isCountLines) {
@@ -73,10 +74,17 @@ public class GrepApplication implements GrepInterface {
      * @param countResults      a StringJoiner of the grep line count results
      * @param fileNames         a String Array of file names supplied by user
      */
-    private void grepResultsFromFiles(String pattern, Boolean isCaseInsensitive, StringJoiner lineResults, StringJoiner countResults, String... fileNames) throws Exception {
+    private void grepResultsFromFiles(String pattern, Boolean isCaseInsensitive, Boolean isPrefixFileName,
+                                      StringJoiner lineResults, StringJoiner countResults, String... fileNames)
+            throws Exception {
         int count;
         boolean isSingleFile = (fileNames.length == 1);
         for (String f : fileNames) {
+            // Ignore '-' input file here, to be read from stdin
+            if (Objects.equals(f, String.valueOf(CHAR_FLAG_PREFIX))) {
+                continue;
+            }
+
             BufferedReader reader = null;
             try {
                 String path = convertToAbsolutePath(f);
@@ -103,7 +111,9 @@ public class GrepApplication implements GrepInterface {
                 while ((line = reader.readLine()) != null) {
                     Matcher matcher = compiledPattern.matcher(line);
                     if (matcher.find()) { // match
-                        if (isSingleFile) {
+                        if (isPrefixFileName) {
+                            lineResults.add(f + ": " + line);
+                        } else if (isSingleFile) {
                             lineResults.add(line);
                         } else {
                             lineResults.add(f + ": " + line);
@@ -184,7 +194,11 @@ public class GrepApplication implements GrepInterface {
             while ((line = reader.readLine()) != null) {
                 Matcher matcher = compiledPattern.matcher(line);
                 if (matcher.find()) { // match
-                    stringJoiner.add(line);
+                    if (isPrefixFileName) {
+                        stringJoiner.add(stdin + ": " + line);
+                    } else {
+                        stringJoiner.add(line);
+                    }
                     count++;
                 }
             }
@@ -229,8 +243,17 @@ public class GrepApplication implements GrepInterface {
                 } else {
                     String[] inputFilesArray = new String[inputFiles.size()];
                     inputFilesArray = inputFiles.toArray(inputFilesArray);
-                    result = grepFromFiles(pattern, grepFlags[CASE_INSEN_IDX], grepFlags[COUNT_INDEX], grepFlags[PREFIX_FN_IDX], inputFilesArray);
 
+                    Boolean toReadFromStdin = Stream.of(inputFilesArray).anyMatch(fileName -> Objects.equals(fileName, String.valueOf(CHAR_FLAG_PREFIX)));
+                    Boolean toReadFromFiles = Stream.of(inputFilesArray).anyMatch(fileName -> !Objects.equals(fileName, String.valueOf(CHAR_FLAG_PREFIX)));
+
+                    if (toReadFromFiles && toReadFromStdin) {
+                        result = grepFromFileAndStdin(pattern, grepFlags[CASE_INSEN_IDX], grepFlags[COUNT_INDEX], grepFlags[PREFIX_FN_IDX], stdin, inputFilesArray);
+                    } else if (toReadFromFiles) {
+                        result = grepFromFiles(pattern, grepFlags[CASE_INSEN_IDX], grepFlags[COUNT_INDEX], grepFlags[PREFIX_FN_IDX], inputFilesArray);
+                    } else if (toReadFromStdin) {
+                        result = grepFromStdin(pattern, grepFlags[CASE_INSEN_IDX], grepFlags[COUNT_INDEX], grepFlags[PREFIX_FN_IDX], stdin);
+                    }
                 }
             }
             stdout.write(result.getBytes());
@@ -285,8 +308,12 @@ public class GrepApplication implements GrepInterface {
     }
 
     @Override
-    public String grepFromFileAndStdin(String pattern, Boolean isCaseInsensitive, Boolean isCountLines, Boolean isPrefixFileName, InputStream stdin, String... fileNames) throws Exception {
+    public String grepFromFileAndStdin(String pattern, Boolean isCaseInsensitive, Boolean isCountLines,
+                                       Boolean isPrefixFileName, InputStream stdin, String... fileNames)
+            throws Exception {
         // TODO: To implement
-        return null;
+        String resultFromFile = grepFromFiles(pattern, isCaseInsensitive, isCountLines, true, fileNames);
+        String resultFromStdin = grepFromStdin(pattern, isCaseInsensitive, isCountLines, true, stdin);
+        return resultFromFile.concat(resultFromStdin);
     }
 }
