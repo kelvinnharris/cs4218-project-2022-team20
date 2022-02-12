@@ -3,7 +3,6 @@ package sg.edu.nus.comp.cs4218.impl.app;
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.app.CpInterface;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
-import sg.edu.nus.comp.cs4218.exception.EchoException;
 import sg.edu.nus.comp.cs4218.exception.InvalidArgsException;
 import sg.edu.nus.comp.cs4218.impl.exception.CpException;
 import sg.edu.nus.comp.cs4218.impl.parser.CpArgsParser;
@@ -74,6 +73,9 @@ public class CpApplication implements CpInterface {
         Path srcAbsPath = getAbsolutePath(srcFile);
         Path destAbsPath = getAbsolutePath(destFile);
 
+        if (srcAbsPath.toString().equals(destAbsPath.toString())) {
+            throw new CpException("Not allowed to copy a file to its own parent folder as destination.");
+        }
         if (!Files.isRegularFile(srcAbsPath)) {
             throw new CpException(String.format("Cannot copy content. '%s' is not a file.", srcFile));
         }
@@ -130,11 +132,21 @@ public class CpApplication implements CpInterface {
         Path destAbsPath = Paths.get(destCwd, destFolder, srcFile); // e.g. ./destFolder/srcFile
         Path srcAbsPath = Paths.get(srcCwd, srcFile); // e.g. ./srcFile
 
+        if (srcAbsPath.toString().equals(destAbsPath.toString())) {
+            throw new CpException("Not allowed to copy a file to its own parent folder as destination.");
+        }
+
         try {
             Files.copy(srcAbsPath, destAbsPath, REPLACE_EXISTING);
 
             // Get all file names in that directory and copy recursively
             if (Files.isDirectory(srcAbsPath) && isRecursive) {
+
+                // To prevent infinite loop e.g. cp -r a a/b
+                if (destAbsPath.startsWith(srcAbsPath)) {
+                    throw new CpException("Not allowed to copy a folder to its child folder.");
+                }
+
                 String[] fileNames = listAllFileNamesInPath(srcAbsPath);
                 for (String fileName : fileNames) {
                     String nextDestCwd = Paths.get(destCwd, destFolder).toString();
