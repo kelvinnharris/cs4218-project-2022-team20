@@ -14,10 +14,12 @@ import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 public class WcApplication implements WcInterface {
 
-    private static final String NUMBER_FORMAT = " %7d";
+    static final String NUMBER_FORMAT = " %7d";
     private static final int LINES_INDEX = 0;
     private static final int WORDS_INDEX = 1;
     private static final int BYTES_INDEX = 2;
+
+    private List<Result> listResult = new ArrayList<>();
 
     /**
      * Runs the wc application with the specified arguments.
@@ -41,9 +43,14 @@ public class WcApplication implements WcInterface {
         String result;
         try {
             if (wcArgs.getFiles().isEmpty()) {
+                System.out.println("Reading from stdin");
                 result = countFromStdin(wcArgs.isBytes(), wcArgs.isLines(), wcArgs.isWords(), stdin);
-            } else {
+            } else if (!wcArgs.getFiles().contains("-")){
+                System.out.println("Reading from files");
                 result = countFromFiles(wcArgs.isBytes(), wcArgs.isLines(), wcArgs.isWords(), wcArgs.getFiles().toArray(new String[0]));
+            } else {
+                System.out.println("Reading from files && stdin");
+                result = countFromFileAndStdin(wcArgs.isBytes(), wcArgs.isLines(), wcArgs.isWords(), stdin, wcArgs.getFiles().toArray(new String[0]));
             }
         } catch (Exception e) {
             // Will never happen
@@ -73,19 +80,30 @@ public class WcApplication implements WcInterface {
             throw new Exception(ERR_GENERAL);
         }
         List<String> result = new ArrayList<>();
+        List<Result> listRes = new ArrayList<>();
         long totalBytes = 0, totalLines = 0, totalWords = 0;
         for (String file : fileName) {
+            Result res = new Result();
             File node = IOUtils.resolveFilePath(file).toFile();
             if (!node.exists()) {
-                result.add("wc: " + ERR_FILE_NOT_FOUND);
+                String error = "wc: " + ERR_FILE_NOT_FOUND;
+                res.setIsErroneous(error);
+                listRes.add(res);
+                result.add(error);
                 continue;
             }
             if (node.isDirectory()) {
-                result.add("wc: " + ERR_IS_DIR);
+                String error = "wc: " + ERR_IS_DIR;
+                res.setIsErroneous(error);
+                listRes.add(res);
+                result.add(error);
                 continue;
             }
             if (!node.canRead()) {
-                result.add("wc: " + ERR_NO_PERM);
+                String error = "wc: " + ERR_NO_PERM;
+                res.setIsErroneous(error);
+                listRes.add(res);
+                result.add(error);
                 continue;
             }
 
@@ -103,13 +121,18 @@ public class WcApplication implements WcInterface {
             StringBuilder sb = new StringBuilder(); //NOPMD
             if (isLines) {
                 sb.append(String.format(NUMBER_FORMAT, count[0]));
+                res.setLines(count[0]);
             }
             if (isWords) {
                 sb.append(String.format(NUMBER_FORMAT, count[1]));
+                res.setWords(count[1]);
             }
             if (isBytes) {
                 sb.append(String.format(NUMBER_FORMAT, count[2]));
+                res.setBytes(count[2]);
             }
+            res.setFileName(file);
+            listRes.add(res);
             sb.append(String.format(" %s", file));
             result.add(sb.toString());
         }
@@ -129,6 +152,8 @@ public class WcApplication implements WcInterface {
             sb.append(" total");
             result.add(sb.toString());
         }
+
+        listResult.addAll(listRes);
         return String.join(STRING_NEWLINE, result);
     }
 
@@ -149,24 +174,71 @@ public class WcApplication implements WcInterface {
         }
         long[] count = getCountReport(stdin); // lines words bytes;
 
-        StringBuilder sb = new StringBuilder(); //NOPMD
+        Result res = new Result(); //NOPMD
+        StringBuilder sb = new StringBuilder();
         if (isLines) {
             sb.append(String.format(NUMBER_FORMAT, count[0]));
+            res.setLines(count[0]);
         }
         if (isWords) {
             sb.append(String.format(NUMBER_FORMAT, count[1]));
+            res.setWords(count[1]);
         }
         if (isBytes) {
             sb.append(String.format(NUMBER_FORMAT, count[2]));
+            res.setBytes(count[2]);
         }
 
+        listResult.add(res);
         return sb.toString();
     }
 
     @Override
     public String countFromFileAndStdin(Boolean isBytes, Boolean isLines, Boolean isWords, InputStream stdin, String... fileName) throws Exception {
         // TODO: To implement
-        return null;
+        if (stdin == null && fileName == null) {
+            throw new Exception(ERR_GENERAL);
+        }
+
+        for (String s : fileName) {
+            if (s.equals("-")) {
+                String res = countFromStdin(isBytes, isLines, isWords, stdin);
+            } else {
+                String res = countFromFiles(isBytes, isLines, isWords, new String[]{s});
+            }
+        }
+
+        List<String> result = new ArrayList<>();
+
+        long totalBytes = 0, totalLines = 0, totalWords = 0;
+
+        for (Result res : listResult) {
+            if (isBytes) {
+                totalBytes += res.bytes;
+            }
+            if (isLines) {
+                totalLines += res.lines;
+            }
+            if (isWords) {
+                totalWords += res.words;
+            }
+            result.add(res.toString());
+        }
+
+        StringBuilder sb = new StringBuilder();
+        if (isLines) {
+            sb.append(String.format(NUMBER_FORMAT, totalLines));
+        }
+        if (isWords) {
+            sb.append(String.format(NUMBER_FORMAT, totalWords));
+        }
+        if (isBytes) {
+            sb.append(String.format(NUMBER_FORMAT, totalBytes));
+        }
+        sb.append(" total");
+        result.add(sb.toString());
+
+        return String.join(STRING_NEWLINE, result);
     }
 
     /**
@@ -192,7 +264,7 @@ public class WcApplication implements WcInterface {
                     if (data[i] == '\n') {
                         ++result[LINES_INDEX];
                     }
-                    if (inWord) {
+                    if (inWord) { // might fail if there are a lot of spaces at the end ??
                         ++result[WORDS_INDEX];
                     }
 
@@ -210,5 +282,59 @@ public class WcApplication implements WcInterface {
         }
 
         return result;
+    }
+}
+
+class Result {
+    long bytes = -1;
+    long lines = -1;
+    long words = -1;
+
+    String fileName;
+
+    boolean isErroneous = false;
+    String errorMessage;
+
+    public void setBytes(long bytes) {
+        this.bytes = bytes;
+    }
+
+    public void setLines(long lines) {
+        this.lines = lines;
+    }
+
+    public void setWords(long words) {
+        this.words = words;
+    }
+
+    public void setIsErroneous(String message) {
+        this.errorMessage = message;
+        this.isErroneous = true;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    @Override
+    public String toString() {
+        if (isErroneous) {
+            return errorMessage;
+        }
+
+        StringBuilder sb = new StringBuilder(); //NOPMD
+        if (lines != -1) {
+            sb.append(String.format(WcApplication.NUMBER_FORMAT, lines));
+        }
+        if (words != -1) {
+            sb.append(String.format(WcApplication.NUMBER_FORMAT, words));
+        }
+        if (bytes != -1) {
+            sb.append(String.format(WcApplication.NUMBER_FORMAT, bytes));
+        }
+        if (fileName != null) {
+            sb.append(String.format(" %s", fileName));
+        }
+        return sb.toString();
     }
 }
