@@ -107,9 +107,11 @@ public class CpApplication implements CpInterface {
         }
 
         for (String srcFile : fileName) {
-            String destCwd = Environment.currentDirectory;
-            String srcCwd = Environment.currentDirectory;
-            cpFilesToFolderImpl(isRecursive, destCwd, srcCwd, destFolder, srcFile);
+            String destCwd = String.valueOf(getAbsolutePath(destFolder).getParent());
+            String srcCwd = String.valueOf(getAbsolutePath(srcFile).getParent());
+            String destFolderName = getAbsolutePath(destFolder).toFile().getName();
+            String srcFileName = getAbsolutePath(srcFile).toFile().getName();
+            cpFilesToFolderImpl(isRecursive, destCwd, srcCwd, destFolderName, srcFileName);
         }
     }
 
