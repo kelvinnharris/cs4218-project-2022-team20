@@ -5,14 +5,16 @@ import java.util.List;
 
 public class CpArgsParser extends ArgsParser {
     private final static char FLAG_IS_RECURSIVE = 'r';
+    private final static char FLAG_IS_RECURSIVE_UPPERCASE = 'R';
 
     public CpArgsParser() {
         super();
         legalFlags.add(FLAG_IS_RECURSIVE);
+        legalFlags.add(FLAG_IS_RECURSIVE_UPPERCASE);
     }
 
     public Boolean isRecursive() {
-        return flags.contains(FLAG_IS_RECURSIVE);
+        return flags.contains(FLAG_IS_RECURSIVE) || flags.contains(FLAG_IS_RECURSIVE_UPPERCASE);
     }
 
     public String[] getSourceFiles() {
