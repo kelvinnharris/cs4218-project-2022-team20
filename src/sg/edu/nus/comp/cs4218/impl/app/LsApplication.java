@@ -107,6 +107,8 @@ public class LsApplication implements LsInterface {
      */
     private String buildResult(List<Path> paths, Boolean isFoldersOnly, Boolean isRecursive, Boolean isSortByExt) {
         StringBuilder result = new StringBuilder();
+        boolean isSinglePathTraced = paths.size() == 1;
+
         for (Path path : paths) {
             try {
                 List<Path> contents;
@@ -119,12 +121,17 @@ public class LsApplication implements LsInterface {
                 }
 
                 String formatted = formatContents(contents, isSortByExt);
-                String relativePath = getRelativeToCwd(path).toString();
-                result.append(StringUtils.isBlank(relativePath) ? PATH_CURR_DIR : relativePath);
-                if (Files.isRegularFile(Path.of(relativePath))) {
-                    result.append("\n");
-                } else {
-                    result.append(":\n");
+
+                // if we only list down one folder no need a folder name indicator on output
+                if (!isSinglePathTraced) {
+                    String relativePath = getRelativeToCwd(path).toString();
+                    result.append(StringUtils.isBlank(relativePath) ? PATH_CURR_DIR : relativePath);
+
+                    if (Files.isRegularFile(Path.of(relativePath))) {
+                        result.append("\n");
+                    } else {
+                        result.append(":\n");
+                    }
                 }
 
                 result.append(formatted);
