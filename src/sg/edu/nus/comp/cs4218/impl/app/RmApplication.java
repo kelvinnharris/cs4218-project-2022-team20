@@ -2,8 +2,9 @@ package sg.edu.nus.comp.cs4218.impl.app;
 
 import sg.edu.nus.comp.cs4218.app.RmInterface;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
+import sg.edu.nus.comp.cs4218.exception.InvalidArgsException;
 import sg.edu.nus.comp.cs4218.exception.RmException;
-import sg.edu.nus.comp.cs4218.impl.app.args.RmArguments;
+import sg.edu.nus.comp.cs4218.impl.parser.RmArgsParser;
 import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 
 import java.io.File;
@@ -30,11 +31,15 @@ public class RmApplication implements RmInterface {
         if (stdout == null) {
             throw new RmException(ERR_NULL_STREAMS);
         }
-        RmArguments rmArgs = new RmArguments();
-        rmArgs.parse(args);
-        StringBuilder output = new StringBuilder();
+        RmArgsParser parser = new RmArgsParser();
         try {
-            remove(rmArgs.isEmptyDir(), rmArgs.isRecursive(), rmArgs.getFiles().toArray(new String[0]));
+            parser.parse(args);
+        } catch (InvalidArgsException e) {
+            throw new RmException(e.getMessage());
+        }
+
+        try {
+            remove(parser.isEmptyDir(), parser.isRecursive(), parser.getFiles().toArray(new String[0]));
         } catch (Exception e) {
             throw new RmException(e.getMessage());//NOPMD
         }

@@ -2,9 +2,9 @@ package sg.edu.nus.comp.cs4218.impl.app;
 
 import sg.edu.nus.comp.cs4218.app.CutInterface;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
-// change exception not done
 import sg.edu.nus.comp.cs4218.exception.CutException;
-import sg.edu.nus.comp.cs4218.impl.app.args.CutArguments;
+import sg.edu.nus.comp.cs4218.exception.InvalidArgsException;
+import sg.edu.nus.comp.cs4218.impl.parser.CutArgsParser;
 import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 
 import java.io.File;
@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static sg.edu.nus.comp.cs4218.impl.parser.ArgsParser.ILLEGAL_FLAG_MSG;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_NO_PERM;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
@@ -34,14 +35,24 @@ public class CutApplication implements CutInterface {
         if (stdout == null) {
             throw new CutException(ERR_NULL_STREAMS);
         }
-        CutArguments cutArgs = new CutArguments();
-        cutArgs.parse(args);
+        CutArgsParser parser = new CutArgsParser();
+        try {
+            parser.parse(args);
+            parser.parseIndex();
+            if ((parser.isCharPo() && parser.isBytePo()) || (!parser.isCharPo() && !parser.isBytePo())) {
+                String exceptionMessage = ILLEGAL_FLAG_MSG;
+                throw new InvalidArgsException(exceptionMessage);
+            }
+        } catch (InvalidArgsException e) {
+            throw new CutException(e.getMessage());
+        }
+
         StringBuilder output = new StringBuilder();
         try {
-            if (cutArgs.getFiles().isEmpty()) {
-                output.append(cutFromStdin(cutArgs.isCharPo(), cutArgs.isBytePo(), cutArgs.isRange(), cutArgs.getStartIdx(), cutArgs.getEndIdx(), cutArgs.getIndex(), stdin));
+            if (parser.getFiles().isEmpty()) {
+                output.append(cutFromStdin(parser.isCharPo(), parser.isBytePo(), parser.isRange(), parser.getStartIdx(), parser.getEndIdx(), parser.getIndex(), stdin));
             } else {
-                output.append(cutFromFiles(cutArgs.isCharPo(), cutArgs.isBytePo(), cutArgs.isRange(), cutArgs.getStartIdx(), cutArgs.getEndIdx(), cutArgs.getIndex(), cutArgs.getFiles().toArray(new String[0])));
+                output.append(cutFromFiles(parser.isCharPo(), parser.isBytePo(), parser.isRange(), parser.getStartIdx(), parser.getEndIdx(), parser.getIndex(), stdin, parser.getFiles().toArray(new String[0])));
             }
         } catch (Exception e) {
             throw new CutException(e.getMessage());//NOPMD
@@ -56,10 +67,6 @@ public class CutApplication implements CutInterface {
         }
     }
 
-//    public String cutFromFiles(Boolean isCharPo, Boolean isBytePo, Boolean isRange, int startIdx, int endIdx, String... fileNames) throws Exception {
-//        return cutFromFiles(isCharPo, isBytePo, isRange, startIdx, endIdx, cutArgs.getIndex(), fileNames);
-//    }
-
         /**
          * Cuts out selected portions of each line
          *
@@ -68,17 +75,22 @@ public class CutApplication implements CutInterface {
          * @param isRange  Boolean option to perform range-based cut
          * @param startIdx index to begin cut
          * @param endIdx   index to end cut
-         * @param fileNames Array of String of file names
+         * @param fileName Array of String of file names
          * @return
          * @throws Exception
          */
     @Override
-    public String cutFromFiles(Boolean isCharPo, Boolean isBytePo, Boolean isRange, int startIdx, int endIdx, int[] index, String... fileNames) throws Exception {
-        if (fileNames == null) {
+    public String cutFromFiles(Boolean isCharPo, Boolean isBytePo, Boolean isRange, int startIdx, int endIdx, int[] index, InputStream stdin, String... fileName) throws Exception {
+        if (fileName == null) {
             throw new Exception(ERR_NULL_ARGS);
         }
         List<String> lines = new ArrayList<>();
-        for (String file : fileNames) {
+        for (String file : fileName) {
+            if (file.length() == 1 && file.toCharArray()[0] == '-') {
+                List<String> linesFromInput = IOUtils.getLinesFromInputStream(stdin);
+                lines.addAll(linesFromInput);
+                continue;
+            }
             File node = IOUtils.resolveFilePath(file).toFile();
             if (!node.exists()) {
                 throw new Exception(ERR_FILE_NOT_FOUND);
@@ -93,8 +105,6 @@ public class CutApplication implements CutInterface {
             lines.addAll(IOUtils.getLinesFromInputStream(input));
             IOUtils.closeInputStream(input);
         }
-        //sortInputString(isFirstWordNumber, isReverseOrder, isCaseIndependent, lines);
-        //return String.join(STRING_NEWLINE, lines);
         String output = cutInputString(isCharPo, isBytePo, isRange, startIdx, endIdx, index, lines);
         return output;
     }
@@ -118,8 +128,7 @@ public class CutApplication implements CutInterface {
             throw new Exception(ERR_NULL_STREAMS);
         }
         List<String> lines = IOUtils.getLinesFromInputStream(stdin);
-        //sortInputString(isFirstWordNumber, isReverseOrder, isCaseIndependent, lines);
-        //return String.join(STRING_NEWLINE, lines);
+
         String output = cutInputString(isCharPo, isBytePo, isRange, startIdx, endIdx, index, lines);
         return output;
     }

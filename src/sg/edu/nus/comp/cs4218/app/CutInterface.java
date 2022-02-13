@@ -54,7 +54,7 @@ public interface CutInterface extends Application {
      * @throws Exception
      */
     String cutFromFiles(Boolean isCharPo, Boolean isBytePo, Boolean isRange, int startIdx, int endIdx, int[] index,
-                        String... fileName) throws Exception;
+                        InputStream stdin, String... fileName) throws Exception;
 
 
     /**
