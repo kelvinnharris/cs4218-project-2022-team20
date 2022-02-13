@@ -9,8 +9,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_CLOSING_STREAMS;
-import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_FILE_NOT_FOUND;
+import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
 
 @SuppressWarnings("PMD.PreserveStackTrace")
 public final class IOUtils {
@@ -105,10 +104,10 @@ public final class IOUtils {
         List<String> output = new ArrayList<>();
         BufferedReader reader = new BufferedReader(new InputStreamReader(input));
         String line;
-        while ((line = reader.readLine()) != null) {
+        while ((line = reader.readLine()) != null && line.length() != 0) {
             output.add(line);
         }
-        reader.close();
+        //reader.close();
         return output;
     }
 }
