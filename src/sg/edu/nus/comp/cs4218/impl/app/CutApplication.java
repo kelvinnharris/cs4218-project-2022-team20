@@ -60,7 +60,7 @@ public class CutApplication implements CutInterface {
         try {
             if (!output.toString().isEmpty()) {
                 stdout.write(output.toString().getBytes());
-                stdout.write(STRING_NEWLINE.getBytes());
+                //stdout.write(STRING_NEWLINE.getBytes());
             }
         } catch (IOException e) {
             throw new CutException(ERR_WRITE_STREAM);//NOPMD
