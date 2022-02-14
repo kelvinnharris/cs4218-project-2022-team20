@@ -22,6 +22,8 @@ public class WcApplication implements WcInterface {
     private static final String ERR_IS_A_DIRECTORY = ": Is a directory";
     private static final String ERR_NO_SUCH_FILE_OR_DIRECTORY = ": No such file or directory";
 
+    static final Character ERR_CODE_IS_DIRECTORY = 'd';
+
     private List<Result> listResult = new ArrayList<>();
 
     /**
@@ -84,10 +86,11 @@ public class WcApplication implements WcInterface {
         long totalBytes = 0, totalLines = 0, totalWords = 0;
         for (String file : fileName) {
             Result res = new Result();
+            res.setFileName(file);
             File node = IOUtils.resolveFilePath(file).toFile();
             if (!node.exists()) {
                 String error = (new StringBuilder()).append("wc: ").append(file).append(ERR_NO_SUCH_FILE_OR_DIRECTORY).toString();
-                res.setIsErroneous(error);
+                res.setIsErroneous(error, null);
                 listRes.add(res);
                 result.add(error);
                 continue;
@@ -95,7 +98,7 @@ public class WcApplication implements WcInterface {
             if (node.isDirectory()) {
                 // wc: folder1/: Is a directory
                 String error = (new StringBuilder()).append("wc: ").append(file).append(ERR_IS_A_DIRECTORY).toString();
-                res.setIsErroneous(error);
+                res.setIsErroneous(error, ERR_CODE_IS_DIRECTORY);
                 listRes.add(res);
                 result.add(error);
                 result.add(getCountReportInString(isBytes,isLines,isWords,new long[]{0,0,0}, file));
@@ -103,7 +106,7 @@ public class WcApplication implements WcInterface {
             }
             if (!node.canRead()) {
                 String error = "wc: " + ERR_NO_PERM;
-                res.setIsErroneous(error);
+                res.setIsErroneous(error, null);
                 listRes.add(res);
                 result.add(error);
                 continue;
@@ -298,6 +301,7 @@ class Result {
 
     boolean isErroneous = false;
     String errorMessage;
+    Character errorCode;
 
     public void setBytes(long bytes) {
         this.bytes = bytes;
@@ -311,12 +315,17 @@ class Result {
         this.words = words;
     }
 
-    public void setIsErroneous(String message) {
+    public void setIsErroneous(String message, Character errorCode) {
         this.errorMessage = message;
         this.isErroneous = true;
+        this.errorCode = errorCode;
         bytes = 0;
         lines = 0;
         words = 0;
+    }
+
+    public Character getErrorCode() {
+        return this.errorCode;
     }
 
     public boolean getIsErroneous() {
@@ -329,8 +338,14 @@ class Result {
 
     @Override
     public String toString() {
-        if (isErroneous) {
+        if (isErroneous && errorCode != WcApplication.ERR_CODE_IS_DIRECTORY) {
             return errorMessage;
+        } else if (isErroneous && errorCode == WcApplication.ERR_CODE_IS_DIRECTORY) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(errorMessage);
+            sb.append("\n");
+            sb.append((new WcApplication()).getCountReportInString(bytes != -1,lines != -1,words != -1,new long[]{0,0,0}, fileName));
+            return sb.toString();
         }
 
         StringBuilder sb = new StringBuilder(); //NOPMD
