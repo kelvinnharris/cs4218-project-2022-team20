@@ -2,7 +2,7 @@ package sg.edu.nus.comp.cs4218.impl.app;
 
 import sg.edu.nus.comp.cs4218.app.WcInterface;
 import sg.edu.nus.comp.cs4218.exception.WcException;
-import sg.edu.nus.comp.cs4218.impl.app.args.WcArguments;
+import sg.edu.nus.comp.cs4218.impl.parser.WcArgsParser;
 import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 
 import java.io.*;
@@ -43,8 +43,19 @@ public class WcApplication implements WcInterface {
         if (stdout == null) {
             throw new WcException(ERR_NULL_STREAMS);
         }
-        WcArguments wcArgs = new WcArguments();
-        wcArgs.parse(args);
+
+        WcArgsParser wcArgs = new WcArgsParser();
+        try {
+            wcArgs.parse(args);
+        } catch (Exception e) {
+            String errorMessage = e.toString();
+            StringBuilder sb = new StringBuilder();
+            sb.append("invalid option -- '");
+            sb.append(errorMessage.charAt(errorMessage.length()-1));
+            sb.append("'");
+            throw new WcException(sb.toString());
+        }
+
         String result;
         try {
             if (wcArgs.getFiles().isEmpty()) {
