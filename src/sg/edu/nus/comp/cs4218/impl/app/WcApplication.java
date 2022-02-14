@@ -46,13 +46,10 @@ public class WcApplication implements WcInterface {
         String result;
         try {
             if (wcArgs.getFiles().isEmpty()) {
-                System.out.println("Reading from stdin");
                 result = countFromStdin(wcArgs.isBytes(), wcArgs.isLines(), wcArgs.isWords(), stdin);
             } else if (!wcArgs.getFiles().contains("-")){
-                System.out.println("Reading from files");
                 result = countFromFiles(wcArgs.isBytes(), wcArgs.isLines(), wcArgs.isWords(), wcArgs.getFiles().toArray(new String[0]));
             } else {
-                System.out.println("Reading from files && stdin");
                 result = countFromFileAndStdin(wcArgs.isBytes(), wcArgs.isLines(), wcArgs.isWords(), stdin, wcArgs.getFiles().toArray(new String[0]));
             }
         } catch (Exception e) {
@@ -190,6 +187,7 @@ public class WcApplication implements WcInterface {
     @Override
     public String countFromFileAndStdin(Boolean isBytes, Boolean isLines, Boolean isWords, InputStream stdin, String... fileName) throws Exception {
         // TODO: To implement
+        // Only when the [Filename] "-" is used then this function will be called
         if (stdin == null && fileName == null) {
             throw new Exception(ERR_GENERAL);
         }
@@ -197,6 +195,7 @@ public class WcApplication implements WcInterface {
         for (String s : fileName) {
             if (s.equals("-")) {
                 String res = countFromStdin(isBytes, isLines, isWords, stdin);
+                this.listResult.get(listResult.size()-1).setFileName("-");
             } else {
                 String res = countFromFiles(isBytes, isLines, isWords, new String[]{s});
             }
@@ -207,6 +206,10 @@ public class WcApplication implements WcInterface {
         long totalBytes = 0, totalLines = 0, totalWords = 0;
 
         for (Result res : listResult) {
+            if (res.getIsErroneous()) {
+                result.add(res.toString());
+                continue;
+            }
             if (isBytes) {
                 totalBytes += res.bytes;
             }
@@ -219,7 +222,9 @@ public class WcApplication implements WcInterface {
             result.add(res.toString());
         }
 
-        result.add(getCountReportInString(isBytes,isLines,isWords,new long[]{totalLines,totalWords,totalBytes}, "total"));
+        if (fileName.length > 1) {
+            result.add(getCountReportInString(isBytes,isLines,isWords,new long[]{totalLines,totalWords,totalBytes}, "total"));
+        }
 
         return String.join(STRING_NEWLINE, result);
     }
@@ -309,6 +314,13 @@ class Result {
     public void setIsErroneous(String message) {
         this.errorMessage = message;
         this.isErroneous = true;
+        bytes = 0;
+        lines = 0;
+        words = 0;
+    }
+
+    public boolean getIsErroneous() {
+        return this.isErroneous;
     }
 
     public void setFileName(String fileName) {
