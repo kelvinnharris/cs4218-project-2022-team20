@@ -13,21 +13,21 @@ class EchoApplicationTest {
     }
 
     @Test
-    void shouldReturnNewLineOnEmptyArgument() throws EchoException {
+    void testEcho_emptyArgument_shouldReturnNewLine() throws EchoException {
         String[] emptyArgs = new String[]{};
         String outputEmptyArgs = echoApplication.constructResult(emptyArgs);
         assertEquals(outputEmptyArgs, System.lineSeparator());
     }
 
     @Test
-    void shouldReturnNewLineOnEmptyStringArgument() throws EchoException {
+    void testEcho_emptyStringArgument_shouldReturnNewLine() throws EchoException {
         String[] emptyStringArgs = new String[]{ "" };
         String outputEmptyStringArgs = echoApplication.constructResult(emptyStringArgs);
         assertEquals(outputEmptyStringArgs, System.lineSeparator());
     }
 
     @Test
-    void passUnicodeAsParameterShouldReturnSameAsInput() throws EchoException {
+    void testEcho_passUnicodeAsParameter_shouldReturnSameAsInput() throws EchoException {
         String[] unicodeArgs = new String[]{ "🐯" };
         String outputUnicodeArgs = echoApplication.constructResult(unicodeArgs);
 
@@ -35,14 +35,14 @@ class EchoApplicationTest {
     }
 
     @Test
-    void passOneNormalTextShouldReturnSameAsInput() throws EchoException {
+    void testEcho_passOneNormalText_shouldReturnSameAsInput() throws EchoException {
         String[] oneArgs = new String[]{ "hello1" };
         String outputOneArgs = echoApplication.constructResult(oneArgs);
         assertEquals("hello1" + System.lineSeparator(), outputOneArgs);
     }
 
     @Test
-    void passMultipleNormalTextShouldReturnSameAsInput() throws EchoException {
+    void testEcho_passMultipleNormalText_shouldReturnSameAsInput() throws EchoException {
         String[] multipleArgs = new String[]{ "hello1", "hello2", "\"hello3\"" };
         String outputMultipleArgs = echoApplication.constructResult(multipleArgs);
 
@@ -51,18 +51,18 @@ class EchoApplicationTest {
     }
 
     @Test
-    void passNullStdinShouldPassed() {
+    void testEcho_passNullStdin_shouldPassed() {
         String[] emptyArgs = new String[]{};
         assertDoesNotThrow(() -> echoApplication.run(emptyArgs, null, System.out));
     }
 
     @Test
-    void passNullArgsShouldThrowEchoException() {
+    void testEcho_passNullArgs_shouldThrowEchoException() {
         assertThrows(EchoException.class, () -> echoApplication.run(null, System.in, System.out));
     }
 
     @Test
-    void passNullStdoutShouldThrowEchoException() {
+    void testEcho_passNullStdout_shouldThrowEchoException() {
         String[] emptyArgs = new String[]{};
         assertThrows(EchoException.class, () -> echoApplication.run(emptyArgs, System.in, null));
     }

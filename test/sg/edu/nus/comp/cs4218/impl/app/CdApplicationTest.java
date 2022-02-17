@@ -61,7 +61,7 @@ class CdApplicationTest {
     }
 
     @Test
-    void testCdAbsoluteFolderShouldChangeToValidFolder() throws CdException {
+    void testCd_absoluteFolder_shouldChangeToValidFolder() throws CdException {
         cdApplication.changeToDirectory(TEST_PATH);
         Path currentPath = Paths.get(Environment.currentDirectory).normalize();
         Path givenPath = Paths.get(TEST_PATH).normalize();
@@ -69,7 +69,7 @@ class CdApplicationTest {
     }
 
     @Test
-    void testCdSamePathShouldRemainTheSameDirectory() throws CdException {
+    void testCd_samePath_shouldRemainTheSameDirectory() throws CdException {
         Path currentPath = Paths.get(Environment.currentDirectory).normalize();
         cdApplication.changeToDirectory(".");
         Path givenPath = Paths.get(Environment.currentDirectory).normalize();
@@ -77,7 +77,7 @@ class CdApplicationTest {
     }
 
     @Test
-    void testCdValidPrevPathShouldChangeToPrevDirectory() throws CdException {
+    void testCd_validPrevPath_shouldChangeToPrevDirectory() throws CdException {
         Environment.currentDirectory = TEST_PATH;
         cdApplication.changeToDirectory("..");
         Path currentPath = Paths.get(Environment.currentDirectory).normalize();
@@ -86,7 +86,7 @@ class CdApplicationTest {
     }
 
     @Test
-    void testCdRelativePathShouldChangeToValidFolder() throws CdException {
+    void testCd_relativePath_shouldChangeToValidFolder() throws CdException {
         String path = TEST_FOLDER_NAME + "folder1/./folder2/../../.";
         cdApplication.changeToDirectory(path);
         Path currentPath = Paths.get(Environment.currentDirectory).normalize();
@@ -95,31 +95,31 @@ class CdApplicationTest {
     }
 
     @Test
-    void testCdValidFileShouldReturnNotADirectoryError() throws CdException {
+    void testCd_validFile_shouldReturnNotADirectoryError() throws CdException {
         String path = TEST_PATH + "file3.xml";
         assertThrows(CdException.class, () -> cdApplication.changeToDirectory(path));
     }
 
     @Test
-    void testCdInvalidPathShouldReturnNoSuchDirectoryError() throws CdException {
+    void testCd_invalidPath_shouldReturnNoSuchDirectoryError() throws CdException {
         String path = TEST_PATH + "folder1/invalidFolder";
         assertThrows(CdException.class, () -> cdApplication.changeToDirectory(path));
     }
 
     @Test
-    void testCdNullArgsShouldReturnCdError() throws CdException {
+    void testCd_nullArgs_shouldReturnCdError() throws CdException {
         String path = TEST_PATH + "file3.xml";
         assertThrows(CdException.class, () -> cdApplication.run(null, System.in, System.out));
     }
 
     @Test
-    void testCdNoArgsShouldReturnCdError() throws CdException {
+    void testCd_noArgs_shouldReturnCdError() throws CdException {
         String[] emptyArgs = new String[]{ "" };
         assertThrows(CdException.class, () -> cdApplication.run(emptyArgs, System.in, System.out));
     }
 
     @Test
-    void testCdMultipleArgsShouldTakeFirstArgumentOnly() throws CdException {
+    void testCd_multipleArgs_shouldTakeFirstArgumentOnly() throws CdException {
         String[] args = new String[]{ TEST_PATH + "folder1/folder2", TEST_PATH + "folder1", "." };
         cdApplication.run(args, System.in, System.out);
         Path currentPath = Paths.get(Environment.currentDirectory).normalize();
