@@ -1,8 +1,5 @@
 package sg.edu.nus.comp.cs4218.impl.parser;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class CpArgsParser extends ArgsParser {
     private final static char FLAG_IS_RECURSIVE = 'r';
     private final static char FLAG_IS_RECURSIVE_UPPERCASE = 'R';
