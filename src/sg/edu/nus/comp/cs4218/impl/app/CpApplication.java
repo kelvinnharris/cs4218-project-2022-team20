@@ -49,6 +49,10 @@ public class CpApplication implements CpInterface {
 
         Path destAbsPath = getAbsolutePath(destFile);
 
+        if (srcFiles.length == 0) {
+            throw new CpException(String.format("missing destination file operand after '%s'", destFile));
+        }
+
         if (Files.isDirectory(destAbsPath)) {
             cpFilesToFolder(isRecursive, destFile, srcFiles);
         }
