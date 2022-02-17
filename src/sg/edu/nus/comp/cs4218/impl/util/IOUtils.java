@@ -107,7 +107,6 @@ public final class IOUtils {
         while ((line = reader.readLine()) != null && line.length() != 0) {
             output.add(line);
         }
-        //reader.close();
         return output;
     }
 }
