@@ -26,7 +26,7 @@ class LsApplicationTest {
 
     private static LsApplication lsApplication;
     private static final String ROOT_PATH = Environment.currentDirectory;
-    private static final String TEST_FOLDER_NAME = "tmpTestFolder/";
+    private static final String TEST_FOLDER_NAME = "tmpLsTestFolder/";
     private static final String TEST_PATH = ROOT_PATH + "/" + TEST_FOLDER_NAME;
 
     @BeforeAll
