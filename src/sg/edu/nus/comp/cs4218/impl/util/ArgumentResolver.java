@@ -37,7 +37,6 @@ public class ArgumentResolver {
      */
     public List<String> parseArguments(List<String> argsList) throws AbstractApplicationException, ShellException, FileNotFoundException {
         List<String> parsedArgsList = new LinkedList<>();
-        System.out.println("[Q0] ARGSLIST:" + argsList);
         for (String arg : argsList) {
             parsedArgsList.addAll(resolveOneArgument(arg));
         }
@@ -61,19 +60,13 @@ public class ArgumentResolver {
         RegexArgument parsedArg = makeRegexArgument();
         StringBuilder subCommand = new StringBuilder();
 
-        System.out.println("[Q1] ARGS:" + arg);
         for (int i = 0; i < arg.length(); i++) {
             char chr = arg.charAt(i);
 
             if (chr == CHAR_BACK_QUOTE) {
-                System.out.println("[Z2-0] Index:" + i);
-                System.out.println("[Z2-1] ParsedArg:" + parsedArg);
-                System.out.println("[Z2-2] unmatchedQuotes:" + unmatchedQuotes);
                 if (unmatchedQuotes.isEmpty() || unmatchedQuotes.peek() == CHAR_DOUBLE_QUOTE) {
                     // start of command substitution
                     if (!parsedArg.isEmpty()) {
-                        System.out.println("[Z3-1] ParsedArgSegment:" + parsedArgsSegment);
-                        System.out.println("[Z3-2] ParsedArg:" + parsedArg);
                         appendParsedArgIntoSegment(parsedArgsSegment, parsedArg);
                         parsedArg = makeRegexArgument();
                     }
@@ -88,8 +81,6 @@ public class ArgumentResolver {
                     String subCommandOutput = evaluateSubCommand(subCommand.toString());
                     subCommand.setLength(0); // Clear the previous subCommand registered
 
-                    System.out.println("[Q4-1] subCommandOutput:" + subCommandOutput);
-                    System.out.println("[Q4-2] unmatchedQuotes:" + unmatchedQuotes);
                     // check if back quotes are nested
                     if (unmatchedQuotes.isEmpty()) {
                         List<RegexArgument> subOutputSegment = Stream
@@ -97,8 +88,6 @@ public class ArgumentResolver {
                                 .map(this::makeRegexArgument)
                                 .collect(Collectors.toList());
 
-                        System.out.println("[Q5-1] subOutputSegment:" + subOutputSegment);
-                        System.out.println("[Q5-2] parsedArgsSegment:" + parsedArgsSegment);
                         // append the first token to the previous parsedArg
                         // e.g. arg: abc`1 2 3`xyz`4 5 6` (contents in `` is after command sub)
                         // expected: [abc1, 2, 3xyz4, 5, 6]
@@ -106,10 +95,8 @@ public class ArgumentResolver {
                             RegexArgument firstOutputArg = subOutputSegment.remove(0);
                             appendParsedArgIntoSegment(parsedArgsSegment, firstOutputArg);
                         }
-                        System.out.println("[Q6] parsedArgsSegment:" + parsedArgsSegment);
 
                         parsedArgsSegment.addAll(subOutputSegment);
-                        System.out.println("[Q8] parsedArgsSegment:" + parsedArgsSegment);
                     } else {
                         // don't tokenize subCommand output
                         appendParsedArgIntoSegment(parsedArgsSegment, makeRegexArgument(subCommandOutput));
