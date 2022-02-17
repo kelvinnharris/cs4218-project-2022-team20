@@ -73,14 +73,18 @@ public class CpApplication implements CpInterface {
         Path srcAbsPath = getAbsolutePath(srcFile);
         Path destAbsPath = getAbsolutePath(destFile);
 
+        if (!Files.exists(srcAbsPath)) {
+            throw new CpException(String.format("cannot stat '%s': no such file or directory", srcFile));
+        }
         if (srcAbsPath.toString().equals(destAbsPath.toString())) {
-            throw new CpException("Not allowed to copy a file to its own parent folder as destination.");
+            throw new CpException(String.format("'%s' and '%s' are the same file", srcFile, destFile));
         }
-        if (!Files.isRegularFile(srcAbsPath)) {
-            throw new CpException(String.format("Cannot copy content. '%s' is not a file.", srcFile));
-        }
-        if (srcFile.equals(destFile)) {
-            throw new CpException("Cannot copy. Source file cannot be the same as destination file");
+        if (Files.isDirectory(srcAbsPath)) {
+            if (isRecursive) {
+                throw new CpException(String.format("cannot overwrite non-directory '%s' with directory '%s'", destFile, srcFile));
+            } else {
+                throw new CpException(String.format("-r not specified; omitting directory '%s'", srcFile));
+            }
         }
 
         try {
@@ -104,7 +108,7 @@ public class CpApplication implements CpInterface {
         for (String srcFile : fileName) {
             Path srcAbsPath = getAbsolutePath(srcFile);
             if (!srcAbsPath.toFile().exists()) {
-                throw new CpException(String.format("Filename '%s' does not exist.", srcAbsPath));
+                throw new CpException(String.format("cannot stat '%s': No such file or directory", srcFile));
             }
         }
 
@@ -113,7 +117,7 @@ public class CpApplication implements CpInterface {
             String srcCwd = String.valueOf(getAbsolutePath(srcFile).getParent());
             String destFolderName = getAbsolutePath(destFolder).toFile().getName();
             String srcFileName = getAbsolutePath(srcFile).toFile().getName();
-            cpFilesToFolderImpl(isRecursive, destCwd, srcCwd, destFolderName, srcFileName);
+            cpFilesToFolderImpl(isRecursive, destCwd, srcCwd, destFolderName, srcFileName, destFolder, srcFile, false);
         }
     }
 
@@ -125,37 +129,52 @@ public class CpApplication implements CpInterface {
      * @param srcCwd        Current source directory
      * @param destFolder    Destination folder to copy to based relative to destCwd
      * @param srcFile       Source file/folder to copy from relative to srcCwd
+     * @param destFolderArg Original argument provided in input for destination folder
+     * @param srcFileArg    Original argument provided in input for source file
      * @throws CpException  Exception related to cp
      */
     public void cpFilesToFolderImpl(Boolean isRecursive, String destCwd, String srcCwd, String destFolder,
-                                    String srcFile) throws CpException {
+                                    String srcFile, String destFolderArg, String srcFileArg,
+                                    Boolean isCopiedOnce) throws CpException {
         Path destAbsPath = Paths.get(destCwd, destFolder, srcFile); // e.g. ./destFolder/srcFile
         Path srcAbsPath = Paths.get(srcCwd, srcFile); // e.g. ./srcFile
 
-        if (srcAbsPath.toString().equals(destAbsPath.toString())) {
-            throw new CpException("Not allowed to copy a file to its own parent folder as destination.");
-        }
-
         try {
-            Files.copy(srcAbsPath, destAbsPath, REPLACE_EXISTING);
-
             // Get all file names in that directory and copy recursively
-            if (Files.isDirectory(srcAbsPath) && isRecursive) {
+            if (Files.isDirectory(srcAbsPath)) {
+                if (isRecursive) {
+                    // To prevent infinite loop e.g. cp -r a a/b, or cp -r a a
+                    if (destAbsPath.startsWith(srcAbsPath) && isCopiedOnce) {
+                        throw new CpException(String.format("cannot copy a directory, '%s', into itself, '%s'", srcFileArg,
+                                destFolderArg + "/" + srcFile));
+                    }
 
-                // To prevent infinite loop e.g. cp -r a a/b
-                if (destAbsPath.startsWith(srcAbsPath)) {
-                    throw new CpException("Not allowed to copy a folder to its child folder.");
+                    isCopiedOnce = true;
+
+                    // Copy the directory itself
+                    if (!Files.exists(destAbsPath)) {
+                        Files.copy(srcAbsPath, destAbsPath, REPLACE_EXISTING);
+                    }
+
+                    // Copy the contents in directory recursively
+                    String[] fileNames = listAllFileNamesInPath(srcAbsPath);
+                    for (String fileName : fileNames) {
+                        String nextDestCwd = Paths.get(destCwd, destFolder).toString();
+                        String nextSrcCwd = Paths.get(srcCwd, srcFile).toString();
+                        cpFilesToFolderImpl(isRecursive, nextDestCwd, nextSrcCwd, srcFile, fileName, destFolderArg, srcFileArg, isCopiedOnce);
+                    }
+                } else {
+                    throw new CpException(String.format("-r not specified; omitting directory '%s'", srcFile));
                 }
 
-                String[] fileNames = listAllFileNamesInPath(srcAbsPath);
-                for (String fileName : fileNames) {
-                    String nextDestCwd = Paths.get(destCwd, destFolder).toString();
-                    String nextSrcCwd = Paths.get(srcCwd, srcFile).toString();
-                    cpFilesToFolderImpl(isRecursive, nextDestCwd, nextSrcCwd, srcFile, fileName);
+            } else if (Files.isRegularFile(srcAbsPath)) { // just copy if file type
+                if (srcAbsPath.toString().equals(destAbsPath.toString())) {
+                    throw new CpException(String.format("'%s' and '%s' are the same file", srcFileArg, destFolderArg + "/" + srcFile));
                 }
+                Files.copy(srcAbsPath, destAbsPath, REPLACE_EXISTING);
             }
-        } catch (DirectoryNotEmptyException dne){
-            throw new CpException("Cannot overwrite folder as it is non-empty");
+        } catch (CpException e) {
+            throw e;
         } catch (Exception e) {
             throw new CpException(e.getMessage());
         }
