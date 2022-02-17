@@ -85,8 +85,6 @@ public class TeeApplication implements TeeInterface {
             }
         }
 
-        Set<String> uniqueFiles = new HashSet<>(List.of(fileName));
-
         BufferedReader reader = new BufferedReader(new InputStreamReader(stdin));
         StringBuilder sb = new StringBuilder();
 
@@ -103,27 +101,40 @@ public class TeeApplication implements TeeInterface {
                 if (StringUtils.isBlank(input)) {
                     break;
                 }
-                sb.append(input);
-                sb.append(STRING_NEWLINE);
+
+                String toAppend = input + STRING_NEWLINE;
+                sb.append(toAppend);
+
+                // write each line to files immediately to preserve order
+                if (isAppend) {
+                    for (String file : fileName) {
+                        String cwd = Environment.currentDirectory;
+                        Path filePath = Paths.get(cwd, file).normalize();
+                        try {
+                            Files.write(filePath, toAppend.getBytes(), APPEND);
+                        } catch (Exception e) {
+                            throw new TeeException(String.format("Cannot write to file '%s'.", filePath));
+                        }
+                    }
+                }
 
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
         }
 
-        for (String file : uniqueFiles) {
-            String cwd = Environment.currentDirectory;
-            Path filePath = Paths.get(cwd, file).normalize();
-            try {
-                if (isAppend) {
-                    Files.write(filePath, sb.toString().getBytes(), APPEND);
-                } else {
+        if (!isAppend) {
+            for (String file : fileName) {
+                String cwd = Environment.currentDirectory;
+                Path filePath = Paths.get(cwd, file).normalize();
+                try {
                     Files.write(filePath, sb.toString().getBytes());
+                } catch (Exception e) {
+                    throw new TeeException(String.format("Cannot write to file '%s'.", filePath));
                 }
-            } catch (Exception e) {
-                throw new TeeException(String.format("Cannot write to file '%s'.", filePath));
             }
         }
+
         return sb.toString();
     }
 }
