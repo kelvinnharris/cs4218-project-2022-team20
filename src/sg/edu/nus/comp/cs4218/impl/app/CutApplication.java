@@ -18,10 +18,11 @@ import java.util.List;
 import static sg.edu.nus.comp.cs4218.impl.parser.ArgsParser.ILLEGAL_FLAG_MSG;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_NO_PERM;
-import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 public class CutApplication implements CutInterface {
-
+//    CutArgsParser parser;
+//    InputStream stdin;
+//    int[] index;
     /**
      * Runs application with specified input data and specified output stream.
      *
@@ -31,6 +32,7 @@ public class CutApplication implements CutInterface {
      */
     @Override
     public void run(String[] args, InputStream stdin, OutputStream stdout) throws AbstractApplicationException {
+//        this.stdin = stdin;
         // Format: cut [Option] [LIST] FILES...
         if (stdout == null) {
             throw new CutException(ERR_NULL_STREAMS);
@@ -60,12 +62,18 @@ public class CutApplication implements CutInterface {
         try {
             if (!output.toString().isEmpty()) {
                 stdout.write(output.toString().getBytes());
-                //stdout.write(STRING_NEWLINE.getBytes());
             }
         } catch (IOException e) {
             throw new CutException(ERR_WRITE_STREAM);//NOPMD
         }
     }
+
+//    @Override
+//    public String cutFromFiles(Boolean isCharPo, Boolean isBytePo, Boolean isRange, int startIdx, int endIdx,
+//                        String... fileName) throws Exception {
+//        return cutFromFiles(parser.isCharPo(), parser.isBytePo(), parser.isRange(), parser.getStartIdx(), parser.getEndIdx(), parser.getIndex(), stdin, parser.getFiles().toArray(new String[0]));
+//
+//    }
 
         /**
          * Cuts out selected portions of each line
@@ -122,7 +130,6 @@ public class CutApplication implements CutInterface {
      * @throws Exception
      */
     @Override
-    // not done
     public String cutFromStdin(Boolean isCharPo, Boolean isBytePo, Boolean isRange, int startIdx, int endIdx, int[] index, InputStream stdin) throws Exception {
         if (stdin == null) {
             throw new Exception(ERR_NULL_STREAMS);
