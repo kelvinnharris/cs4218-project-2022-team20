@@ -100,6 +100,7 @@ public final class CommandBuilder {
                     } else if (callCmdsForPipe.isEmpty()) {
                         // add CallCommand as part of a SequenceCommand
                         cmdsForSequence.add(new CallCommand(tokens, appRunner, argumentResolver));
+                        tokens = new LinkedList<>();
                     } else {
                         // add CallCommand as part of ongoing PipeCommand
                         callCmdsForPipe.add(new CallCommand(tokens, appRunner, argumentResolver));
