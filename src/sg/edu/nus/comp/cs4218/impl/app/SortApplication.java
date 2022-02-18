@@ -1,8 +1,9 @@
 package sg.edu.nus.comp.cs4218.impl.app;
 
 import sg.edu.nus.comp.cs4218.app.SortInterface;
+import sg.edu.nus.comp.cs4218.exception.InvalidArgsException;
 import sg.edu.nus.comp.cs4218.exception.SortException;
-import sg.edu.nus.comp.cs4218.impl.app.args.SortArguments;
+import sg.edu.nus.comp.cs4218.impl.parser.SortArgsParser;
 import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 
 import java.io.File;
@@ -36,14 +37,20 @@ public class SortApplication implements SortInterface {
         if (stdout == null) {
             throw new SortException(ERR_NULL_STREAMS);
         }
-        SortArguments sortArgs = new SortArguments();
-        sortArgs.parse(args);
+
+
+        SortArgsParser parser = new SortArgsParser();
+        try {
+            parser.parse(args);
+        } catch (InvalidArgsException e) {
+            throw new SortException(e.getMessage());
+        }
         StringBuilder output = new StringBuilder();
         try {
-            if (sortArgs.getFiles().isEmpty()) {
-                output.append(sortFromStdin(sortArgs.isFirstWordNumber(), sortArgs.isReverseOrder(), sortArgs.isCaseIndependent(), stdin));
+            if (parser.getFiles().isEmpty()) {
+                output.append(sortFromStdin(parser.isFirstWordNumber(), parser.isReverseOrder(), parser.isCaseIndependent(), stdin));
             } else {
-                output.append(sortFromFiles(sortArgs.isFirstWordNumber(), sortArgs.isReverseOrder(), sortArgs.isCaseIndependent(), sortArgs.getFiles().toArray(new String[0])));
+                output.append(sortFromFiles(parser.isFirstWordNumber(), parser.isReverseOrder(), parser.isCaseIndependent(), parser.getFiles().toArray(new String[0])));
             }
         } catch (Exception e) {
             throw new SortException(e.getMessage());//NOPMD
