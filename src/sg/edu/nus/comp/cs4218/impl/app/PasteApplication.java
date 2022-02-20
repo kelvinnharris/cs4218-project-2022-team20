@@ -31,6 +31,14 @@ public class PasteApplication implements PasteInterface {
     private int numOfErrors = 0;
     private int maxFileLength = Integer.MIN_VALUE;
 
+    private boolean fileNotExist = false;
+    String fileNotExistName = "";
+
+    private int CurrentOperation = 0;
+    private int STDIN_OPERATION = 1;
+    private int FILE_OPERATION = 2;
+    private int STDIN_FILE_OPERATION = 3;
+
     public PasteApplication() {
         this.listResult = new ArrayList<>();
         this.tempListResult = new ArrayList<>();
@@ -72,10 +80,13 @@ public class PasteApplication implements PasteInterface {
         String result;
         try {
             if (pasteArgs.getFiles().isEmpty()) {
+                CurrentOperation = STDIN_OPERATION;
                 result = mergeStdin(pasteArgs.isSerial(), stdin);
             } else if (!pasteArgs.getFiles().contains("-")) {
+                CurrentOperation = FILE_OPERATION;
                 result = mergeFile(pasteArgs.isSerial(), pasteArgs.getFiles().toArray(new String[0]));
             } else {
+                CurrentOperation = STDIN_FILE_OPERATION;
                 result = mergeFileAndStdin(pasteArgs.isSerial(), stdin, pasteArgs.getFiles().toArray(new String[0]));
             }
         } catch (Exception e) {
@@ -92,16 +103,28 @@ public class PasteApplication implements PasteInterface {
     }
 
     public String mergeStdin(Boolean isSerial, InputStream stdin) throws Exception {
-        return null;
+        if (stdin == null) {
+            throw new Exception(ERR_NULL_STREAMS);
+        }
+
+        List<String> data = IOUtils.getLinesFromInputStream(stdin);
+        tempListResult.add(data);
+
+        // produce result in listResult
+        if (isSerial) {
+            mergeFileDataInSerial(tempListResult);
+        } else {
+            mergeFileDataInParallel(tempListResult);
+        }
+
+        String result = stringifyListResult(listResult);
+        return result;
     }
 
     public String mergeFile(Boolean isSerial, String... fileName) throws Exception {
         if (fileName == null) {
             throw new Exception(ERR_GENERAL);
         }
-
-        boolean fileNotExist = false;
-        String fileNotExistName = "";
 
         for (String file : fileName) {
             File node = IOUtils.resolveFilePath(file).toFile();
@@ -133,11 +156,68 @@ public class PasteApplication implements PasteInterface {
 //            System.out.println("tempListResult size: " + tempListResult.size());
         }
 
+        System.out.println("Current Operation: " + CurrentOperation);
+
+        if (CurrentOperation != FILE_OPERATION) {
+            return "";
+        }
+
+        System.out.println("Tada");
+
         // produce result in listResult
         if (isSerial) {
             mergeFileDataInSerial(tempListResult);
         } else {
             mergeFileDataInParallel(tempListResult);
+        }
+
+        // If there is a file that doesn't exist, output file doesn't exist error
+        if (fileNotExist) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("paste: ").append(fileNotExistName).append(": ").append(ERR_NO_SUCH_FILE_OR_DIRECTORY);
+            return sb.toString();
+        }
+
+        String result = stringifyListResult(listResult);
+        return result;
+    }
+
+    public String mergeFileAndStdin(Boolean isSerial, InputStream stdin, String... fileName) throws Exception {
+        if (stdin == null && fileName == null) {
+            throw new Exception(ERR_GENERAL);
+        }
+
+        List<String> stdInData = IOUtils.getLinesFromInputStream(stdin);
+
+        int numOfStdin = 0;
+        for (String s : fileName) {
+            if (s.equals("-")) {
+                numOfStdin++;
+            }
+        }
+
+        // If serial, the stdIn will all come out in the first "-"
+        if (isSerial) {
+            numOfStdin = 1;
+        }
+
+        int currStdin = 0;
+        for (String s : fileName) {
+            if (s.equals("-")) {
+                List<String> currLst = new ArrayList<>();
+                for (int i = currStdin; i < stdInData.size(); i += numOfStdin) {
+                    currLst.add(stdInData.get(i));
+                }
+                if (isSerial) {
+                    currStdin = stdInData.size();
+                } else {
+                    currStdin += 1;
+                }
+                tempListResult.add(currLst);
+            } else {
+                mergeFile(isSerial, s);
+                if (fileNotExist) break;
+            }
         }
 
         if (fileNotExist) {
@@ -146,18 +226,14 @@ public class PasteApplication implements PasteInterface {
             return sb.toString();
         }
 
-        // each list in ListResult conatins all the elements for a single line of the output, therefore simply
-        // append with tab (STRING_TAB)
-        List<String> intermediateResult = new ArrayList<>();
-        for (List<String> lst : listResult) {
-            intermediateResult.add(String.join(STRING_TAB, lst));
+        if (isSerial) {
+            mergeFileDataInSerial(tempListResult);
+        } else {
+            mergeFileDataInParallel(tempListResult);
         }
 
-        return String.join(STRING_NEWLINE, intermediateResult);
-    }
-
-    public String mergeFileAndStdin(Boolean isSerial, InputStream stdin, String... fileName) throws Exception {
-        return null;
+        String result = stringifyListResult(listResult);
+        return result;
     }
 
     // Produce the correct output to listResult
@@ -182,12 +258,24 @@ public class PasteApplication implements PasteInterface {
             }
             this.listResult.add(currLstToAdd);
         }
+    }
 
-//        for (List<String> lst : listResult) {
-//            for (String s : lst) {
-//                System.out.print(s + " ");
-//            }
-//            System.out.println();
-//        }
+    public String stringifyListResult(List<List<String>> listResult) {
+        // each list in ListResult contains all the elements for a single line of the output, therefore simply
+        // append with tab (STRING_TAB)
+        List<String> intermediateResult = new ArrayList<>();
+        for (List<String> lst : listResult) {
+            intermediateResult.add(String.join(STRING_TAB, lst));
+        }
+
+        return String.join(STRING_NEWLINE, intermediateResult);
+    }
+
+    public void setCurrentOperation(int operation) {
+        this.CurrentOperation = operation;
+    }
+
+    public int getFileOperation() {
+        return this.FILE_OPERATION;
     }
 }
