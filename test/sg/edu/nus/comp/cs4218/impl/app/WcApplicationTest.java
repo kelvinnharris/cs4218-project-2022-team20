@@ -27,7 +27,6 @@ public class WcApplicationTest {
     private static String stdIn = "-";
 
     static final String NUMBER_FORMAT = " %7d";
-    static final String EOF = "\\u001a";
 
     private static final String nonExistentFile = "wc";
 
@@ -37,6 +36,7 @@ public class WcApplicationTest {
     private static final String filePath2 = TEST_FOLDER_NAME + fileName2;
     private static final String fileName3 = "test3.txt";
     private static final String filePath3 = TEST_FOLDER_NAME + fileName3;
+    private static final String filePathAllTextFiles = TEST_FOLDER_NAME + "*.txt";
     private static final String fileNameWithEOFs = "testEOFs.txt";
     private static final String filePathWithEOFs = TEST_FOLDER_NAME + fileNameWithEOFs;
 
@@ -206,7 +206,7 @@ public class WcApplicationTest {
 
     @Test
         // command: wc tmpWcTestFolder/test1.txt -l
-    void testWc_fileInputWithLineFlag_shouldShowWordsLinesBytesWithFilename() throws Exception {
+    void testWc_fileInputWithLineFlag_shouldShowLinesWithFilename() throws Exception {
         String result = wcApplication.countFromFiles(false, true, false, filePath1);
 
         StringBuilder sbExpected = new StringBuilder();
@@ -218,7 +218,7 @@ public class WcApplicationTest {
 
     @Test
         // command: wc tmpWcTestFolder/test1.txt -l
-    void testWc_fileInputWithWordFlag_shouldShowWordsLinesBytesWithFilename() throws Exception {
+    void testWc_fileInputWithWordFlag_shouldShowWordsWithFilename() throws Exception {
         String result = wcApplication.countFromFiles(true, false, false, filePath1);
 
         StringBuilder sbExpected = new StringBuilder();
@@ -230,7 +230,7 @@ public class WcApplicationTest {
 
     @Test
         // command: wc tmpWcTestFolder/test1.txt -l
-    void testWc_fileInputWithByteFlag_shouldShowWordsLinesBytesWithFilename() throws Exception {
+    void testWc_fileInputWithByteFlag_shouldShowBytesWithFilename() throws Exception {
         String result = wcApplication.countFromFiles(false, false, true, filePath1);
 
         StringBuilder sbExpected = new StringBuilder();
@@ -284,5 +284,9 @@ public class WcApplicationTest {
         assertEquals(sbExpected.toString(), result);
     }
 
-    // TODO: test redirection, test with different flags combination (many duplicates, single ones)
+    // TODO:
+    //  test redirection
+    //  test with different flags combination (many duplicates, single ones)
+    //  test with globing
+    //  test with multiple stdIn arguments
 }
