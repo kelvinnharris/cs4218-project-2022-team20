@@ -4,6 +4,7 @@ import sg.edu.nus.comp.cs4218.app.WcInterface;
 import sg.edu.nus.comp.cs4218.exception.WcException;
 import sg.edu.nus.comp.cs4218.impl.parser.WcArgsParser;
 import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
+import sg.edu.nus.comp.cs4218.impl.util.StringUtils;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -354,7 +355,7 @@ class Result {
         } else if (isErroneous && errorCode == WcApplication.ERR_CODE_IS_DIRECTORY) {
             StringBuilder sb = new StringBuilder();
             sb.append(errorMessage);
-            sb.append("\n");
+            sb.append(STRING_NEWLINE);
             sb.append((new WcApplication()).getCountReportInString(bytes != -1,lines != -1,words != -1,new long[]{0,0,0}, fileName));
             return sb.toString();
         }
