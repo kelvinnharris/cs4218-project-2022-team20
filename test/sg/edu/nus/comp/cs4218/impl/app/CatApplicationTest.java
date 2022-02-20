@@ -23,6 +23,9 @@ public class CatApplicationTest {
     private static final String TEST_FOLDER_NAME = "tmpCatTestFolder/";
     private static final String TEST_PATH = ROOT_PATH + "/" + TEST_FOLDER_NAME;
 
+    private static final String ERR_IS_A_DIRECTORY = ": Is a directory";
+    private static final String ERR_NO_SUCH_FILE_OR_DIRECTORY = ": No such file or directory";
+
     private static String stdIn = "-";
 
     private static final String NUMBER_FORMAT = "%6d ";
@@ -173,6 +176,32 @@ public class CatApplicationTest {
         sbExpected.append(String.format(NUMBER_FORMAT, 8));
         sbExpected.append("c").append(StringUtils.STRING_NEWLINE);
         sbExpected.append(String.format(NUMBER_FORMAT, 9)).append("d");
+
+        assertEquals(sbExpected.toString(), result);
+    }
+
+    @Test
+        // command: cat -n cat tmpCatTestFolder/test2.txt
+    void testCat_multipleFilesWithNonExistentFileWithFlag_shouldShowContentsInAllFilesWithNumbers() throws Exception {
+        String result = catApplication.catFiles(true, nonExistentFile, filePath1);
+
+        StringBuilder sbExpected = new StringBuilder();
+        sbExpected.append("cat: ").append(nonExistentFile).append(ERR_NO_SUCH_FILE_OR_DIRECTORY).append(StringUtils.STRING_NEWLINE);
+        sbExpected.append(String.format(NUMBER_FORMAT, 1));
+        sbExpected.append("This is WC Test file 1");
+
+        assertEquals(sbExpected.toString(), result);
+    }
+
+    @Test
+        // command: cat -n cat tmpCatTestFolder/test2.txt
+    void testCat_multipleFilesWithDirectoryFileWithFlag_shouldShowContentsInAllFilesWithNumbers() throws Exception {
+        String result = catApplication.catFiles(true, filePath1, TEST_FOLDER_NAME);
+
+        StringBuilder sbExpected = new StringBuilder();
+        sbExpected.append(String.format(NUMBER_FORMAT, 1));
+        sbExpected.append("This is WC Test file 1").append(StringUtils.STRING_NEWLINE);
+        sbExpected.append("cat: ").append(TEST_FOLDER_NAME).append(ERR_IS_A_DIRECTORY);
 
         assertEquals(sbExpected.toString(), result);
     }
