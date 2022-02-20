@@ -38,7 +38,7 @@ public class WcArguments {
                     continue;
                 }
                 // `parsingFlag` is to ensure all flags come first, followed by files.
-                if (parsingFlag && arg.charAt(0) == CHAR_FLAG_PREFIX) {
+                if (parsingFlag && arg.charAt(0) == CHAR_FLAG_PREFIX && arg.length() > 1) {
                     for (char c : arg.toCharArray()) {
                         if (c == CHAR_FLAG_PREFIX) {
                             continue;
