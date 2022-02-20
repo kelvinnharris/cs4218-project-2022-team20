@@ -20,9 +20,9 @@ import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_NO_PERM;
 
 public class CutApplication implements CutInterface {
-//    CutArgsParser parser;
-//    InputStream stdin;
-//    int[] index;
+    CutArgsParser parser;
+    InputStream stdin;
+    int[] index;
     /**
      * Runs application with specified input data and specified output stream.
      *
@@ -32,15 +32,17 @@ public class CutApplication implements CutInterface {
      */
     @Override
     public void run(String[] args, InputStream stdin, OutputStream stdout) throws AbstractApplicationException {
-//        this.stdin = stdin;
+
         // Format: cut [Option] [LIST] FILES...
         if (stdout == null) {
             throw new CutException(ERR_NULL_STREAMS);
         }
-        CutArgsParser parser = new CutArgsParser();
+        this.stdin = stdin;
+        this.parser = new CutArgsParser();
         try {
             parser.parse(args);
             parser.parseIndex();
+            this.index = parser.getIndex();
             if ((parser.isCharPo() && parser.isBytePo()) || (!parser.isCharPo() && !parser.isBytePo())) {
                 String exceptionMessage = ILLEGAL_FLAG_MSG;
                 throw new InvalidArgsException(exceptionMessage);
@@ -52,9 +54,9 @@ public class CutApplication implements CutInterface {
         StringBuilder output = new StringBuilder();
         try {
             if (parser.getFiles().isEmpty()) {
-                output.append(cutFromStdin(parser.isCharPo(), parser.isBytePo(), parser.isRange(), parser.getStartIdx(), parser.getEndIdx(), parser.getIndex(), stdin));
+                output.append(cutFromStdin(parser.isCharPo(), parser.isBytePo(), parser.isRange(), parser.getStartIdx(), parser.getEndIdx(), stdin));
             } else {
-                output.append(cutFromFiles(parser.isCharPo(), parser.isBytePo(), parser.isRange(), parser.getStartIdx(), parser.getEndIdx(), parser.getIndex(), stdin, parser.getFiles().toArray(new String[0])));
+                output.append(cutFromFiles(parser.isCharPo(), parser.isBytePo(), parser.isRange(), parser.getStartIdx(), parser.getEndIdx(), parser.getFiles().toArray(new String[0])));
             }
         } catch (Exception e) {
             throw new CutException(e.getMessage());//NOPMD
@@ -68,25 +70,32 @@ public class CutApplication implements CutInterface {
         }
     }
 
-//    @Override
-//    public String cutFromFiles(Boolean isCharPo, Boolean isBytePo, Boolean isRange, int startIdx, int endIdx,
-//                        String... fileName) throws Exception {
-//        return cutFromFiles(parser.isCharPo(), parser.isBytePo(), parser.isRange(), parser.getStartIdx(), parser.getEndIdx(), parser.getIndex(), stdin, parser.getFiles().toArray(new String[0]));
-//
-//    }
+    @Override
+    public String cutFromFiles(Boolean isCharPo, Boolean isBytePo, Boolean isRange, int startIdx, int endIdx,
+                        String... fileName) throws Exception {
+        return cutFromFiles(isCharPo, isBytePo, isRange, startIdx, endIdx, index, stdin, fileName);
 
-        /**
-         * Cuts out selected portions of each line
-         *
-         * @param isCharPo Boolean option to cut by character position
-         * @param isBytePo Boolean option to cut by byte position
-         * @param isRange  Boolean option to perform range-based cut
-         * @param startIdx index to begin cut
-         * @param endIdx   index to end cut
-         * @param fileName Array of String of file names
-         * @return
-         * @throws Exception
-         */
+    }
+
+    @Override
+    public String cutFromStdin(Boolean isCharPo, Boolean isBytePo, Boolean isRange, int startIdx, int endIdx,
+                               InputStream stdin) throws Exception {
+        return cutFromStdin(isCharPo, isBytePo, isRange, startIdx, endIdx, index, stdin);
+
+    }
+
+    /**
+     * Cuts out selected portions of each line
+     *
+     * @param isCharPo Boolean option to cut by character position
+     * @param isBytePo Boolean option to cut by byte position
+     * @param isRange  Boolean option to perform range-based cut
+     * @param startIdx index to begin cut
+     * @param endIdx   index to end cut
+     * @param fileName Array of String of file names
+     * @return
+     * @throws Exception
+     */
     @Override
     public String cutFromFiles(Boolean isCharPo, Boolean isBytePo, Boolean isRange, int startIdx, int endIdx, int[] index, InputStream stdin, String... fileName) throws Exception {
         if (fileName == null) {
@@ -140,7 +149,7 @@ public class CutApplication implements CutInterface {
         return output;
     }
 
-    @Override
+
     public String cutInputString(Boolean isCharPo, Boolean isBytePo, Boolean isRange, int startIdx, int endIdx, int[] index, List<String> input) {
         Arrays.sort(index);
         int len = index.length;
@@ -155,10 +164,10 @@ public class CutApplication implements CutInterface {
             int counter;
             if (isRange) {
                 for (String line : input) {
-                    currArray = new char[endIdx - startIdx];
+                    currArray = new char[endIdx + 1 - startIdx < line.length() ? endIdx + 1 - startIdx : line.length()];
                     counter = 0;
                     charArray = line.toCharArray();
-                    for (int i = startIdx; i < endIdx; i++) {
+                    for (int i = startIdx; i < endIdx + 1; i++) {
                         if (i >= charArray.length) {
                             break;
                         }
@@ -169,7 +178,7 @@ public class CutApplication implements CutInterface {
                 }
             } else {
                 for (String line : input) {
-                    currArray = new char[len];
+                    currArray = new char[len < line.length() ? len : line.length()];
                     counter = 0;
                     charArray = line.toCharArray();
                     for (Integer i : res) {
@@ -188,10 +197,10 @@ public class CutApplication implements CutInterface {
             int counter;
             if (isRange) {
                 for (String line : input) {
-                    currArray = new byte[endIdx - startIdx];
+                    currArray = new byte[endIdx + 1 - startIdx < line.length() ? endIdx + 1 - startIdx : line.length()];
                     counter = 0;
                     byteArray = line.getBytes();
-                    for (int i = startIdx; i < endIdx; i++) {
+                    for (int i = startIdx; i < endIdx + 1; i++) {
                         if (i >= byteArray.length) {
                             break;
                         }
@@ -202,7 +211,7 @@ public class CutApplication implements CutInterface {
                 }
             } else {
                 for (String line : input) {
-                    currArray = new byte[len];
+                    currArray = new byte[len < line.length() ? len : line.length()];
                     counter = 0;
                     byteArray = line.getBytes();
                     for (Integer i : res) {
@@ -236,7 +245,6 @@ public class CutApplication implements CutInterface {
         for (int i = 0; i < j; i++){
             res[i] = temp[i];
         }
-
 
         return res;
     }

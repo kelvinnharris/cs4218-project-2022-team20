@@ -71,7 +71,7 @@ public class RmApplication implements RmInterface {
                 checkRemove = removeFile(node);
             } else if (isEmptyFolder) {
                 File[] contents = node.listFiles();
-                if (contents != null) {
+                if (contents != null && contents.length != 0) {
                     throw new Exception(ERR_DIR_NOT_EMPTY);
                 }
                 checkRemove = node.delete();

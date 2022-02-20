@@ -52,7 +52,7 @@ public class CutArgsParser extends ArgsParser {
                     index[j] = Integer.parseInt(indexString[j]) - 1;
                 }
                 startIdx = index[0];
-                endIdx = index[index.length - 1] + 1;
+                endIdx = index[index.length - 1];
             } else if (arg.contains("-")) {
                 range = true;
                 indexString = arg.split("-");
@@ -61,13 +61,13 @@ public class CutArgsParser extends ArgsParser {
                     index[j] = Integer.parseInt(indexString[j]) - 1;
                 }
                 startIdx = index[0];
-                endIdx = index[1] + 1;
+                endIdx = index[1];
             } else {
                 range = false;
                 index = new int[1];
                 index[0] = Integer.parseInt(arg) - 1;
                 startIdx = index[0];
-                endIdx = index[0] + 1;
+                endIdx = index[0];
             }
         } catch (Exception e) {
             throw new InvalidArgsException(e.getMessage());
