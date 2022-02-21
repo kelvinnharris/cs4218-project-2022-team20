@@ -16,14 +16,14 @@ class EchoApplicationTest {
     void testEcho_emptyArgument_shouldReturnNewLine() throws EchoException {
         String[] emptyArgs = new String[]{};
         String outputEmptyArgs = echoApplication.constructResult(emptyArgs);
-        assertEquals(outputEmptyArgs, System.lineSeparator());
+        assertEquals(System.lineSeparator(), outputEmptyArgs);
     }
 
     @Test
     void testEcho_emptyStringArgument_shouldReturnNewLine() throws EchoException {
         String[] emptyStringArgs = new String[]{ "" };
         String outputEmptyStringArgs = echoApplication.constructResult(emptyStringArgs);
-        assertEquals(outputEmptyStringArgs, System.lineSeparator());
+        assertEquals(System.lineSeparator(), outputEmptyStringArgs);
     }
 
     @Test

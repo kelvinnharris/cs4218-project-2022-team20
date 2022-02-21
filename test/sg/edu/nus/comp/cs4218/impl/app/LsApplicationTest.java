@@ -65,14 +65,14 @@ class LsApplicationTest {
     void testLs_emptyPath_shouldReturnFileNotFound() throws LsException {
         String lsOutput = lsApplication.listFolderContent(false, false, false, "");
         String expectedOutput = "ls: cannot access '': No such file or directory";
-        assertEquals(lsOutput, expectedOutput);
+        assertEquals(expectedOutput, lsOutput);
     }
 
     @Test
     void testLs_FullPath_shouldReturnAllFilesAndDirectories() throws LsException {
         String lsOutput = lsApplication.listFolderContent(false, false, false, TEST_PATH);
         String expectedOutput = "file4.xml\nfolder1\nfolder3";
-        assertEquals(lsOutput, expectedOutput);
+        assertEquals(expectedOutput, lsOutput);
     }
 
     @Test
@@ -80,7 +80,7 @@ class LsApplicationTest {
         Environment.currentDirectory = TEST_PATH;
         String lsOutput = lsApplication.listFolderContent(false, false, false, ".");
         String expectedOutput = "file4.xml\nfolder1\nfolder3";
-        assertEquals(lsOutput, expectedOutput);
+        assertEquals(expectedOutput, lsOutput);
     }
 
     @Test
@@ -88,7 +88,7 @@ class LsApplicationTest {
         String path = "./" + TEST_FOLDER_NAME + "folder3/../folder1/.";
         String lsOutput = lsApplication.listFolderContent(false, false, false, path);
         String expectedOutput = "file1.txt\nfile2.iml\nfolder2";
-        assertEquals(lsOutput, expectedOutput);
+        assertEquals(expectedOutput, lsOutput);
     }
 
     @Test
@@ -96,7 +96,7 @@ class LsApplicationTest {
         String path = TEST_FOLDER_NAME + "invalidFile.txt";
         String lsOutput = lsApplication.listFolderContent(false, false, false,  path);
         String expectedOutput = "ls: cannot access 'tmpLsTestFolder/invalidFile.txt': No such file or directory";
-        assertEquals(lsOutput, expectedOutput);
+        assertEquals(expectedOutput, lsOutput);
     }
 
     @Test
@@ -108,7 +108,7 @@ class LsApplicationTest {
         String expectedOutput = "tmpLsTestFolder/folder1:\nfile1.txt\nfile2.iml\nfolder2\n\n" +
                 "tmpLsTestFolder/folder1/file1.txt\n\n" +
                 "tmpLsTestFolder/folder3/folder4:\nfile3.txt";
-        assertEquals(lsOutput, expectedOutput);
+        assertEquals(expectedOutput, lsOutput);
     }
 
     @Test
@@ -120,7 +120,7 @@ class LsApplicationTest {
         String expectedOutput = "ls: cannot access 'tmpLsTestFolder/folder5': No such file or directory\n" +
                 "ls: cannot access 'tmpLsTestFolder/folder1/folder2/hello.txt': No such file or directory\n" +
                 "tmpLsTestFolder/folder3/folder4/file3.txt";
-        assertEquals(lsOutput, expectedOutput);
+        assertEquals(expectedOutput, lsOutput);
     }
 
     @Test
@@ -128,7 +128,7 @@ class LsApplicationTest {
         String validPath = TEST_FOLDER_NAME + "folder3/folder4/file3.txt";
         String lsOutput = lsApplication.listFolderContent(false, false, false, validPath);
         String expectedOutput = "tmpLsTestFolder/folder3/folder4/file3.txt";
-        assertEquals(lsOutput, expectedOutput);
+        assertEquals(expectedOutput, lsOutput);
     }
 
     @Test
@@ -136,14 +136,14 @@ class LsApplicationTest {
         Environment.currentDirectory = TEST_PATH;
         String lsOutput = lsApplication.listFolderContent(false, false, false, "file4.xml");
         String expectedOutput = "file4.xml";
-        assertEquals(lsOutput, expectedOutput);
+        assertEquals(expectedOutput, lsOutput);
     }
 
     @Test
     void testLs_folderOnly_shouldReturnOnlyDirectories() throws LsException {
         String isFolderOnlyOutput = lsApplication.listFolderContent(true, false, false, TEST_PATH);
         String expectedOutput = "folder1\nfolder3";
-        assertEquals(isFolderOnlyOutput, expectedOutput);
+        assertEquals(expectedOutput, isFolderOnlyOutput);
     }
 
     @Test
@@ -154,7 +154,7 @@ class LsApplicationTest {
                 "tmpLsTestFolder/folder1/folder2:\n\n" +
                 "tmpLsTestFolder/folder3:\nfolder4\n\n" +
                 "tmpLsTestFolder/folder3/folder4:\nfile3.txt";
-        assertEquals(isFolderOnlyOutput, expectedOutput);
+        assertEquals(expectedOutput, isFolderOnlyOutput);
     }
 
     @Test
@@ -165,7 +165,7 @@ class LsApplicationTest {
                 "tmpLsTestFolder/folder1/folder2:\n\n" +
                 "tmpLsTestFolder/folder3:\nfolder4\n\n" +
                 "tmpLsTestFolder/folder3/folder4:\nfile3.txt";
-        assertEquals(isFolderOnlyOutput, expectedOutput);
+        assertEquals(expectedOutput, isFolderOnlyOutput);
     }
 
     @Test
