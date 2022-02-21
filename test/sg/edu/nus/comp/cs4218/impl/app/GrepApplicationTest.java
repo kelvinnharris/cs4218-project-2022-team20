@@ -20,13 +20,14 @@ import java.util.regex.Pattern;
 
 import static java.nio.file.StandardOpenOption.APPEND;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 public class GrepApplicationTest {
 
     private static GrepApplication grepApplication;
     private static final String ROOT_PATH = Environment.currentDirectory;
 
-    public static final String input = "The first file\r\nThe second line\r\n1000\r\n";
+    public static final String input = "The first file" + STRING_NEWLINE + "The second line" + STRING_NEWLINE + "1000" + STRING_NEWLINE;
     public final InputStream is = new ByteArrayInputStream(input.getBytes());
 
     public static final String FILE1_NAME = "file1.txt";
@@ -74,7 +75,7 @@ public class GrepApplicationTest {
 
     static void appendToFile(Path file, String[] lines) throws IOException {
         for (String line : lines) {
-            Files.write(file, (line + "\r\n").getBytes(), APPEND);
+            Files.write(file, (line + STRING_NEWLINE).getBytes(), APPEND);
         }
     }
 
@@ -88,10 +89,10 @@ public class GrepApplicationTest {
             String actualOutput = grepApplication.grepFromFiles(PATTERN1, false, false, false, FILE1_NAME);
             String fileContent = readString(Paths.get(FILE1_NAME));
             StringBuilder sb = new StringBuilder();
-            String[] lines = fileContent.split("\r\n");
+            String[] lines = fileContent.split(STRING_NEWLINE);
             for (String line: lines) {
                 if (line.contains(PATTERN1)) {
-                    sb.append(line).append("\r\n");
+                    sb.append(line).append(STRING_NEWLINE);
                 }
             }
             assertEquals(sb.toString(), actualOutput);
@@ -107,20 +108,20 @@ public class GrepApplicationTest {
             String actualOutput = grepApplication.grepFromFiles(PATTERN1, false, false, false, files);
             String fileContent1 = readString(Paths.get(FILE1_NAME));
             StringBuilder sb = new StringBuilder();
-            String[] lines1 = fileContent1.split("\r\n");
+            String[] lines1 = fileContent1.split(STRING_NEWLINE);
             for (String line: lines1) {
                 if (line.contains(PATTERN1)) {
-                    sb.append(FILE1_NAME).append(": ").append(line).append("\r\n");
+                    sb.append(FILE1_NAME).append(": ").append(line).append(STRING_NEWLINE);
                 }
             }
             String fileContent2 = readString(Paths.get(FILE2_NAME));
-            String[] lines2 = fileContent2.split("\r\n");
+            String[] lines2 = fileContent2.split(STRING_NEWLINE);
             for (String line: lines2) {
                 if (line.contains(PATTERN1)) {
-                    sb.append(FILE2_NAME).append(": ").append(line).append("\r\n");
+                    sb.append(FILE2_NAME).append(": ").append(line).append(STRING_NEWLINE);
                 }
             }
-            String errorMsg = String.format("grep: %s: No such file or directory\r\n", "nonExistent.txt");
+            String errorMsg = String.format("grep: %s: No such file or directory" + STRING_NEWLINE, "nonExistent.txt");
             sb.append(errorMsg);
             assertEquals(sb.toString(), actualOutput);
         } catch (Exception e) {
@@ -134,9 +135,9 @@ public class GrepApplicationTest {
             String actualOutput = grepApplication.grepFromFiles(PATTERN1, false, true, false, FILE1_NAME);
             String fileContent = readString(Paths.get(FILE1_NAME));
             StringBuilder sb = new StringBuilder();
-            String[] lines = fileContent.split("\r\n");
+            String[] lines = fileContent.split(STRING_NEWLINE);
             long count = Arrays.stream(lines).filter(line -> line.contains(PATTERN1)).count();
-            String expectedOutput = String.valueOf(count) + "\r\n";
+            String expectedOutput = String.valueOf(count) + STRING_NEWLINE;
             assertEquals(expectedOutput, actualOutput);
         } catch (Exception e) {
             throw new GrepException(e.getMessage());
@@ -149,12 +150,12 @@ public class GrepApplicationTest {
             String actualOutput = grepApplication.grepFromFiles(PATTERN1, true, true, false, FILE1_NAME);
             String fileContent = readString(Paths.get(FILE1_NAME));
             StringBuilder sb = new StringBuilder();
-            String[] lines = fileContent.split("\r\n");
+            String[] lines = fileContent.split(STRING_NEWLINE);
             long count = Arrays.stream(lines)
                     .filter(line -> Pattern.compile(Pattern.quote(PATTERN1_CASE_INSEN), Pattern.CASE_INSENSITIVE)
                             .matcher(line).find())
                     .count();
-            String expectedOutput = String.valueOf(count) + "\r\n";
+            String expectedOutput = String.valueOf(count) + STRING_NEWLINE;
             assertEquals(expectedOutput, actualOutput);
         } catch (Exception e) {
             throw new GrepException(e.getMessage());
@@ -167,10 +168,10 @@ public class GrepApplicationTest {
             String actualOutput = grepApplication.grepFromFiles(PATTERN1, false, false, true, FILE1_NAME);
             String fileContent = readString(Paths.get(FILE1_NAME));
             StringBuilder sb = new StringBuilder();
-            String[] lines = fileContent.split("\r\n");
+            String[] lines = fileContent.split(STRING_NEWLINE);
             for (String line: lines) {
                 if (line.contains(PATTERN1)) {
-                    sb.append(FILE1_NAME).append(": ").append(line).append("\r\n");
+                    sb.append(FILE1_NAME).append(": ").append(line).append(STRING_NEWLINE);
                 }
             }
             assertEquals(sb.toString(), actualOutput);
@@ -183,7 +184,7 @@ public class GrepApplicationTest {
     void testGrep_grepFromNonExistentFile_shouldDisplayErrorMessage() throws GrepException {
         try {
             String actualOutput = grepApplication.grepFromFiles(PATTERN1, false, false, false, "nonExistent.txt");
-            String errorMsg = String.format("grep: %s: No such file or directory\r\n", "nonExistent.txt");
+            String errorMsg = String.format("grep: %s: No such file or directory" + STRING_NEWLINE, "nonExistent.txt");
             assertEquals(errorMsg, actualOutput);
         } catch (Exception e) {
             throw new GrepException(e.getMessage());
@@ -195,10 +196,10 @@ public class GrepApplicationTest {
         try {
             String actualOutput = grepApplication.grepFromStdin(PATTERN1, false, false, false, is);
             StringBuilder sb = new StringBuilder();
-            String[] lines = input.split("\r\n");
+            String[] lines = input.split(STRING_NEWLINE);
             for (String line: lines) {
                 if (line.contains(PATTERN1)) {
-                    sb.append(line).append("\r\n");
+                    sb.append(line).append(STRING_NEWLINE);
                 }
             }
             assertEquals(sb.toString(), actualOutput);
@@ -215,17 +216,17 @@ public class GrepApplicationTest {
             String actualOutput = grepApplication.grepFromFileAndStdin(PATTERN1, false, false, false, is, FILE1_NAME);
             StringBuilder sb = new StringBuilder();
             String fileContent = readString(Paths.get(FILE1_NAME));
-            String[] fileLines = fileContent.split("\r\n");
+            String[] fileLines = fileContent.split(STRING_NEWLINE);
             for (String line: fileLines) {
                 if (line.contains(PATTERN1)) {
-                    sb.append(FILE1_NAME).append(": ").append(line).append("\r\n");
+                    sb.append(FILE1_NAME).append(": ").append(line).append(STRING_NEWLINE);
                 }
             }
 
-            String[] stdinLines = input.split("\r\n");
+            String[] stdinLines = input.split(STRING_NEWLINE);
             for (String line: stdinLines) {
                 if (line.contains(PATTERN1)) {
-                    sb.append("(standard input): ").append(line).append("\r\n");
+                    sb.append("(standard input): ").append(line).append(STRING_NEWLINE);
                 }
             }
             assertEquals(sb.toString(), actualOutput);

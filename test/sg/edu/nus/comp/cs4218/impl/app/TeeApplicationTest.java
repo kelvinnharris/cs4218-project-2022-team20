@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.impl.exception.TeeException;
+import sg.edu.nus.comp.cs4218.impl.util.StringUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -19,13 +20,14 @@ import java.nio.file.Paths;
 import static java.nio.file.StandardOpenOption.APPEND;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 public class TeeApplicationTest {
 
     private static TeeApplication teeApplication;
     private static final String ROOT_PATH = Environment.currentDirectory;
 
-    public static final String input = "hello\r\nworld\r\ngoodbye\r\nworld\r\n";
+    public static final String input = "hello" + STRING_NEWLINE + "world" + STRING_NEWLINE +"goodbye" + STRING_NEWLINE + "world" + STRING_NEWLINE;
     public final InputStream is = new ByteArrayInputStream(input.getBytes());
 
     public static final String FILE1_NAME = "file1.txt";
@@ -71,7 +73,7 @@ public class TeeApplicationTest {
 
     static void appendToFile(Path file, String[] lines) throws IOException {
         for (String line : lines) {
-            Files.write(file, (line + "\r\n").getBytes(), APPEND);
+            Files.write(file, (line + STRING_NEWLINE).getBytes(), APPEND);
         }
     }
 
@@ -109,7 +111,7 @@ public class TeeApplicationTest {
         try {
             StringBuilder sb = new StringBuilder();
             for (String s : LINES1) {
-                sb.append(s).append("\r\n");
+                sb.append(s).append(STRING_NEWLINE);
             }
             sb.append(input);
             teeApplication.teeFromStdin(true, is, FILE1_NAME);
@@ -126,12 +128,12 @@ public class TeeApplicationTest {
         try {
             StringBuilder sb = new StringBuilder();
             for (String s : LINES1) {
-                sb.append(s).append("\r\n");
+                sb.append(s).append(STRING_NEWLINE);
             }
-            String[] inputWords = input.split("\r\n");
+            String[] inputWords = input.split(STRING_NEWLINE);
             for (String word : inputWords) {
-                sb.append(word).append("\r\n");
-                sb.append(word).append("\r\n");
+                sb.append(word).append(STRING_NEWLINE);
+                sb.append(word).append(STRING_NEWLINE);
             }
             String[] files = {FILE1_NAME, FILE1_NAME};
             teeApplication.teeFromStdin(true, is, files);
