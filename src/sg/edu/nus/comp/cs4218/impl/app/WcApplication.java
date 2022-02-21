@@ -3,8 +3,8 @@ package sg.edu.nus.comp.cs4218.impl.app;
 import sg.edu.nus.comp.cs4218.app.WcInterface;
 import sg.edu.nus.comp.cs4218.exception.WcException;
 import sg.edu.nus.comp.cs4218.impl.parser.WcArgsParser;
+import sg.edu.nus.comp.cs4218.impl.util.ErrorConstants;
 import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
-import sg.edu.nus.comp.cs4218.impl.util.StringUtils;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -176,7 +176,7 @@ public class WcApplication implements WcInterface {
     public String countFromStdin(Boolean isBytes, Boolean isLines, Boolean isWords,
                                  InputStream stdin) throws Exception {
         if (stdin == null) {
-            throw new WcException(ERR_NULL_INPUTSTREAM);
+            throw new WcException(ErrorConstants.ERR_NULL_STREAMS);
         }
         long[] count = getCountReport(stdin); // lines words bytes;
 
@@ -204,7 +204,7 @@ public class WcApplication implements WcInterface {
         // TODO: To implement
         // Only when the [Filename] "-" is used then this function will be called
         if (stdin == null) {
-            throw new WcException(ERR_NULL_INPUTSTREAM);
+            throw new WcException(ERR_NULL_STREAMS);
         }
         if (fileName == null) {
             throw new WcException(ERR_NULL_FILES);

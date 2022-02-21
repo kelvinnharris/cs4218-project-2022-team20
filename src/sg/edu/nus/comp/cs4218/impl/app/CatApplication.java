@@ -3,6 +3,7 @@ package sg.edu.nus.comp.cs4218.impl.app;
 import sg.edu.nus.comp.cs4218.app.CatInterface;
 import sg.edu.nus.comp.cs4218.exception.CatException;
 import sg.edu.nus.comp.cs4218.impl.parser.CatArgsParser;
+import sg.edu.nus.comp.cs4218.impl.util.ErrorConstants;
 import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 
 import java.io.File;
@@ -84,7 +85,7 @@ public class CatApplication implements CatInterface {
     @Override
     public String catFiles(Boolean isLineNumber, String... fileName) throws Exception {
         if (fileName == null) {
-            throw new Exception(ERR_GENERAL);
+            throw new CatException(ERR_NULL_FILES);
         }
 
         for (String file : fileName) {
@@ -125,7 +126,7 @@ public class CatApplication implements CatInterface {
     @Override
     public String catStdin(Boolean isLineNumber, InputStream stdin) throws Exception {
         if (stdin == null) {
-            throw new Exception(ERR_NULL_STREAMS);
+            throw new CatException(ErrorConstants.ERR_NULL_STREAMS);
         }
 
         List<String> data = IOUtils.getLinesFromInputStream(stdin);
@@ -141,8 +142,11 @@ public class CatApplication implements CatInterface {
 
     @Override
     public String catFileAndStdin(Boolean isLineNumber, InputStream stdin, String... fileName) throws Exception {
-        if (stdin == null && fileName == null) {
-            throw new Exception(ERR_GENERAL);
+        if (stdin == null) {
+            throw new CatException(ErrorConstants.ERR_NULL_STREAMS);
+        }
+        if (fileName == null) {
+            throw new CatException(ERR_NULL_FILES);
         }
 
         for (String s : fileName) {
