@@ -1,6 +1,5 @@
 package sg.edu.nus.comp.cs4218.impl.app;
 
-import org.junit.Assert;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,7 +26,7 @@ public class PasteApplicationTest {
     private static final String ERR_IS_A_DIRECTORY = ": Is a directory";
     private static final String ERR_NO_SUCH_FILE_OR_DIRECTORY = ": No such file or directory";
 
-    private static String stdIn = "-";
+    private static final String stdIn = "-";
 
     private static final String nonExistentFile = "paste";
 
@@ -111,8 +110,42 @@ public class PasteApplicationTest {
     }
 
     @Test
+        // command: paste tmpPasteTestFolder/test1.txt tmpPasteTestFolder/test2.txt
+    void testPaste_stdInWithoutFlag_shouldShowMergedContentsInParallel() throws Exception {
+        InputStream inputStream = IOUtils.openInputStream(filePath2);
+        String result = pasteApplication.mergeStdin(false, inputStream);
+        IOUtils.closeInputStream(inputStream);
+
+        StringBuilder sbExpected = new StringBuilder();
+        sbExpected.append("A").append(StringUtils.STRING_NEWLINE);
+        sbExpected.append("B").append(StringUtils.STRING_NEWLINE);
+        sbExpected.append("C").append(StringUtils.STRING_NEWLINE);
+        sbExpected.append("D").append(StringUtils.STRING_NEWLINE);
+        sbExpected.append("E");
+
+        assertEquals(sbExpected.toString(), result);
+    }
+
+    @Test
+        // command: paste tmpPasteTestFolder/test1.txt tmpPasteTestFolder/test2.txt
+    void testPaste_stdInWithFlag_shouldShowMergedContentsSerially() throws Exception {
+        InputStream inputStream = IOUtils.openInputStream(filePath2);
+        String result = pasteApplication.mergeStdin(true, inputStream);
+        IOUtils.closeInputStream(inputStream);
+
+        StringBuilder sbExpected = new StringBuilder();
+        sbExpected.append("A").append(StringUtils.STRING_TAB);
+        sbExpected.append("B").append(StringUtils.STRING_TAB);
+        sbExpected.append("C").append(StringUtils.STRING_TAB);
+        sbExpected.append("D").append(StringUtils.STRING_TAB);
+        sbExpected.append("E");
+
+        assertEquals(sbExpected.toString(), result);
+    }
+
+    @Test
         // command: paste - tmpPasteTestFolder/test1.txt -
-    void testPaste_fileInpuAndStdIntWithoutFlag_shouldShowMergedContentsInParallel() throws Exception {
+    void testPaste_fileInputAndStdIntWithoutFlag_shouldShowMergedContentsInParallel() throws Exception {
         InputStream inputStream = IOUtils.openInputStream(filePath2);
         String result = pasteApplication.mergeFileAndStdin(false, inputStream, stdIn, filePath1, stdIn);
         IOUtils.closeInputStream(inputStream);
@@ -147,28 +180,28 @@ public class PasteApplicationTest {
 
     @Test
         // command: paste - tmpPasteTestFolder/test1.txt tmpPasteTestFolder/
-    void testPaste_fileInpuAndStdInAndDirectoryWithoutFlag_shouldShowMergedContentsInParallel() throws Exception {
+    void testPaste_fileInputAndStdInAndDirectoryWithoutFlag_shouldShowMergedContentsInParallel() throws Exception {
         InputStream inputStream = IOUtils.openInputStream(filePath2);
         String result = pasteApplication.mergeFileAndStdin(false, inputStream, stdIn, filePath1, TEST_FOLDER_NAME);
         IOUtils.closeInputStream(inputStream);
 
         StringBuilder sbIsDirectory = new StringBuilder();
-        sbIsDirectory.append("paste: ").append(TEST_FOLDER_NAME).append(ERR_IS_A_DIRECTORY).append(STRING_NEWLINE).toString();
+        sbIsDirectory.append("paste: ").append(TEST_FOLDER_NAME).append(ERR_IS_A_DIRECTORY).append(STRING_NEWLINE);
 
         StringBuilder sbExpected = new StringBuilder();
         sbExpected.append("A").append(StringUtils.STRING_TAB).append("1").append(StringUtils.STRING_TAB).append(sbIsDirectory);
         sbExpected.append(StringUtils.STRING_NEWLINE);
-        sbExpected.append("B").append(StringUtils.STRING_TAB).append("2").append(StringUtils.STRING_TAB).append("").append(StringUtils.STRING_NEWLINE);
-        sbExpected.append("C").append(StringUtils.STRING_TAB).append("3").append(StringUtils.STRING_TAB).append("").append(StringUtils.STRING_NEWLINE);
-        sbExpected.append("D").append(StringUtils.STRING_TAB).append("4").append(StringUtils.STRING_TAB).append("").append(StringUtils.STRING_NEWLINE);
-        sbExpected.append("E").append(StringUtils.STRING_TAB).append("5").append(StringUtils.STRING_TAB).append("");
+        sbExpected.append("B").append(StringUtils.STRING_TAB).append("2").append(StringUtils.STRING_TAB).append(StringUtils.STRING_NEWLINE);
+        sbExpected.append("C").append(StringUtils.STRING_TAB).append("3").append(StringUtils.STRING_TAB).append(StringUtils.STRING_NEWLINE);
+        sbExpected.append("D").append(StringUtils.STRING_TAB).append("4").append(StringUtils.STRING_TAB).append(StringUtils.STRING_NEWLINE);
+        sbExpected.append("E").append(StringUtils.STRING_TAB).append("5").append(StringUtils.STRING_TAB);
 
         assertEquals(sbExpected.toString(), result);
     }
 
     @Test
         // command: paste - tmpPasteTestFolder/test1.txt paste
-    void testPaste_fileInpuAndStdInAndNonExistentFileWithoutFlag_shouldShowMergedContentsInParallel() throws Exception {
+    void testPaste_fileInputAndStdInAndNonExistentFileWithoutFlag_shouldShowMergedContentsInParallel() throws Exception {
         InputStream inputStream = IOUtils.openInputStream(filePath2);
         String result = pasteApplication.mergeFileAndStdin(false, inputStream, stdIn, filePath1, nonExistentFile);
         IOUtils.closeInputStream(inputStream);

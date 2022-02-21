@@ -61,11 +61,6 @@ public class PasteApplication implements PasteInterface {
         }
         PasteArgsParser pasteArgs = new PasteArgsParser();
 
-//        System.out.println("Arguments: ");
-//        for (String arg : args) {
-//            System.out.println(arg);
-//        }
-
         try {
             pasteArgs.parse(args);
         } catch (Exception e) {
@@ -108,6 +103,7 @@ public class PasteApplication implements PasteInterface {
         }
 
         List<String> data = IOUtils.getLinesFromInputStream(stdin);
+        maxFileLength = Math.max(maxFileLength, data.size());
         tempListResult.add(data);
 
         // produce result in listResult
@@ -151,18 +147,12 @@ public class PasteApplication implements PasteInterface {
             List<String> fileDatas = IOUtils.getLinesFromInputStream(input);
             IOUtils.closeInputStream(input);
             maxFileLength = Math.max(maxFileLength, fileDatas.size());
-//            System.out.println("File datas size: " + fileDatas.size());
             tempListResult.add(fileDatas);
-//            System.out.println("tempListResult size: " + tempListResult.size());
         }
-
-        System.out.println("Current Operation: " + CurrentOperation);
 
         if (CurrentOperation != FILE_OPERATION) {
             return "";
         }
-
-        System.out.println("Tada");
 
         // produce result in listResult
         if (isSerial) {
