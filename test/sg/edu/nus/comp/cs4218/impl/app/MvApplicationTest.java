@@ -132,7 +132,7 @@ public class MvApplicationTest {
 
 
     @Test
-    void testMv_moveSrcFileToDestFolderDoNotOverwrite_shouldAppendToDestFile() throws MvException {
+    void testMv_moveSrcFileToDestFolderDoNotOverwrite_shouldNotMoveSrcFile() throws MvException {
         try {
             Files.createFile(Paths.get(FILE1_NAME));
             List<String> srcFileLines = Arrays.asList("This is", "src file");
