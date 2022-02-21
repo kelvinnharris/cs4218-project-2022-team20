@@ -14,6 +14,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 
 class CdApplicationTest {
     /* before each file path:
@@ -26,17 +27,17 @@ class CdApplicationTest {
 
     private static CdApplication cdApplication;
     private static final String ROOT_PATH = Environment.currentDirectory;
-    private static final String TEST_FOLDER_NAME = "tmpCdTestFolder/";
-    private static final String TEST_PATH = ROOT_PATH + "/" + TEST_FOLDER_NAME;
+    private static final String TEST_FOLDER_NAME = "tmpCdTestFolder" + CHAR_FILE_SEP + "";
+    private static final String TEST_PATH = ROOT_PATH + CHAR_FILE_SEP + TEST_FOLDER_NAME;
 
 
     @BeforeAll
     static void setUp() throws IOException {
         cdApplication = new CdApplication();
         deleteDir(new File(TEST_PATH));
-        Files.createDirectories(Paths.get(TEST_PATH + "folder1/folder2"));
-        Files.createFile(Paths.get(TEST_PATH + "folder1/file1.txt"));
-        Files.createFile(Paths.get(TEST_PATH + "folder1/folder2/file2.txt"));
+        Files.createDirectories(Paths.get(TEST_PATH + "folder1" + CHAR_FILE_SEP + "folder2"));
+        Files.createFile(Paths.get(TEST_PATH + "folder1" + CHAR_FILE_SEP + "file1.txt"));
+        Files.createFile(Paths.get(TEST_PATH + "folder1" + CHAR_FILE_SEP + "folder2" + CHAR_FILE_SEP + "file2.txt"));
         Files.createFile(Paths.get(TEST_PATH + "file3.xml"));
     }
 
@@ -87,7 +88,7 @@ class CdApplicationTest {
 
     @Test
     void testCd_relativePath_shouldChangeToValidFolder() throws CdException {
-        String path = TEST_FOLDER_NAME + "folder1/./folder2/../../.";
+        String path = TEST_FOLDER_NAME + "folder1" + CHAR_FILE_SEP + "." + CHAR_FILE_SEP + "folder2" + CHAR_FILE_SEP + ".." + CHAR_FILE_SEP + ".." + CHAR_FILE_SEP + ".";
         cdApplication.changeToDirectory(path);
         Path currentPath = Paths.get(Environment.currentDirectory).normalize();
         Path givenPath = Paths.get(TEST_PATH).normalize();
@@ -102,7 +103,7 @@ class CdApplicationTest {
 
     @Test
     void testCd_invalidPath_shouldReturnNoSuchDirectoryError() throws CdException {
-        String path = TEST_PATH + "folder1/invalidFolder";
+        String path = TEST_PATH + "folder1" + CHAR_FILE_SEP + "invalidFolder";
         assertThrows(CdException.class, () -> cdApplication.changeToDirectory(path));
     }
 
@@ -120,10 +121,10 @@ class CdApplicationTest {
 
     @Test
     void testCd_multipleArgs_shouldTakeFirstArgumentOnly() throws CdException {
-        String[] args = new String[]{ TEST_PATH + "folder1/folder2", TEST_PATH + "folder1", "." };
+        String[] args = new String[]{ TEST_PATH + "folder1" + CHAR_FILE_SEP + "folder2", TEST_PATH + "folder1", "." };
         cdApplication.run(args, System.in, System.out);
         Path currentPath = Paths.get(Environment.currentDirectory).normalize();
-        Path givenPath = Paths.get(TEST_PATH + "folder1/folder2").normalize();
+        Path givenPath = Paths.get(TEST_PATH + "folder1" + CHAR_FILE_SEP + "folder2").normalize();
         assertEquals(currentPath, givenPath);
     }
 }

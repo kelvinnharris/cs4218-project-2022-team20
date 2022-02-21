@@ -283,9 +283,15 @@ public class LsApplication implements LsInterface {
      * @return Path
      */
     private Path resolvePath(String directory) {
-        if (directory.charAt(0) == '/') {
-            // This is an absolute path
-            return Paths.get(directory);
+        if (System.getProperty("os.name").toLowerCase().contains("win")) {
+            if (directory.charAt(1) == ':' && directory.charAt(2) == '\\') {
+                return Paths.get(directory);
+            }
+        } else {
+            if (directory.charAt(0) == '/') {
+                // This is an absolute path
+                return Paths.get(directory);
+            }
         }
 
         return Paths.get(Environment.currentDirectory, directory);
