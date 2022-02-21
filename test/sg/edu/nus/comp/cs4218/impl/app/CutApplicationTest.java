@@ -1,6 +1,8 @@
 package sg.edu.nus.comp.cs4218.impl.app;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
+
 import org.junit.jupiter.api.*;
 import sg.edu.nus.comp.cs4218.exception.CutException;
 
@@ -29,7 +31,7 @@ class CutApplicationTest {
             bw1.close();
             FileWriter fw2 = new FileWriter( "fileMultipleLines.txt");
             BufferedWriter bw2 = new BufferedWriter(fw2);
-            bw2.write( "abcd\nefgh");
+            bw2.write( "abcd" + STRING_NEWLINE + "efgh");
             bw2.close();
         }
         catch( IOException ioe ) {
@@ -57,313 +59,156 @@ class CutApplicationTest {
     @Test
     void cutFromFiles_byCharSingleIndexSingleLine_returnsLines() throws Exception {
         InputStream input = new ByteArrayInputStream("".getBytes());
-        String output = cutApplication.cutFromFiles(true, false, false, 1, 2, new int[]{0}, input, new String[] {"fileSingleLine.txt"});
-        assertEquals("a\n", output);
+        cutApplication.stdin = input;
+        String output = cutApplication.cutFromFiles(true, false, false, 0, 1, new String[] {"fileSingleLine.txt"});
+        assertEquals("a" + STRING_NEWLINE, output);
     }
 
     @Test
     void cutFromFiles_byByteSingleIndexSingleLine_returnsLines() throws Exception {
         InputStream input = new ByteArrayInputStream("".getBytes());
-        String output = cutApplication.cutFromFiles(false, true, false, 1, 2, new int[]{0}, input, new String[] {"fileSingleLine.txt"});
-        assertEquals("a\n", output);
-    }
-
-    @Test
-    void cutFromFiles_byCharCommaSeparatedIndexSingleLine_returnsLines() throws Exception {
-        InputStream input = new ByteArrayInputStream("".getBytes());
-        String output = cutApplication.cutFromFiles(true, false, false, 1, 2, new int[]{0,2,3}, input, new String[] {"fileSingleLine.txt"});
-        assertEquals("acd\n", output);
-    }
-
-    @Test
-    void cutFromFiles_byByteCommaSeparatedIndexSingleLine_returnsLines() throws Exception {
-        InputStream input = new ByteArrayInputStream("".getBytes());
-        String output = cutApplication.cutFromFiles(false, true, false, 1, 2, new int[]{0,2,3}, input, new String[] {"fileSingleLine.txt"});
-        assertEquals("acd\n", output);
-    }
-
-    @Test
-    void cutFromFiles_byCharUnsortedCommaSeparatedIndexSingleLine_returnsLines() throws Exception {
-        InputStream input = new ByteArrayInputStream("".getBytes());
-        String output = cutApplication.cutFromFiles(true, false, false, 1, 2, new int[]{2,3,0}, input, new String[] {"fileSingleLine.txt"});
-        assertEquals("acd\n", output);
-    }
-
-    @Test
-    void cutFromFiles_byByteUnsortedCommaSeparatedIndexSingleLine_returnsLines() throws Exception {
-        InputStream input = new ByteArrayInputStream("".getBytes());
-        String output = cutApplication.cutFromFiles(false, true, false, 0, 2, new int[]{2,3,0}, input, new String[] {"fileSingleLine.txt"});
-        assertEquals("acd\n", output);
-    }
-
-    @Test
-    void cutFromFiles_byCharDuplicateCommaSeparatedIndexSingleLine_returnsLines() throws Exception {
-        InputStream input = new ByteArrayInputStream("".getBytes());
-        String output = cutApplication.cutFromFiles(true, false, false, 1, 2, new int[]{0,0,1}, input, new String[] {"fileSingleLine.txt"});
-        assertEquals("ab\n", output);
-    }
-
-    @Test
-    void cutFromFiles_byByteDuplicateCommaSeparatedIndexSingleLine_returnsLines() throws Exception {
-        InputStream input = new ByteArrayInputStream("".getBytes());
-        String output = cutApplication.cutFromFiles(false, true, false, 1, 2, new int[]{0,0,1}, input, new String[] {"fileSingleLine.txt"});
-        assertEquals("ab\n", output);
+        cutApplication.stdin = input;
+        String output = cutApplication.cutFromFiles(false, true, false, 0, 1, new String[] {"fileSingleLine.txt"});
+        assertEquals("a" + STRING_NEWLINE, output);
     }
 
     @Test
     void cutFromFiles_byCharRangeIndexSingleLine_returnsLines() throws Exception {
         InputStream input = new ByteArrayInputStream("".getBytes());
-        String output = cutApplication.cutFromFiles(true, false, false, 1, 2, new int[]{0,1,2}, input, new String[] {"fileSingleLine.txt"});
-        assertEquals("abc\n", output);
+        cutApplication.stdin = input;
+        String output = cutApplication.cutFromFiles(true, false, true, 0, 2, new String[] {"fileSingleLine.txt"});
+        assertEquals("abc" + STRING_NEWLINE, output);
     }
 
     @Test
     void cutFromFiles_byByteRangeIndexSingleLine_returnsLines() throws Exception {
         InputStream input = new ByteArrayInputStream("".getBytes());
-        String output = cutApplication.cutFromFiles(false, true, false, 1, 2, new int[]{0,1,2}, input, new String[] {"fileSingleLine.txt"});
-        assertEquals("abc\n", output);
+        cutApplication.stdin = input;
+        String output = cutApplication.cutFromFiles(false, true, true, 0, 2, new String[] {"fileSingleLine.txt"});
+        assertEquals("abc" + STRING_NEWLINE, output);
     }
 
     @Test
     void cutFromFiles_byCharSingleIndexMultipleLines_returnsLines() throws Exception {
         InputStream input = new ByteArrayInputStream("".getBytes());
-        String output = cutApplication.cutFromFiles(true, false, false, 1, 2, new int[]{0}, input, new String[] {"fileMultipleLines.txt"});
-        assertEquals("a\ne\n", output);
+        cutApplication.stdin = input;
+        String output = cutApplication.cutFromFiles(true, false, false, 0, 1, new String[] {"fileMultipleLines.txt"});
+        assertEquals("a" + STRING_NEWLINE + "e" + STRING_NEWLINE, output);
     }
 
     @Test
     void cutFromFiles_byByteSingleIndexMultipleLines_returnsLines() throws Exception {
         InputStream input = new ByteArrayInputStream("".getBytes());
-        String output = cutApplication.cutFromFiles(false, true, false, 1, 2, new int[]{0}, input, new String[] {"fileMultipleLines.txt"});
-        assertEquals("a\ne\n", output);
-    }
-
-    @Test
-    void cutFromFiles_byCharCommaSeparatedIndexMultipleLines_returnsLines() throws Exception {
-        InputStream input = new ByteArrayInputStream("".getBytes());
-        String output = cutApplication.cutFromFiles(true, false, false, 1, 2, new int[]{0,2,3}, input, new String[] {"fileMultipleLines.txt"});
-        assertEquals("acd\negh\n", output);
-    }
-
-    @Test
-    void cutFromFiles_byByteCommaSeparatedIndexMultipleLines_returnsLines() throws Exception {
-        InputStream input = new ByteArrayInputStream("".getBytes());
-        String output = cutApplication.cutFromFiles(false, true, false, 1, 2, new int[]{0,2,3}, input, new String[] {"fileMultipleLines.txt"});
-        assertEquals("acd\negh\n", output);
-    }
-
-    @Test
-    void cutFromFiles_byCharUnsortedCommaSeparatedIndexMultipleLines_returnsLines() throws Exception {
-        InputStream input = new ByteArrayInputStream("".getBytes());
-        String output = cutApplication.cutFromFiles(true, false, false, 1, 2, new int[]{2,3,0}, input, new String[] {"fileMultipleLines.txt"});
-        assertEquals("acd\negh\n", output);
-    }
-
-    @Test
-    void cutFromFiles_byByteUnsortedCommaSeparatedIndexMultipleLines_returnsLines() throws Exception {
-        InputStream input = new ByteArrayInputStream("".getBytes());
-        String output = cutApplication.cutFromFiles(false, true, false, 1, 2, new int[]{2,3,0}, input, new String[] {"fileMultipleLines.txt"});
-        assertEquals("acd\negh\n", output);
-    }
-
-    @Test
-    void cutFromFiles_byCharDuplicateCommaSeparatedIndexMultipleLines_returnsLines() throws Exception {
-        InputStream input = new ByteArrayInputStream("".getBytes());
-        String output = cutApplication.cutFromFiles(true, false, false, 1, 2, new int[]{0,0,1}, input, new String[] {"fileMultipleLines.txt"});
-        assertEquals("ab\nef\n", output);
-    }
-
-    @Test
-    void cutFromFiles_byByteDuplicateCommaSeparatedIndexMultipleLines_returnsLines() throws Exception {
-        InputStream input = new ByteArrayInputStream("".getBytes());
-        String output = cutApplication.cutFromFiles(false, true, false, 0, 1, new int[]{0,0,1}, input, new String[] {"fileMultipleLines.txt"});
-        assertEquals("ab\nef\n", output);
+        cutApplication.stdin = input;
+        String output = cutApplication.cutFromFiles(false, true, false, 0, 1, new String[] {"fileMultipleLines.txt"});
+        assertEquals("a" + STRING_NEWLINE + "e" + STRING_NEWLINE, output);
     }
 
     @Test
     void cutFromFiles_byCharRangeIndexMultipleLines_returnsLines() throws Exception {
         InputStream input = new ByteArrayInputStream("".getBytes());
-        String output = cutApplication.cutFromFiles(true, false, true, 0, 2, new int[]{0,1,2}, input, new String[] {"fileMultipleLines.txt"});
-        assertEquals("abc\nefg\n", output);
+        cutApplication.stdin = input;
+        String output = cutApplication.cutFromFiles(true, false, true, 0, 2, new String[] {"fileMultipleLines.txt"});
+        assertEquals("abc" + STRING_NEWLINE + "efg" + STRING_NEWLINE, output);
     }
 
     @Test
     void cutFromFiles_byByteRangeIndexMultipleLines_returnsLines() throws Exception {
         InputStream input = new ByteArrayInputStream("".getBytes());
-        String output = cutApplication.cutFromFiles(false, true, true, 0, 2, new int[]{0,1,2}, input, new String[] {"fileMultipleLines.txt"});
-        assertEquals("abc\nefg\n", output);
+        cutApplication.stdin = input;
+        String output = cutApplication.cutFromFiles(false, true, true, 0, 2, new String[] {"fileMultipleLines.txt"});
+        assertEquals("abc" + STRING_NEWLINE + "efg" + STRING_NEWLINE, output);
     }
 
     @Test
     void cutFromFiles_byByteRangeIndexMultipleFiles_returnsLines() throws Exception {
         InputStream input = new ByteArrayInputStream("".getBytes());
-        String output = cutApplication.cutFromFiles(false, true, true, 0, 2, new int[]{0,1,2}, input, new String[] {"fileSingleLine.txt", "fileMultipleLines.txt"});
-        assertEquals(output, "abc\nabc\nefg\n");
+        cutApplication.stdin = input;
+        String output = cutApplication.cutFromFiles(false, true, true, 0, 2, new String[] {"fileSingleLine.txt", "fileMultipleLines.txt"});
+        assertEquals(output, "abc" + STRING_NEWLINE + "abc" + STRING_NEWLINE + "efg" + STRING_NEWLINE);
     }
 
     @Test
     void cutFromFiles_byByteRangeIndexMultipleFilesAndStdin_returnsLines() throws Exception {
-        InputStream input = new ByteArrayInputStream("z\nyy\nx\nwww".getBytes());
-        String output = cutApplication.cutFromFiles(false, true, true, 0, 2, new int[]{0,1,2}, input, new String[] {"fileSingleLine.txt", "-", "fileMultipleLines.txt"});
-        assertEquals(output, "abc\nz\nyy\nx\nwww\nabc\nefg\n");
+        String inputString = "z" + STRING_NEWLINE + "yy" + STRING_NEWLINE + "x" + STRING_NEWLINE + "www";
+        InputStream input = new ByteArrayInputStream(inputString.getBytes());
+        cutApplication.stdin = input;
+        String output = cutApplication.cutFromFiles(false, true, true, 0, 2, new String[] {"fileSingleLine.txt", "-", "fileMultipleLines.txt"});
+        assertEquals(output, "abc" + STRING_NEWLINE + "z" + STRING_NEWLINE + "yy" + STRING_NEWLINE + "x" + STRING_NEWLINE + "www" + STRING_NEWLINE + "abc" + STRING_NEWLINE + "efg" + STRING_NEWLINE);
     }
 
 
     @Test
     void cutFromStdin_byCharSingleIndexSingleLine_returnsLines() throws Exception {
         InputStream input = new ByteArrayInputStream("abcd".getBytes());
-        String output = cutApplication.cutFromStdin(true, false, false, 1, 2, new int[]{0}, input);
-        assertEquals("a\n", output);
+        String output = cutApplication.cutFromStdin(true, false, false, 0, 1, input);
+        assertEquals("a" + STRING_NEWLINE, output);
     }
 
     @Test
     void cutFromStdin_byByteSingleIndexSingleLine_returnsLines() throws Exception {
         InputStream input = new ByteArrayInputStream("abcd".getBytes());
-        String output = cutApplication.cutFromStdin(false, true, false, 1, 2, new int[]{0}, input);
-        assertEquals("a\n", output);
-    }
-
-    @Test
-    void cutFromStdin_byCharCommaSeparatedIndexSingleLine_returnsLines() throws Exception {
-        InputStream input = new ByteArrayInputStream("abcd".getBytes());
-        String output = cutApplication.cutFromStdin(true, false, false, 1, 2, new int[]{0,2,3}, input);
-        assertEquals("acd\n", output);
-    }
-
-    @Test
-    void cutFromStdin_byByteCommaSeparatedIndexSingleLine_returnsLines() throws Exception {
-        InputStream input = new ByteArrayInputStream("abcd".getBytes());
-        String output = cutApplication.cutFromStdin(false, true, false, 1, 2, new int[]{0,2,3}, input);
-        assertEquals("acd\n", output);
-    }
-
-    @Test
-    void cutFromStdin_byCharUnsortedCommaSeparatedIndexSingleLine_returnsLines() throws Exception {
-        InputStream input = new ByteArrayInputStream("abcd".getBytes());
-        String output = cutApplication.cutFromStdin(true, false, false, 1, 2, new int[]{2,3,0}, input);
-        assertEquals("acd\n", output);
-    }
-
-    @Test
-    void cutFromStdin_byByteUnsortedCommaSeparatedIndexSingleLine_returnsLines() throws Exception {
-        InputStream input = new ByteArrayInputStream("abcd".getBytes());
-        String output = cutApplication.cutFromStdin(false, true, false, 1, 2, new int[]{2,3,0}, input);
-        assertEquals("acd\n", output);
-    }
-
-    @Test
-    void cutFromStdin_byCharDuplicateCommaSeparatedIndexSingleLine_returnsLines() throws Exception {
-        InputStream input = new ByteArrayInputStream("abcd".getBytes());
-        String output = cutApplication.cutFromStdin(true, false, false, 1, 2, new int[]{0,0,1}, input);
-        assertEquals("ab\n", output);
-    }
-
-    @Test
-    void cutFromStdin_byByteDuplicateCommaSeparatedIndexSingleLine_returnsLines() throws Exception {
-        InputStream input = new ByteArrayInputStream("abcd".getBytes());
-        String output = cutApplication.cutFromStdin(false, true, false, 1, 2, new int[]{0,0,1}, input);
-        assertEquals("ab\n", output);
+        String output = cutApplication.cutFromStdin(false, true, false, 0, 1, input);
+        assertEquals("a" + STRING_NEWLINE, output);
     }
 
     @Test
     void cutFromStdin_byCharRangeIndexSingleLine_returnsLines() throws Exception {
         InputStream input = new ByteArrayInputStream("abcd".getBytes());
-        String output = cutApplication.cutFromStdin(true, false, false, 1, 2, new int[]{0,1,2}, input);
-        assertEquals("abc\n", output);
+        String output = cutApplication.cutFromStdin(true, false, true, 0, 2, input);
+        assertEquals("abc" + STRING_NEWLINE, output);
     }
 
     @Test
     void cutFromStdin_byByteRangeIndexSingleLine_returnsLines() throws Exception {
         InputStream input = new ByteArrayInputStream("abcd".getBytes());
-        String output = cutApplication.cutFromStdin(false, true, false, 1, 2, new int[]{0,1,2}, input);
-        assertEquals("abc\n", output);
+        String output = cutApplication.cutFromStdin(false, true, true, 0, 2, input);
+        assertEquals("abc" + STRING_NEWLINE, output);
     }
 
     @Test
     void cutFromStdin_byCharSingleIndexMultipleLines_returnsLines() throws Exception {
-        InputStream input = new ByteArrayInputStream("abcd\nefgh".getBytes());
-        String output = cutApplication.cutFromStdin(true, false, false, 1, 2, new int[]{0}, input);
-        assertEquals("a\ne\n", output);
+        String inputString = "abcd" + STRING_NEWLINE + "efgh";
+        InputStream input = new ByteArrayInputStream(inputString.getBytes());          String output = cutApplication.cutFromStdin(true, false, false, 0, 1, input);
+        assertEquals("a" + STRING_NEWLINE + "e" + STRING_NEWLINE, output);
     }
 
     @Test
     void cutFromStdin_byByteSingleIndexMultipleLines_returnsLines() throws Exception {
-        InputStream input = new ByteArrayInputStream("abcd\nefgh".getBytes());
-        String output = cutApplication.cutFromStdin(false, true, false, 1, 2, new int[]{0}, input);
-        assertEquals("a\ne\n", output);
-
-    }
-
-    @Test
-    void cutFromStdin_byCharCommaSeparatedIndexMultipleLines_returnsLines() throws Exception {
-        InputStream input = new ByteArrayInputStream("abcd\nefgh".getBytes());
-        String output = cutApplication.cutFromStdin(true, false, false, 1, 2, new int[]{0,2,3}, input);
-        assertEquals("acd\negh\n", output);
-    }
-
-    @Test
-    void cutFromStdin_byByteCommaSeparatedIndexMultipleLines_returnsLines() throws Exception {
-        InputStream input = new ByteArrayInputStream("abcd\nefgh".getBytes());
-        String output = cutApplication.cutFromStdin(false, true, false, 1, 2, new int[]{0,2,3}, input);
-        assertEquals("acd\negh\n", output);
-    }
-
-    @Test
-    void cutFromStdin_byCharUnsortedCommaSeparatedIndexMultipleLines_returnsLines() throws Exception {
-        InputStream input = new ByteArrayInputStream("abcd\nefgh".getBytes());
-        String output = cutApplication.cutFromStdin(true, false, false, 1, 2, new int[]{2,3,0}, input);
-        assertEquals("acd\negh\n", output);
-    }
-
-    @Test
-    void cutFromStdin_byByteUnsortedCommaSeparatedIndexMultipleLines_returnsLines() throws Exception {
-        InputStream input = new ByteArrayInputStream("abcd\nefgh".getBytes());
-        String output = cutApplication.cutFromStdin(false, true, false, 0, 1, new int[]{2,3,0}, input);
-        assertEquals("acd\negh\n", output);
-
-    }
-
-    @Test
-    void cutFromStdin_byCharDuplicateCommaSeparatedIndexMultipleLines_returnsLines() throws Exception {
-        InputStream input = new ByteArrayInputStream("abcd\nefgh".getBytes());
-        String output = cutApplication.cutFromStdin(true, false, false, 0, 1, new int[]{0,0,1}, input);
-        assertEquals("ab\nef\n", output);
-    }
-
-    @Test
-    void cutFromStdin_byByteDuplicateCommaSeparatedIndexMultipleLines_returnsLines() throws Exception {
-        InputStream input = new ByteArrayInputStream("abcd\nefgh".getBytes());
-        String output = cutApplication.cutFromStdin(false, true, false, 0, 1, new int[]{0,0,1}, input);
-        assertEquals("ab\nef\n", output);
+        String inputString = "abcd" + STRING_NEWLINE + "efgh";
+        InputStream input = new ByteArrayInputStream(inputString.getBytes());          String output = cutApplication.cutFromStdin(false, true, false, 0, 1, input);
+        assertEquals("a" + STRING_NEWLINE + "e" + STRING_NEWLINE, output);
 
     }
 
     @Test
     void cutFromStdin_byCharRangeIndexMultipleLines_returnsLines() throws Exception {
-        InputStream input = new ByteArrayInputStream("abcd\nefgh".getBytes());
-        String output = cutApplication.cutFromStdin(true, false, true, 0, 2, new int[]{0,1,2}, input);
-        assertEquals("abc\nefg\n", output);
+        String inputString = "abcd" + STRING_NEWLINE + "efgh";
+        InputStream input = new ByteArrayInputStream(inputString.getBytes());          String output = cutApplication.cutFromStdin(true, false, true, 0, 2, input);
+        assertEquals("abc" + STRING_NEWLINE + "efg" + STRING_NEWLINE, output);
     }
 
     @Test
     void cutFromStdin_byByteRangeIndexMultipleLines_returnsLines() throws Exception {
-        InputStream input = new ByteArrayInputStream("abcd\nefgh".getBytes());
-        String output = cutApplication.cutFromStdin(false, true, true, 0, 2, new int[]{0,1,2}, input);
-        assertEquals("abc\nefg\n", output);
+        String inputString = "abcd" + STRING_NEWLINE + "efgh";
+        InputStream input = new ByteArrayInputStream(inputString.getBytes());        String output = cutApplication.cutFromStdin(false, true, true, 0, 2, input);
+        assertEquals("abc" + STRING_NEWLINE + "efg" + STRING_NEWLINE, output);
     }
 
     @Test
     void cutFromStdin_EmptyString_returnsLines() throws Exception {
-        InputStream input = new ByteArrayInputStream("\n".getBytes());
-        String output = cutApplication.cutFromStdin(true, false, false, 1, 2, new int[]{0}, input);
-        assertEquals("\n", output);
+        String inputString = STRING_NEWLINE;
+        InputStream input = new ByteArrayInputStream(inputString.getBytes());
+        String output = cutApplication.cutFromStdin(true, false, false, 0, 1, input);
+        assertEquals(STRING_NEWLINE, output);
     }
 
     @Test
     void cutFromStdin_MultipleEmptyString_returnsLines() throws Exception {
-        InputStream input = new ByteArrayInputStream("\n\n".getBytes());
-        String output = cutApplication.cutFromStdin(true, false, false, 1, 2, new int[]{0}, input);
-        assertEquals("\n\n", output);
+        String inputString = STRING_NEWLINE + STRING_NEWLINE;
+        InputStream input = new ByteArrayInputStream(inputString.getBytes());
+        String output = cutApplication.cutFromStdin(true, false, false, 0, 1, input);
+        assertEquals(STRING_NEWLINE + STRING_NEWLINE, output);
     }
 
 }
