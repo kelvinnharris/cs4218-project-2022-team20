@@ -6,6 +6,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Environment;
+import sg.edu.nus.comp.cs4218.exception.ShellException;
+import sg.edu.nus.comp.cs4218.exception.WcException;
 import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 import sg.edu.nus.comp.cs4218.impl.util.StringUtils;
 
@@ -16,6 +18,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_NULL_FILES;
+import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_NULL_INPUTSTREAM;
 
 public class WcApplicationTest {
 
@@ -24,7 +28,7 @@ public class WcApplicationTest {
     private static final String TEST_FOLDER_NAME = "tmpWcTestFolder/";
     private static final String TEST_PATH = ROOT_PATH + "/" + TEST_FOLDER_NAME;
 
-    private static String stdIn = "-";
+    private static final String stdIn = "-";
 
     static final String NUMBER_FORMAT = " %7d";
 
@@ -49,14 +53,9 @@ public class WcApplicationTest {
         TestUtils.deleteDir(new File(TEST_PATH));
         Files.createDirectories(Paths.get(TEST_PATH));
 
-
         TestUtils.createFile(filePath1, "This is WC Test file 1\n");
         TestUtils.createFile(filePath2, "This is WC Test file 2\n Test for second line\n");
         TestUtils.createFile(filePath3, "This is WC Test file 3\n Test for second line\n Test for third line\n");
-
-//        StringBuilder sb = new StringBuilder();
-//        sb.append("This is WC Test file 1\n").append(EOF).append("This is WC Test file 2\n").append(EOF).append("This is WC Test file 3\n");
-//        TestUtils.createFile(filePathWithEOFs, sb.toString());
     }
 
     @BeforeEach
@@ -140,7 +139,7 @@ public class WcApplicationTest {
         sbExpected.append(String.format(NUMBER_FORMAT, 6)).append(String.format(NUMBER_FORMAT, 30)).append(String.format(NUMBER_FORMAT, 134));
         sbExpected.append(String.format(" %s", "total"));
 
-        Assert.assertEquals(sbExpected.toString(), result);
+        assertEquals(sbExpected.toString(), result);
     }
 
     @Test
@@ -240,26 +239,6 @@ public class WcApplicationTest {
         assertEquals(sbExpected.toString(), result);
     }
 
-//    @Test
-//        // command: wc - - -
-//    void testWc_multipleStdinWithoutFlag_shouldShowWordsLinesBytesWithFilename() throws Exception {
-//        InputStream input = IOUtils.openInputStream(filePathWithEOFs);
-//        String result = wcApplication.countFromFileAndStdin(true, true, true, input, stdIn, stdIn, stdIn);
-//        IOUtils.closeInputStream(input);
-//
-//        StringBuilder sbExpected = new StringBuilder();
-//        sbExpected.append(String.format(NUMBER_FORMAT, 1)).append(String.format(NUMBER_FORMAT, 6)).append(String.format(NUMBER_FORMAT, 23));
-//        sbExpected.append(String.format(" %s", stdIn)).append(StringUtils.STRING_NEWLINE);
-//        sbExpected.append(String.format(NUMBER_FORMAT, 1)).append(String.format(NUMBER_FORMAT, 6)).append(String.format(NUMBER_FORMAT, 23));
-//        sbExpected.append(String.format(" %s", stdIn)).append(StringUtils.STRING_NEWLINE);
-//        sbExpected.append(String.format(NUMBER_FORMAT, 1)).append(String.format(NUMBER_FORMAT, 6)).append(String.format(NUMBER_FORMAT, 23));
-//        sbExpected.append(String.format(" %s", stdIn)).append(StringUtils.STRING_NEWLINE);
-//        sbExpected.append(String.format(NUMBER_FORMAT, 3)).append(String.format(NUMBER_FORMAT, 18)).append(String.format(NUMBER_FORMAT, 69));
-//        sbExpected.append(String.format(" %s", "total"));
-//
-//        Assert.assertEquals(sbExpected.toString(), result);
-//    }
-
     @Test
         // command: wc tmpWcTestFolder
     void testWc_inputFileIsDirectory_shouldDisplayIsDirectoryError() throws Exception {
@@ -282,6 +261,24 @@ public class WcApplicationTest {
         sbExpected.append("wc: ").append(nonExistentFile).append(ERR_NO_SUCH_FILE_OR_DIRECTORY);
 
         assertEquals(sbExpected.toString(), result);
+    }
+
+    @Test
+    void testWc_nullInputStream_shouldThrowException(){
+        assertThrows(WcException.class, () -> wcApplication.countFromStdin(true, true, true, null), ERR_NULL_INPUTSTREAM);
+    }
+
+    @Test
+    void testWc_nullFileNames_shouldThrowException(){
+        assertThrows(WcException.class, () -> wcApplication.countFromFiles(true, true, true, null), ERR_NULL_FILES);
+    }
+
+    @Test
+    void testWc_nullFileNamesAndInputStream_shouldThrowException() throws ShellException {
+        assertThrows(WcException.class, () -> wcApplication.countFromFileAndStdin(true, true, true, null, new String[]{}), ERR_NULL_INPUTSTREAM);
+        InputStream input = IOUtils.openInputStream(filePath1);
+        assertThrows(WcException.class, () -> wcApplication.countFromFileAndStdin(true, true, true, input, null), ERR_NULL_FILES);
+        IOUtils.closeInputStream(input);
     }
 
     // TODO:
