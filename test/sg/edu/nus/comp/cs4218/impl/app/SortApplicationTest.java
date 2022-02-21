@@ -124,6 +124,18 @@ class SortApplicationTest {
         String output = sortApplication.sortFromStdin(false, false, false, input);
         assertEquals("1\n10\n2", output);
     }
-    
 
+    @Test
+    void sortFromStdin_notFirstWordNumberNotReverseOrderCaseIndependentLetters_returnsLines() throws Exception {
+        InputStream input = new ByteArrayInputStream("ab\nA\na\nAB".getBytes());
+        String output = sortApplication.sortFromStdin(false, false, true, input);
+        assertEquals("A\na\nab\nAB", output);
+    }
+
+    @Test
+    void sortFromStdin_notFirstWordNumberNotReverseOrderNotCaseIndependentLetters_returnsLines() throws Exception {
+        InputStream input = new ByteArrayInputStream("ab\nA\na\nAB".getBytes());
+        String output = sortApplication.sortFromStdin(false, false, false, input);
+        assertEquals("A\nAB\na\nab", output);
+    }
 }
