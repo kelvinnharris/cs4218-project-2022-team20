@@ -13,29 +13,30 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 
 class RmApplicationTest {
     private static RmApplication rmApplication;
 
     private static final String ROOT_PATH = Environment.currentDirectory;
-    private static final String TEST_FOLDER_NAME = "tmpRmTestFolder/";
-    private static final String TEST_PATH = ROOT_PATH + "/" + TEST_FOLDER_NAME;
+    private static final String TEST_FOLDER_NAME = "tmpRmTestFolder" + CHAR_FILE_SEP;
+    private static final String TEST_PATH = ROOT_PATH + CHAR_FILE_SEP + TEST_FOLDER_NAME;
 
     @BeforeAll
     static void setUp() throws IOException {
         rmApplication = new RmApplication();
 
         deleteDir(new File(TEST_PATH));
-        Files.createDirectories(Paths.get(TEST_PATH + "folder1/folder2"));
-        Files.createDirectories(Paths.get(TEST_PATH + "folder3/folder4"));
+        Files.createDirectories(Paths.get(TEST_PATH + "folder1" + CHAR_FILE_SEP + "folder2"));
+        Files.createDirectories(Paths.get(TEST_PATH + "folder3" + CHAR_FILE_SEP + "folder4"));
         Files.createDirectories(Paths.get(TEST_PATH + "folder5"));
-        Files.createDirectories(Paths.get(TEST_PATH + "folder6/folder7"));
-        Files.createFile(Paths.get(TEST_PATH + "folder1/file1.txt"));
-        Files.createFile(Paths.get(TEST_PATH + "folder1/file2.iml"));
+        Files.createDirectories(Paths.get(TEST_PATH + "folder6" + CHAR_FILE_SEP + "folder7"));
+        Files.createFile(Paths.get(TEST_PATH + "folder1" + CHAR_FILE_SEP + "file1.txt"));
+        Files.createFile(Paths.get(TEST_PATH + "folder1" + CHAR_FILE_SEP + "file2.iml"));
         Files.createFile(Paths.get(TEST_PATH + "file4.xml"));
         Files.createFile(Paths.get(TEST_PATH + "file5.txt"));
-        Files.createFile(Paths.get(TEST_PATH + "folder3/folder4/file3.txt"));
-        Files.createFile(Paths.get(TEST_PATH + "folder6/folder7/file6.txt"));
+        Files.createFile(Paths.get(TEST_PATH + "folder3" + CHAR_FILE_SEP + "folder4" + CHAR_FILE_SEP + "file3.txt"));
+        Files.createFile(Paths.get(TEST_PATH + "folder6" + CHAR_FILE_SEP + "folder7" + CHAR_FILE_SEP + "file6.txt"));
 
     }
 
@@ -103,7 +104,7 @@ class RmApplicationTest {
 
     @Test
     void remove_notEmptyFolderNotRecursiveFolder_removeFile() throws Exception {
-        String path = TEST_PATH + "folder6/folder7/file6.txt";
+        String path = TEST_PATH + "folder6" + CHAR_FILE_SEP + "folder7" + CHAR_FILE_SEP + "file6.txt";
         rmApplication.remove(false, false, new String[] {path});
         File tempFile = new File(path);
         assertEquals(false, tempFile.exists());
@@ -111,7 +112,7 @@ class RmApplicationTest {
 
     @Test
     void remove_notEmptyFolderNotRecursiveFolder_throwsError() throws Exception {
-        String path = TEST_PATH + "folder6/folder7";
+        String path = TEST_PATH + "folder6" + CHAR_FILE_SEP + "folder7";
         assertThrows(Exception.class, () -> rmApplication.remove(false, false, new String[] {path}));
     }
 }
