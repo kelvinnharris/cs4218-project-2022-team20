@@ -104,7 +104,7 @@ public final class IOUtils {
         List<String> output = new ArrayList<>();
         BufferedReader reader = new BufferedReader(new InputStreamReader(input));
         String line;
-        while ((line = reader.readLine()) != null) {
+        while ((line = reader.readLine()) != null && line.length() != 0) {
             output.add(line);
         }
         return output;

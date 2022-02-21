@@ -7,7 +7,6 @@ import java.util.List;
 
 public interface CutInterface extends Application {
 
-
     /**
      * Cuts out selected portions of each line
      *
@@ -70,4 +69,5 @@ public interface CutInterface extends Application {
      * @throws Exception
      */
     String cutFromStdin(Boolean isCharPo, Boolean isBytePo, Boolean isRange, int startIdx, int endIdx, int[] index, InputStream stdin) throws Exception;
+
 }

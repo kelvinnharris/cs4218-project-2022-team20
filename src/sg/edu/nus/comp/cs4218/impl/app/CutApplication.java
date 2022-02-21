@@ -32,6 +32,21 @@ public class CutApplication implements CutInterface {
      */
     @Override
     public void run(String[] args, InputStream stdin, OutputStream stdout) throws AbstractApplicationException {
+        // Format: cut [Option] [LIST] FILES...
+        if (stdout == null) {
+            throw new CutException(ERR_NULL_STREAMS);
+        }
+        CutArgsParser parser = new CutArgsParser();
+        try {
+            parser.parse(args);
+            parser.parseIndex();
+            if ((parser.isCharPo() && parser.isBytePo()) || (!parser.isCharPo() && !parser.isBytePo())) {
+                String exceptionMessage = ILLEGAL_FLAG_MSG;
+                throw new InvalidArgsException(exceptionMessage);
+            }
+        } catch (InvalidArgsException e) {
+            throw new CutException(e.getMessage());
+        }
 
         // Format: cut [Option] [LIST] FILES...
         if (stdout == null) {
@@ -57,6 +72,7 @@ public class CutApplication implements CutInterface {
                 output.append(cutFromStdin(parser.isCharPo(), parser.isBytePo(), parser.isRange(), parser.getStartIdx(), parser.getEndIdx(), stdin));
             } else {
                 output.append(cutFromFiles(parser.isCharPo(), parser.isBytePo(), parser.isRange(), parser.getStartIdx(), parser.getEndIdx(), parser.getFiles().toArray(new String[0])));
+
             }
         } catch (Exception e) {
             throw new CutException(e.getMessage());//NOPMD
@@ -84,18 +100,18 @@ public class CutApplication implements CutInterface {
 
     }
 
-    /**
-     * Cuts out selected portions of each line
-     *
-     * @param isCharPo Boolean option to cut by character position
-     * @param isBytePo Boolean option to cut by byte position
-     * @param isRange  Boolean option to perform range-based cut
-     * @param startIdx index to begin cut
-     * @param endIdx   index to end cut
-     * @param fileName Array of String of file names
-     * @return
-     * @throws Exception
-     */
+        /**
+         * Cuts out selected portions of each line
+         *
+         * @param isCharPo Boolean option to cut by character position
+         * @param isBytePo Boolean option to cut by byte position
+         * @param isRange  Boolean option to perform range-based cut
+         * @param startIdx index to begin cut
+         * @param endIdx   index to end cut
+         * @param fileName Array of String of file names
+         * @return
+         * @throws Exception
+         */
     @Override
     public String cutFromFiles(Boolean isCharPo, Boolean isBytePo, Boolean isRange, int startIdx, int endIdx, int[] index, InputStream stdin, String... fileName) throws Exception {
         if (fileName == null) {
@@ -168,6 +184,7 @@ public class CutApplication implements CutInterface {
                     counter = 0;
                     charArray = line.toCharArray();
                     for (int i = startIdx; i < endIdx + 1; i++) {
+
                         if (i >= charArray.length) {
                             break;
                         }
@@ -179,6 +196,7 @@ public class CutApplication implements CutInterface {
             } else {
                 for (String line : input) {
                     currArray = new char[len < line.length() ? len : line.length()];
+
                     counter = 0;
                     charArray = line.toCharArray();
                     for (Integer i : res) {
@@ -201,6 +219,7 @@ public class CutApplication implements CutInterface {
                     counter = 0;
                     byteArray = line.getBytes();
                     for (int i = startIdx; i < endIdx + 1; i++) {
+
                         if (i >= byteArray.length) {
                             break;
                         }
@@ -212,6 +231,7 @@ public class CutApplication implements CutInterface {
             } else {
                 for (String line : input) {
                     currArray = new byte[len < line.length() ? len : line.length()];
+
                     counter = 0;
                     byteArray = line.getBytes();
                     for (Integer i : res) {

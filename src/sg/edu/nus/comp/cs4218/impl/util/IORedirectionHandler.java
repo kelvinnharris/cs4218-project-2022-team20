@@ -55,9 +55,6 @@ public class IORedirectionHandler {
             // if current arg is < or >, fast-forward to the next arg to extract the specified file
             String file = argsIterator.next();
 
-            if (isRedirOperator(file)) {
-            }
-
             // handle quoting + globing + command substitution in file arg
             List<String> fileSegment = argumentResolver.resolveOneArgument(file);
             if (fileSegment.size() > 1) {
@@ -66,6 +63,7 @@ public class IORedirectionHandler {
             }
             file = fileSegment.get(0);
 
+            // Handle redir operations
             // replace existing inputStream / outputStream
             if (arg.equals(String.valueOf(CHAR_REDIR_INPUT))) {
                 IOUtils.closeInputStream(inputStream);
@@ -96,6 +94,6 @@ public class IORedirectionHandler {
     }
 
     private boolean isRedirOperator(String str) {
-        return str.equals(String.valueOf(CHAR_REDIR_INPUT));
+        return str.equals(String.valueOf(CHAR_REDIR_INPUT)) || str.equals((String.valueOf(CHAR_REDIR_OUTPUT)));
     }
 }
