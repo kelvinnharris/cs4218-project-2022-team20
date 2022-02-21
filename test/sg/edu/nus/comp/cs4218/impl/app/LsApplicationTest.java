@@ -27,7 +27,7 @@ class LsApplicationTest {
      */
 
     private static LsApplication lsApplication;
-    private static final String NEW_LINE = StringUtils.STRING_NEWLINE;
+    private static final String NEW_LINE = System.lineSeparator();
     private static final String ROOT_PATH = Environment.currentDirectory;
     private static final String TEST_FOLDER_NAME = "tmpLsTestFolder" + CHAR_FILE_SEP + "";
     private static final String TEST_PATH = ROOT_PATH + CHAR_FILE_SEP + TEST_FOLDER_NAME;

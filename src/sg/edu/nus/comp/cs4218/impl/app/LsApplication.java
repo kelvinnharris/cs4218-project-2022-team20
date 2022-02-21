@@ -132,9 +132,9 @@ public class LsApplication implements LsInterface {
                     result.append(StringUtils.isBlank(relativePath) ? PATH_CURR_DIR : relativePath);
 
                     if (Files.isRegularFile(Path.of(relativePath))) {
-                        result.append("\n");
+                        result.append(StringUtils.STRING_NEWLINE);
                     } else {
-                        result.append(":\n");
+                        result.append(":" + StringUtils.STRING_NEWLINE);
                     }
                 }
 
@@ -166,7 +166,7 @@ public class LsApplication implements LsInterface {
                 // do we do then?
                 if (!isRecursive) {
                     result.append(e.getMessage());
-                    result.append('\n');
+                    result.append(StringUtils.STRING_NEWLINE);
                 }
             }
         }
@@ -212,7 +212,7 @@ public class LsApplication implements LsInterface {
         StringBuilder result = new StringBuilder();
         for (String fileName : fileNames) {
             result.append(fileName);
-            result.append('\n');
+            result.append(StringUtils.STRING_NEWLINE);
         }
 
         return result.toString().trim();
@@ -284,7 +284,7 @@ public class LsApplication implements LsInterface {
      */
     private Path resolvePath(String directory) {
         if (System.getProperty("os.name").toLowerCase().contains("win")) {
-            if (directory.charAt(1) == ':' && directory.charAt(2) == '\\') {
+            if (directory.length() > 2 && directory.charAt(1) == ':' && directory.charAt(2) == '\\') {
                 return Paths.get(directory);
             }
         } else {
