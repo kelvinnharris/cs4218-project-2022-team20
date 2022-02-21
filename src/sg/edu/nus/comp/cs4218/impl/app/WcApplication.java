@@ -91,7 +91,7 @@ public class WcApplication implements WcInterface {
     public String countFromFiles(Boolean isBytes, Boolean isLines, Boolean isWords, //NOPMD
                                  String... fileName) throws Exception {
         if (fileName == null) {
-            throw new Exception(ERR_GENERAL);
+            throw new WcException(ERR_NULL_FILES);
         }
         List<String> result = new ArrayList<>();
         List<Result> listRes = new ArrayList<>();
@@ -176,7 +176,7 @@ public class WcApplication implements WcInterface {
     public String countFromStdin(Boolean isBytes, Boolean isLines, Boolean isWords,
                                  InputStream stdin) throws Exception {
         if (stdin == null) {
-            throw new Exception(ERR_NULL_STREAMS);
+            throw new WcException(ERR_NULL_INPUTSTREAM);
         }
         long[] count = getCountReport(stdin); // lines words bytes;
 
@@ -203,8 +203,11 @@ public class WcApplication implements WcInterface {
     public String countFromFileAndStdin(Boolean isBytes, Boolean isLines, Boolean isWords, InputStream stdin, String... fileName) throws Exception {
         // TODO: To implement
         // Only when the [Filename] "-" is used then this function will be called
-        if (stdin == null && fileName == null) {
-            throw new Exception(ERR_GENERAL);
+        if (stdin == null) {
+            throw new WcException(ERR_NULL_INPUTSTREAM);
+        }
+        if (fileName == null) {
+            throw new WcException(ERR_NULL_FILES);
         }
 
         for (String s : fileName) {
@@ -252,7 +255,7 @@ public class WcApplication implements WcInterface {
      */
     public long[] getCountReport(InputStream input) throws Exception {
         if (input == null) {
-            throw new Exception(ERR_NULL_STREAMS);
+            throw new WcException(ERR_NULL_STREAMS);
         }
         long[] result = new long[3]; // lines, words, bytes
 
@@ -302,77 +305,79 @@ public class WcApplication implements WcInterface {
         sb.append(name);
         return sb.toString();
     }
-}
 
-class Result {
-    long bytes = -1;
-    long lines = -1;
-    long words = -1;
+    static class Result {
+        long bytes = -1;
+        long lines = -1;
+        long words = -1;
 
-    String fileName;
+        String fileName;
 
-    boolean isErroneous = false;
-    String errorMessage;
-    Character errorCode;
+        boolean isErroneous = false;
+        String errorMessage;
+        Character errorCode;
 
-    public void setBytes(long bytes) {
-        this.bytes = bytes;
-    }
+        public void setBytes(long bytes) {
+            this.bytes = bytes;
+        }
 
-    public void setLines(long lines) {
-        this.lines = lines;
-    }
+        public void setLines(long lines) {
+            this.lines = lines;
+        }
 
-    public void setWords(long words) {
-        this.words = words;
-    }
+        public void setWords(long words) {
+            this.words = words;
+        }
 
-    public void setIsErroneous(String message, Character errorCode) {
-        this.errorMessage = message;
-        this.isErroneous = true;
-        this.errorCode = errorCode;
-        bytes = 0;
-        lines = 0;
-        words = 0;
-    }
+        public void setIsErroneous(String message, Character errorCode) {
+            this.errorMessage = message;
+            this.isErroneous = true;
+            this.errorCode = errorCode;
+            bytes = 0;
+            lines = 0;
+            words = 0;
+        }
 
-    public Character getErrorCode() {
-        return this.errorCode;
-    }
+        public Character getErrorCode() {
+            return this.errorCode;
+        }
 
-    public boolean getIsErroneous() {
-        return this.isErroneous;
-    }
+        public boolean getIsErroneous() {
+            return this.isErroneous;
+        }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
+        public void setFileName(String fileName) {
+            this.fileName = fileName;
+        }
 
-    @Override
-    public String toString() {
-        if (isErroneous && errorCode != WcApplication.ERR_CODE_IS_DIRECTORY) {
-            return errorMessage;
-        } else if (isErroneous && errorCode == WcApplication.ERR_CODE_IS_DIRECTORY) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(errorMessage);
-            sb.append(STRING_NEWLINE);
-            sb.append((new WcApplication()).getCountReportInString(bytes != -1,lines != -1,words != -1,new long[]{0,0,0}, fileName));
+        @Override
+        public String toString() {
+            if (isErroneous && errorCode != WcApplication.ERR_CODE_IS_DIRECTORY) {
+                return errorMessage;
+            } else if (isErroneous && errorCode == WcApplication.ERR_CODE_IS_DIRECTORY) {
+                StringBuilder sb = new StringBuilder();
+                sb.append(errorMessage);
+                sb.append(STRING_NEWLINE);
+                sb.append((new WcApplication()).getCountReportInString(bytes != -1,lines != -1,words != -1,new long[]{0,0,0}, fileName));
+                return sb.toString();
+            }
+
+            StringBuilder sb = new StringBuilder(); //NOPMD
+            if (lines != -1) {
+                sb.append(String.format(WcApplication.NUMBER_FORMAT, lines));
+            }
+            if (words != -1) {
+                sb.append(String.format(WcApplication.NUMBER_FORMAT, words));
+            }
+            if (bytes != -1) {
+                sb.append(String.format(WcApplication.NUMBER_FORMAT, bytes));
+            }
+            if (fileName != null) {
+                sb.append(String.format(" %s", fileName));
+            }
             return sb.toString();
         }
-
-        StringBuilder sb = new StringBuilder(); //NOPMD
-        if (lines != -1) {
-            sb.append(String.format(WcApplication.NUMBER_FORMAT, lines));
-        }
-        if (words != -1) {
-            sb.append(String.format(WcApplication.NUMBER_FORMAT, words));
-        }
-        if (bytes != -1) {
-            sb.append(String.format(WcApplication.NUMBER_FORMAT, bytes));
-        }
-        if (fileName != null) {
-            sb.append(String.format(" %s", fileName));
-        }
-        return sb.toString();
     }
 }
+
+
