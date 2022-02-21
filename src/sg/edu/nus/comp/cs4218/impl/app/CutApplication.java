@@ -17,6 +17,7 @@ import java.util.List;
 import static sg.edu.nus.comp.cs4218.impl.parser.ArgsParser.ILLEGAL_FLAG_MSG;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_NO_PERM;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 public class CutApplication implements CutInterface {
     CutArgsParser parser;
@@ -170,7 +171,7 @@ public class CutApplication implements CutInterface {
                         currArray[counter] = charArray[i];
                         counter += 1;
                     }
-                    output += new String(currArray) + "\n";
+                    output += new String(currArray) + STRING_NEWLINE;
                 }
             } else {
                 for (String line : input) {
@@ -180,7 +181,7 @@ public class CutApplication implements CutInterface {
                     if (1 <= line.length()) {
                         currArray[0] = charArray[startIdx];
                     }
-                    output += new String(currArray) + "\n";
+                    output += new String(currArray) + STRING_NEWLINE;
                 }
             }
         } else if (isBytePo) {
@@ -199,7 +200,7 @@ public class CutApplication implements CutInterface {
                         currArray[counter] = byteArray[i];
                         counter += 1;
                     }
-                    output += new String(currArray) + "\n";
+                    output += new String(currArray) + STRING_NEWLINE;
                 }
             } else {
                 for (String line : input) {
@@ -209,7 +210,7 @@ public class CutApplication implements CutInterface {
                     if (1 <= line.length()) {
                         currArray[0] = byteArray[startIdx];
                     }
-                    output += new String(currArray) + "\n";
+                    output += new String(currArray) + STRING_NEWLINE;
                 }
             }
         }
