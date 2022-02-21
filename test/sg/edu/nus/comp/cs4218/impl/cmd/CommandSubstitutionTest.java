@@ -63,6 +63,16 @@ class CommandSubstitutionTest {
     }
 
     @Test
+    void testCommandSubstitution_doubleQuoteEchoOutsideBackQuote_testPassed() throws Exception {
+        String inputString = "echo \"`echo 'quote is interpreted as special character'`\"";
+        Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
+
+        command.evaluate(System.in, System.out);
+        final String standardOutput = myOut.toString();
+        assertEquals("quote is interpreted as special character" + StringUtils.STRING_NEWLINE, standardOutput);
+    }
+
+    @Test
     void testCommandSubstitution_doubleQuoteEchoInsideBackQuote_testPassed() throws Exception {
         String inputString = "echo `echo \"'quote is not interpreted as special character'\"`";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
