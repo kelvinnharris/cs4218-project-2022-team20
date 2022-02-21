@@ -1,11 +1,12 @@
 package sg.edu.nus.comp.cs4218.impl.app;
 
-import org.junit.Assert;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Environment;
+import sg.edu.nus.comp.cs4218.exception.CatException;
+import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 import sg.edu.nus.comp.cs4218.impl.util.StringUtils;
 
@@ -16,6 +17,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_NULL_FILES;
+import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_NULL_STREAMS;
 
 public class CatApplicationTest {
     private static CatApplication catApplication;
@@ -26,7 +30,7 @@ public class CatApplicationTest {
     private static final String ERR_IS_A_DIRECTORY = ": Is a directory";
     private static final String ERR_NO_SUCH_FILE_OR_DIRECTORY = ": No such file or directory";
 
-    private static String stdIn = "-";
+    private static final String stdIn = "-";
 
     private static final String NUMBER_FORMAT = "%6d ";
 
@@ -204,5 +208,23 @@ public class CatApplicationTest {
         sbExpected.append("cat: ").append(TEST_FOLDER_NAME).append(ERR_IS_A_DIRECTORY);
 
         assertEquals(sbExpected.toString(), result);
+    }
+
+    @Test
+    void testWc_nullInputStream_shouldThrowException(){
+        assertThrows(CatException.class, () -> catApplication.catStdin( true, null), ERR_NULL_STREAMS);
+    }
+
+    @Test
+    void testWc_nullFileNames_shouldThrowException(){
+        assertThrows(CatException.class, () -> catApplication.catFiles(true, null), ERR_NULL_FILES);
+    }
+
+    @Test
+    void testWc_nullFileNamesAndInputStream_shouldThrowException() throws ShellException {
+        assertThrows(CatException.class, () -> catApplication.catFileAndStdin(true, null, new String[]{}), ERR_NULL_STREAMS);
+        InputStream input = IOUtils.openInputStream(filePath1);
+        assertThrows(CatException.class, () -> catApplication.catFileAndStdin(true, input, null), ERR_NULL_FILES);
+        IOUtils.closeInputStream(input);
     }
 }

@@ -1,6 +1,5 @@
 package sg.edu.nus.comp.cs4218.impl.app;
 
-import org.junit.Assert;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +18,7 @@ import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_NULL_FILES;
-import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_NULL_INPUTSTREAM;
+import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_NULL_STREAMS;
 
 public class WcApplicationTest {
 
@@ -265,7 +264,7 @@ public class WcApplicationTest {
 
     @Test
     void testWc_nullInputStream_shouldThrowException(){
-        assertThrows(WcException.class, () -> wcApplication.countFromStdin(true, true, true, null), ERR_NULL_INPUTSTREAM);
+        assertThrows(WcException.class, () -> wcApplication.countFromStdin(true, true, true, null), ERR_NULL_STREAMS);
     }
 
     @Test
@@ -275,7 +274,7 @@ public class WcApplicationTest {
 
     @Test
     void testWc_nullFileNamesAndInputStream_shouldThrowException() throws ShellException {
-        assertThrows(WcException.class, () -> wcApplication.countFromFileAndStdin(true, true, true, null, new String[]{}), ERR_NULL_INPUTSTREAM);
+        assertThrows(WcException.class, () -> wcApplication.countFromFileAndStdin(true, true, true, null, new String[]{}), ERR_NULL_STREAMS);
         InputStream input = IOUtils.openInputStream(filePath1);
         assertThrows(WcException.class, () -> wcApplication.countFromFileAndStdin(true, true, true, input, null), ERR_NULL_FILES);
         IOUtils.closeInputStream(input);
