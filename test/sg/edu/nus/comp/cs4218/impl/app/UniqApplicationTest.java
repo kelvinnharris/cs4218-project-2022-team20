@@ -1,9 +1,7 @@
 package sg.edu.nus.comp.cs4218.impl.app;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import sg.edu.nus.comp.cs4218.impl.app.args.UniqApplication;
 
 import java.io.*;
 import java.nio.file.Files;

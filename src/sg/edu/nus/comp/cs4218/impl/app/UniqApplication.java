@@ -1,4 +1,4 @@
-package sg.edu.nus.comp.cs4218.impl.app.args;
+package sg.edu.nus.comp.cs4218.impl.app;
 
 import sg.edu.nus.comp.cs4218.app.UniqInterface;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
