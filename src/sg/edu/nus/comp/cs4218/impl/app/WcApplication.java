@@ -45,6 +45,13 @@ public class WcApplication implements WcInterface {
             throw new WcException(ERR_NULL_STREAMS);
         }
 
+        System.out.println("Arguments:");
+        int i = 1;
+        for (String s : args) {
+            System.out.println(i + " " + s);
+            i++;
+        }
+
         WcArgsParser wcArgs = new WcArgsParser();
         try {
             wcArgs.parse(args);
