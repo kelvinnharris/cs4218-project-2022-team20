@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 
 public class CpApplicationTest {
     /* before each file path:
@@ -41,16 +42,16 @@ public class CpApplicationTest {
     private static final String DEST_FOLDER_NAME = "destFolder";
 
     private static final String SRC_FOLDER_PATH = "srcFolder";
-    private static final String SRC_FOLDER1_PATH = "srcFolder/srcFolder1";
-    private static final String SRC_FOLDER2_PATH = "srcFolder/srcFolder1/srcFolder2";
-    private static final String FILE1_PATH = "srcFolder/file1.txt";
-    private static final String FILE2_PATH = "srcFolder/srcFolder1/file2.txt";
-    private static final String FILE3_PATH = "srcFolder/srcFolder1/srcFolder2/file3.xml";
+    private static final String SRC_FOLDER1_PATH = "srcFolder" + CHAR_FILE_SEP + "srcFolder1";
+    private static final String SRC_FOLDER2_PATH = "srcFolder" + CHAR_FILE_SEP + "srcFolder1" + CHAR_FILE_SEP + "srcFolder2";
+    private static final String FILE1_PATH = "srcFolder" + CHAR_FILE_SEP + "file1.txt";
+    private static final String FILE2_PATH = "srcFolder" + CHAR_FILE_SEP + "srcFolder1" + CHAR_FILE_SEP + "file2.txt";
+    private static final String FILE3_PATH = "srcFolder" + CHAR_FILE_SEP + "srcFolder1" + CHAR_FILE_SEP + "srcFolder2" + CHAR_FILE_SEP + "file3.xml";
     private static final String DEST_FOLDER_PATH = "destFolder";
 
 
     @BeforeAll
-    static void setUp() throws IOException {
+    static void setUp() {
         cpApplication = new CpApplication();
     }
 
@@ -76,7 +77,7 @@ public class CpApplicationTest {
     static void tearDown() throws IOException {
         deleteDir(new File(SRC_FOLDER_PATH));
         deleteDir(new File(DEST_FOLDER_PATH));
-        Files.deleteIfExists(Paths.get(ROOT_PATH + "/nonExistent.txt"));
+        Files.deleteIfExists(Paths.get(ROOT_PATH + CHAR_FILE_SEP + "nonExistent.txt"));
     }
 
     static void deleteDir(File file) {
@@ -124,7 +125,7 @@ public class CpApplicationTest {
 
     @Test
     void testCp_copyFilesToFolderSingleFileValid_shouldCopyFilesOver() throws CpException {
-        String newFilePath = DEST_FOLDER_PATH + "/" + FILE1_NAME;
+        String newFilePath = DEST_FOLDER_PATH + CHAR_FILE_SEP + FILE1_NAME;
         cpApplication.cpFilesToFolder(false, DEST_FOLDER_PATH, FILE1_PATH);
         assertTrue(Files.exists(Paths.get(newFilePath)));
         try {
@@ -138,8 +139,8 @@ public class CpApplicationTest {
 
     @Test
     void testCp_copyFilesToFolderMutipleFilesValid_shouldCopyFilesOver() throws CpException {
-        String newFile1Path = DEST_FOLDER_PATH + "/" + FILE1_NAME;
-        String newFile2Path = DEST_FOLDER_PATH + "/" + FILE2_NAME;
+        String newFile1Path = DEST_FOLDER_PATH + CHAR_FILE_SEP + FILE1_NAME;
+        String newFile2Path = DEST_FOLDER_PATH + CHAR_FILE_SEP + FILE2_NAME;
         String[] srcFiles = {FILE1_PATH, FILE2_PATH};
         cpApplication.cpFilesToFolder(false, DEST_FOLDER_PATH, srcFiles);
         assertTrue(Files.exists(Paths.get(newFile1Path)));
@@ -169,21 +170,21 @@ public class CpApplicationTest {
     @Test
     void testCp_copyFolderToEmptyFolderRecursive_shouldCopyWholeFolderOver() throws CpException {
         cpApplication.cpFilesToFolder(true, DEST_FOLDER_PATH, SRC_FOLDER_PATH);
-        assertTrue(Files.exists(Paths.get(DEST_FOLDER_PATH + "/" + SRC_FOLDER_PATH)));
-        assertTrue(Files.exists(Paths.get(DEST_FOLDER_PATH + "/" + SRC_FOLDER1_PATH)));
-        assertTrue(Files.exists(Paths.get(DEST_FOLDER_PATH + "/" + SRC_FOLDER2_PATH)));
-        assertTrue(Files.exists(Paths.get(DEST_FOLDER_PATH + "/" + FILE1_PATH)));
-        assertTrue(Files.exists(Paths.get(DEST_FOLDER_PATH + "/" + FILE2_PATH)));
-        assertTrue(Files.exists(Paths.get(DEST_FOLDER_PATH + "/" + FILE3_PATH)));
+        assertTrue(Files.exists(Paths.get(DEST_FOLDER_PATH + CHAR_FILE_SEP + SRC_FOLDER_PATH)));
+        assertTrue(Files.exists(Paths.get(DEST_FOLDER_PATH + CHAR_FILE_SEP + SRC_FOLDER1_PATH)));
+        assertTrue(Files.exists(Paths.get(DEST_FOLDER_PATH + CHAR_FILE_SEP + SRC_FOLDER2_PATH)));
+        assertTrue(Files.exists(Paths.get(DEST_FOLDER_PATH + CHAR_FILE_SEP + FILE1_PATH)));
+        assertTrue(Files.exists(Paths.get(DEST_FOLDER_PATH + CHAR_FILE_SEP + FILE2_PATH)));
+        assertTrue(Files.exists(Paths.get(DEST_FOLDER_PATH + CHAR_FILE_SEP + FILE3_PATH)));
         try {
             String file1Content = readString(Paths.get(FILE1_PATH));
-            String newFile1Content = readString(Paths.get(DEST_FOLDER_PATH + "/" + FILE1_PATH));
+            String newFile1Content = readString(Paths.get(DEST_FOLDER_PATH + CHAR_FILE_SEP + FILE1_PATH));
             assertEquals(file1Content, newFile1Content);
             String file2Content = readString(Paths.get(FILE2_PATH));
-            String newFile2Content = readString(Paths.get(DEST_FOLDER_PATH + "/" + FILE2_PATH));
+            String newFile2Content = readString(Paths.get(DEST_FOLDER_PATH + CHAR_FILE_SEP + FILE2_PATH));
             assertEquals(file2Content, newFile2Content);
             String file3Content = readString(Paths.get(FILE3_PATH));
-            String newFile3Content = readString(Paths.get(DEST_FOLDER_PATH + "/" + FILE3_PATH));
+            String newFile3Content = readString(Paths.get(DEST_FOLDER_PATH + CHAR_FILE_SEP + FILE3_PATH));
             assertEquals(file3Content, newFile3Content);
         } catch (Exception e) {
             throw new CpException(e.getMessage());
@@ -191,7 +192,7 @@ public class CpApplicationTest {
     }
 
     @Test
-    void testCp_copyFolderToEmptyFolderSelfRecursive_shouldThrowCpException() throws CpException {
+    void testCp_copyFolderToEmptyFolderSelfRecursive_shouldThrowCpException() {
         assertThrows(CpException.class, () -> cpApplication.cpFilesToFolder(true, SRC_FOLDER_PATH, SRC_FOLDER_PATH));
     }
 
@@ -199,11 +200,11 @@ public class CpApplicationTest {
     void testCp_copyFolderToNonEmptyFolder_shouldOverwritePreviousCopy() throws CpException {
         cpApplication.cpFilesToFolder(true, DEST_FOLDER_PATH, SRC_FOLDER2_PATH);
         cpApplication.cpFilesToFolder(true, DEST_FOLDER_PATH, SRC_FOLDER2_PATH);
-        assertTrue(Files.exists(Paths.get(DEST_FOLDER_PATH + "/" + SRC_FOLDER2_NAME)));
-        assertTrue(Files.exists(Paths.get(DEST_FOLDER_PATH + "/" + SRC_FOLDER2_NAME + "/" + FILE3_NAME)));
+        assertTrue(Files.exists(Paths.get(DEST_FOLDER_PATH + CHAR_FILE_SEP + SRC_FOLDER2_NAME)));
+        assertTrue(Files.exists(Paths.get(DEST_FOLDER_PATH + CHAR_FILE_SEP + SRC_FOLDER2_NAME + CHAR_FILE_SEP + FILE3_NAME)));
         try {
             String file3Content = readString(Paths.get(FILE3_PATH));
-            String newFile3Content = readString(Paths.get(DEST_FOLDER_PATH + "/" + SRC_FOLDER2_NAME + "/" + FILE3_NAME));
+            String newFile3Content = readString(Paths.get(DEST_FOLDER_PATH + CHAR_FILE_SEP + SRC_FOLDER2_NAME + CHAR_FILE_SEP + FILE3_NAME));
             assertEquals(file3Content, newFile3Content);
         } catch (Exception e) {
             throw new CpException(e.getMessage());

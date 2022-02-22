@@ -6,7 +6,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.impl.exception.TeeException;
-import sg.edu.nus.comp.cs4218.impl.util.StringUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -20,6 +19,7 @@ import java.nio.file.Paths;
 import static java.nio.file.StandardOpenOption.APPEND;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 public class TeeApplicationTest {
@@ -31,9 +31,9 @@ public class TeeApplicationTest {
     public final InputStream is = new ByteArrayInputStream(input.getBytes());
 
     public static final String FILE1_NAME = "file1.txt";
-    public static final String FILE1_PATH = ROOT_PATH + "/" + FILE1_NAME;
+    public static final String FILE1_PATH = ROOT_PATH + CHAR_FILE_SEP + FILE1_NAME;
     public static final String FILE2_NAME = "file2.txt";
-    public static final String FILE2_PATH = ROOT_PATH + "/" + FILE2_NAME;
+    public static final String FILE2_PATH = ROOT_PATH + CHAR_FILE_SEP + FILE2_NAME;
 
     public static final String[] LINES1 = {"The first file", "The second line"};
     public static final String[] LINES2 = {"The second file", "The second line"};
@@ -145,9 +145,9 @@ public class TeeApplicationTest {
     }
 
     @Test
-    void testTee_teeWithFolderAsInputFile_shouldThrowTeeException() throws TeeException, IOException {
+    void testTee_teeWithFolderAsInputFile_shouldThrowTeeException() throws IOException {
         String folderName = "folder";
-        String folderPath = ROOT_PATH + "/" + folderName;
+        String folderPath = ROOT_PATH + CHAR_FILE_SEP + folderName;
         Files.deleteIfExists(Paths.get(folderPath));
         Files.createDirectories(Paths.get(folderPath));
         assertThrows(TeeException.class, () -> teeApplication.teeFromStdin(false, is, folderName));
@@ -155,7 +155,7 @@ public class TeeApplicationTest {
     }
 
     @Test
-    void testTee_teeWithNonExistentFile_shouldThrowTeeException() throws TeeException, IOException {
+    void testTee_teeWithNonExistentFile_shouldThrowTeeException() {
         assertThrows(TeeException.class, () -> teeApplication.teeFromStdin(false, is, "nonExistent.txt"));
     }
 }

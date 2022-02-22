@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
 
 import static java.nio.file.StandardOpenOption.APPEND;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 public class GrepApplicationTest {
@@ -31,9 +32,9 @@ public class GrepApplicationTest {
     public final InputStream is = new ByteArrayInputStream(input.getBytes());
 
     public static final String FILE1_NAME = "file1.txt";
-    public static final String FILE1_PATH = ROOT_PATH + "/" + FILE1_NAME;
+    public static final String FILE1_PATH = ROOT_PATH + CHAR_FILE_SEP + FILE1_NAME;
     public static final String FILE2_NAME = "file2.txt";
-    public static final String FILE2_PATH = ROOT_PATH + "/" + FILE2_NAME;
+    public static final String FILE2_PATH = ROOT_PATH + CHAR_FILE_SEP + FILE2_NAME;
 
     public static final String[] LINES1 = {"The first file", "The second line", "1000"};
     public static final String[] LINES2 = {"The second file", "The second line", "10"};
