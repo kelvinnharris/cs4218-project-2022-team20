@@ -15,13 +15,14 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 public class PasteApplicationTest {
     private static PasteApplication pasteApplication;
     private static final String ROOT_PATH = Environment.currentDirectory;
     private static final String TEST_FOLDER_NAME = "tmpPasteTestFolder/";
-    private static final String TEST_PATH = ROOT_PATH + "/" + TEST_FOLDER_NAME;
+    private static final String TEST_PATH = ROOT_PATH + CHAR_FILE_SEP + TEST_FOLDER_NAME;
 
     private static final String ERR_IS_A_DIRECTORY = ": Is a directory";
     private static final String ERR_NO_SUCH_FILE_OR_DIRECTORY = ": No such file or directory";
