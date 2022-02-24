@@ -90,6 +90,10 @@ public class ApplicationRunner {
                 application = new WcApplication();
                 System.out.println("[WC] CALLED");
                 break;
+            case APP_PASTE:
+                application = new PasteApplication();
+                System.out.println("[PASTE] CALLED");
+                break;
             default:
                 System.out.println("[ERROR]");
                 throw new ShellException(app + ": " + ERR_INVALID_APP);
