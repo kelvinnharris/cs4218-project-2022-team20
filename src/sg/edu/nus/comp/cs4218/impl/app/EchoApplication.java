@@ -30,7 +30,7 @@ public class EchoApplication implements EchoInterface {
         if (args.length == 0) {
             result = STRING_NEWLINE;
         } else {
-            result = String.join(" ", args).trim();
+            result = String.join(" ", args);
             result += STRING_NEWLINE;
         }
 
