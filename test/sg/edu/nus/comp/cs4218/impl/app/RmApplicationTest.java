@@ -62,7 +62,7 @@ class RmApplicationTest {
     @Test
     void remove_emptyFolderNotRecursiveFolder_removeEmptyFolder() throws Exception {
         String path = TEST_PATH + "folder5";
-        rmApplication.remove(true, false, new String[] {path});
+        rmApplication.remove(true, false, new String[]{path});
         File tempFile = new File(path);
         assertFalse(tempFile.exists());
     }
@@ -70,7 +70,7 @@ class RmApplicationTest {
     @Test
     void remove_emptyFolderNotRecursiveFile_removeFile() throws Exception {
         String path = TEST_PATH + "file4.xml";
-        rmApplication.remove(true, false, new String[] {path});
+        rmApplication.remove(true, false, new String[]{path});
         File tempFile = new File(path);
         assertFalse(tempFile.exists());
     }
@@ -78,7 +78,7 @@ class RmApplicationTest {
     @Test
     void remove_notEmptyFolderRecursiveFolder_removeFolderRecursively() throws Exception {
         String path = TEST_PATH + "folder1";
-        rmApplication.remove(false, true, new String[] {path});
+        rmApplication.remove(false, true, new String[]{path});
         File tempFile = new File(path);
         assertFalse(tempFile.exists());
     }
@@ -86,7 +86,7 @@ class RmApplicationTest {
     @Test
     void remove_notEmptyFolderRecursiveFile_removeFile() throws Exception {
         String path = TEST_PATH + "file5.txt";
-        rmApplication.remove(false, true, new String[] {path});
+        rmApplication.remove(false, true, new String[]{path});
         File tempFile = new File(path);
         assertFalse(tempFile.exists());
     }
@@ -94,7 +94,7 @@ class RmApplicationTest {
     @Test
     void remove_emptyFolderRecursiveFolder_removeFolderRecursively() throws Exception {
         String path = TEST_PATH + "folder3";
-        rmApplication.remove(true, true, new String[] {path});
+        rmApplication.remove(true, true, new String[]{path});
         File tempFile = new File(path);
         assertFalse(tempFile.exists());
     }
@@ -102,7 +102,7 @@ class RmApplicationTest {
     @Test
     void remove_notEmptyFolderNotRecursiveFolder_removeFile() throws Exception {
         String path = TEST_PATH + "folder6" + CHAR_FILE_SEP + "folder7" + CHAR_FILE_SEP + "file6.txt";
-        rmApplication.remove(false, false, new String[] {path});
+        rmApplication.remove(false, false, new String[]{path});
         File tempFile = new File(path);
         assertFalse(tempFile.exists());
     }
@@ -110,6 +110,6 @@ class RmApplicationTest {
     @Test
     void remove_notEmptyFolderNotRecursiveFolder_throwsError() throws Exception {
         String path = TEST_PATH + "folder6" + CHAR_FILE_SEP + "folder7";
-        assertThrows(Exception.class, () -> rmApplication.remove(false, false, new String[] {path}));
+        assertThrows(Exception.class, () -> rmApplication.remove(false, false, new String[]{path}));
     }
 }

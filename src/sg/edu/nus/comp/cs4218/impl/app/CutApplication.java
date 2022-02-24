@@ -23,6 +23,7 @@ public class CutApplication implements CutInterface {
     CutArgsParser parser;
     InputStream stdin;
     int[] index;
+
     /**
      * Runs application with specified input data and specified output stream.
      *
@@ -70,18 +71,18 @@ public class CutApplication implements CutInterface {
     }
 
 
-        /**
-         * Cuts out selected portions of each line
-         *
-         * @param isCharPo Boolean option to cut by character position
-         * @param isBytePo Boolean option to cut by byte position
-         * @param isRange  Boolean option to perform range-based cut
-         * @param startIdx index to begin cut
-         * @param endIdx   index to end cut
-         * @param fileName Array of String of file names
-         * @return
-         * @throws Exception
-         */
+    /**
+     * Cuts out selected portions of each line
+     *
+     * @param isCharPo Boolean option to cut by character position
+     * @param isBytePo Boolean option to cut by byte position
+     * @param isRange  Boolean option to perform range-based cut
+     * @param startIdx index to begin cut
+     * @param endIdx   index to end cut
+     * @param fileName Array of String of file names
+     * @return
+     * @throws Exception
+     */
     @Override
     public String cutFromFiles(Boolean isCharPo, Boolean isBytePo, Boolean isRange, int startIdx, int endIdx, String... fileName) throws Exception {
         if (fileName == null) {
@@ -105,11 +106,13 @@ public class CutApplication implements CutInterface {
                 throw new Exception(ERR_NO_PERM);
             }
             InputStream input = IOUtils.openInputStream(file);
-            lines.addAll(IOUtils.getLinesFromInputStream(input));
-            IOUtils.closeInputStream(input);
+            try {
+                lines.addAll(IOUtils.getLinesFromInputStream(input));
+            } finally {
+                IOUtils.closeInputStream(input);
+            }
         }
-        String output = cutInputString(isCharPo, isBytePo, isRange, startIdx, endIdx, lines);
-        return output;
+        return cutInputString(isCharPo, isBytePo, isRange, startIdx, endIdx, lines);
     }
 
     /**
@@ -131,8 +134,7 @@ public class CutApplication implements CutInterface {
         }
         List<String> lines = IOUtils.getLinesFromInputStream(stdin);
 
-        String output = cutInputString(isCharPo, isBytePo, isRange, startIdx, endIdx, lines);
-        return output;
+        return cutInputString(isCharPo, isBytePo, isRange, startIdx, endIdx, lines);
     }
 
 

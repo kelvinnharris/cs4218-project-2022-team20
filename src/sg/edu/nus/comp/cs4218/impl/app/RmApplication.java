@@ -51,7 +51,7 @@ public class RmApplication implements RmInterface {
      * @param isEmptyFolder Boolean option to delete a folder only if it is empty
      * @param isRecursive   Boolean option to recursively delete the folder contents (traversing
      *                      through all folders inside the specified folder)
-     * @param fileNames      Array of String of file names
+     * @param fileNames     Array of String of file names
      * @throws Exception
      */
     @Override
