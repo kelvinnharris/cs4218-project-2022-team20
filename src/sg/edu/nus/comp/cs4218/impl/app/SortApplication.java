@@ -84,10 +84,12 @@ public class SortApplication implements SortInterface {
         for (String file : fileNames) {
             File node = IOUtils.resolveFilePath(file).toFile();
             if (!node.exists()) {
-                throw new Exception(ERR_FILE_NOT_FOUND);
+                String errorMessage = "cannot read: " + file + ": " + ERR_FILE_NOT_FOUND;
+                throw new Exception(errorMessage);
             }
             if (node.isDirectory()) {
-                throw new Exception(ERR_IS_DIR);
+                String errorMessage = "read failed: " + file + ": " + ERR_IS_DIR;
+                throw new Exception(errorMessage);
             }
             if (!node.canRead()) {
                 throw new Exception(ERR_NO_PERM);

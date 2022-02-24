@@ -14,7 +14,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import static sg.edu.nus.comp.cs4218.impl.parser.ArgsParser.ILLEGAL_FLAG_MSG;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_NO_PERM;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
@@ -41,13 +40,26 @@ public class CutApplication implements CutInterface {
         this.parser = new CutArgsParser();
         try {
             parser.parse(args);
+            if (parser.isCharPo() && parser.isBytePo()) {
+                throw new InvalidArgsException("invalid byte, character or field list");
+            }
+
+            if (!parser.isCharPo() && !parser.isBytePo()) {
+                throw new InvalidArgsException("you must specify a list of bytes, characters, or fields");
+            }
             parser.parseIndex();
             this.index = parser.getIndex();
-            if ((parser.isCharPo() && parser.isBytePo()) || (!parser.isCharPo() && !parser.isBytePo())) {
-                throw new InvalidArgsException(ILLEGAL_FLAG_MSG);
-            }
+
         } catch (InvalidArgsException e) {
             throw new CutException(e.getMessage());
+        } catch (IndexOutOfBoundsException e) {
+            String errorMessage = "option requires an argument -- '";
+            if (parser.isCharPo()) {
+                errorMessage += "c'";
+            } else if (parser.isBytePo()) {
+                errorMessage += "b'";
+            }
+            throw new CutException(errorMessage);
         }
 
         StringBuilder output = new StringBuilder();
@@ -97,13 +109,16 @@ public class CutApplication implements CutInterface {
             }
             File node = IOUtils.resolveFilePath(file).toFile();
             if (!node.exists()) {
-                throw new Exception(ERR_FILE_NOT_FOUND);
+                String errorMessage = file + "': " + ERR_FILE_NOT_FOUND;
+                throw new Exception(errorMessage);
             }
             if (node.isDirectory()) {
-                throw new Exception(ERR_IS_DIR);
+                String errorMessage = file + "': " + ERR_IS_DIR;
+                throw new Exception(errorMessage);
             }
             if (!node.canRead()) {
-                throw new Exception(ERR_NO_PERM);
+                String errorMessage = file + "': " + ERR_NO_PERM;
+                throw new Exception(errorMessage);
             }
             InputStream input = IOUtils.openInputStream(file);
             try {

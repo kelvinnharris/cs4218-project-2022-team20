@@ -73,21 +73,24 @@ public class RmApplication implements RmInterface {
                 File[] contents = node.listFiles();
 
                 if (contents != null && contents.length != 0) {
-
-                    throw new Exception(ERR_DIR_NOT_EMPTY);
+                    String errorMessage = "cannot remove '" + file + "': " + ERR_DIR_NOT_EMPTY;
+                    throw new Exception(errorMessage);
                 }
                 checkRemove = node.delete();
             } else if (node.isDirectory()) {
-                throw new Exception(ERR_IS_DIR);
+                String errorMessage = "cannot remove '" + file + "': " + ERR_IS_DIR;
+                throw new Exception(errorMessage);
             } else if (!node.canRead()) {
-                throw new Exception(ERR_NO_PERM);
+                String errorMessage = "cannot remove '" + file + "': " + ERR_NO_PERM;
+                throw new Exception(errorMessage);
             } else {
                 // if it is a file
                 checkRemove = node.delete();
             }
 
             if (!checkRemove) {
-                throw new RmException("failed to remove");
+                String errorMessage = "cannot remove '" + file;
+                throw new Exception(errorMessage);
             }
         }
     }
