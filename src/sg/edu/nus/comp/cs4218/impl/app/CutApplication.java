@@ -36,22 +36,6 @@ public class CutApplication implements CutInterface {
         if (stdout == null) {
             throw new CutException(ERR_NULL_STREAMS);
         }
-        CutArgsParser parser = new CutArgsParser();
-        try {
-            parser.parse(args);
-            parser.parseIndex();
-            if ((parser.isCharPo() && parser.isBytePo()) || (!parser.isCharPo() && !parser.isBytePo())) {
-                String exceptionMessage = ILLEGAL_FLAG_MSG;
-                throw new InvalidArgsException(exceptionMessage);
-            }
-        } catch (InvalidArgsException e) {
-            throw new CutException(e.getMessage());
-        }
-
-        // Format: cut [Option] [LIST] FILES...
-        if (stdout == null) {
-            throw new CutException(ERR_NULL_STREAMS);
-        }
         this.stdin = stdin;
         this.parser = new CutArgsParser();
         try {
@@ -59,8 +43,7 @@ public class CutApplication implements CutInterface {
             parser.parseIndex();
             this.index = parser.getIndex();
             if ((parser.isCharPo() && parser.isBytePo()) || (!parser.isCharPo() && !parser.isBytePo())) {
-                String exceptionMessage = ILLEGAL_FLAG_MSG;
-                throw new InvalidArgsException(exceptionMessage);
+                throw new InvalidArgsException(ILLEGAL_FLAG_MSG);
             }
         } catch (InvalidArgsException e) {
             throw new CutException(e.getMessage());

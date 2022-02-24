@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 import org.junit.jupiter.api.*;
-import sg.edu.nus.comp.cs4218.exception.CutException;
 
 import java.io.*;
 import java.nio.file.Files;

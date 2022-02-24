@@ -5,7 +5,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Environment;
-import sg.edu.nus.comp.cs4218.exception.RmException;
 
 import java.io.File;
 import java.io.IOException;
@@ -65,8 +64,7 @@ class RmApplicationTest {
         String path = TEST_PATH + "folder5";
         rmApplication.remove(true, false, new String[] {path});
         File tempFile = new File(path);
-        assertEquals(false, tempFile.exists());
-
+        assertFalse(tempFile.exists());
     }
 
     @Test
@@ -74,8 +72,7 @@ class RmApplicationTest {
         String path = TEST_PATH + "file4.xml";
         rmApplication.remove(true, false, new String[] {path});
         File tempFile = new File(path);
-        assertEquals(false, tempFile.exists());
-
+        assertFalse(tempFile.exists());
     }
 
     @Test
@@ -83,7 +80,7 @@ class RmApplicationTest {
         String path = TEST_PATH + "folder1";
         rmApplication.remove(false, true, new String[] {path});
         File tempFile = new File(path);
-        assertEquals(false, tempFile.exists());
+        assertFalse(tempFile.exists());
     }
 
     @Test
@@ -91,7 +88,7 @@ class RmApplicationTest {
         String path = TEST_PATH + "file5.txt";
         rmApplication.remove(false, true, new String[] {path});
         File tempFile = new File(path);
-        assertEquals(false, tempFile.exists());
+        assertFalse(tempFile.exists());
     }
 
     @Test
@@ -99,7 +96,7 @@ class RmApplicationTest {
         String path = TEST_PATH + "folder3";
         rmApplication.remove(true, true, new String[] {path});
         File tempFile = new File(path);
-        assertEquals(false, tempFile.exists());
+        assertFalse(tempFile.exists());
     }
 
     @Test
@@ -107,7 +104,7 @@ class RmApplicationTest {
         String path = TEST_PATH + "folder6" + CHAR_FILE_SEP + "folder7" + CHAR_FILE_SEP + "file6.txt";
         rmApplication.remove(false, false, new String[] {path});
         File tempFile = new File(path);
-        assertEquals(false, tempFile.exists());
+        assertFalse(tempFile.exists());
     }
 
     @Test
