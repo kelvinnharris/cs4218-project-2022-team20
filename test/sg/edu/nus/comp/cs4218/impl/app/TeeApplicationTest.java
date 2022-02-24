@@ -27,8 +27,8 @@ public class TeeApplicationTest {
     private static TeeApplication teeApplication;
     private static final String ROOT_PATH = Environment.currentDirectory;
 
-    public static final String input = "hello" + STRING_NEWLINE + "world" + STRING_NEWLINE +"goodbye" + STRING_NEWLINE + "world" + STRING_NEWLINE;
-    public final InputStream is = new ByteArrayInputStream(input.getBytes());
+    public static final String INPUT = "hello" + STRING_NEWLINE + "world" + STRING_NEWLINE +"goodbye" + STRING_NEWLINE + "world" + STRING_NEWLINE;
+    public final InputStream inputStream = new ByteArrayInputStream(INPUT.getBytes());
 
     public static final String FILE1_NAME = "file1.txt";
     public static final String FILE1_PATH = ROOT_PATH + CHAR_FILE_SEP + FILE1_NAME;
@@ -71,7 +71,7 @@ public class TeeApplicationTest {
         file.delete();
     }
 
-    static void appendToFile(Path file, String[] lines) throws IOException {
+    static void appendToFile(Path file, String... lines) throws IOException {
         for (String line : lines) {
             Files.write(file, (line + STRING_NEWLINE).getBytes(), APPEND);
         }
@@ -84,11 +84,11 @@ public class TeeApplicationTest {
     @Test
     void testTee_teeWithValidFile_shouldOverwritePreviousContent() throws TeeException {
         try {
-            teeApplication.teeFromStdin(false, is, FILE1_NAME);
+            teeApplication.teeFromStdin(false, inputStream, FILE1_NAME);
             String fileContent = readString(Paths.get(FILE1_NAME));
-            assertEquals(input, fileContent);
+            assertEquals(INPUT, fileContent);
         } catch (Exception e) {
-            throw new TeeException(e.getMessage());
+            throw new TeeException(e);
         }
     }
 
@@ -96,29 +96,29 @@ public class TeeApplicationTest {
     void testTee_teeWithValidFiles_shouldOverwritePreviousContent() throws TeeException {
         try {
             String[] files = {FILE1_NAME, FILE2_NAME};
-            teeApplication.teeFromStdin(false, is, files);
+            teeApplication.teeFromStdin(false, inputStream, files);
             String file1Content = readString(Paths.get(FILE1_NAME));
             String file2Content = readString(Paths.get(FILE2_NAME));
-            assertEquals(input, file1Content);
-            assertEquals(input, file2Content);
+            assertEquals(INPUT, file1Content);
+            assertEquals(INPUT, file2Content);
         } catch (Exception e) {
-            throw new TeeException(e.getMessage());
+            throw new TeeException(e);
         }
     }
 
     @Test
     void testTee_teeWithValidFileAppend_shouldAppendToFile() throws TeeException {
         try {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder stringBuilder = new StringBuilder();
             for (String s : LINES1) {
-                sb.append(s).append(STRING_NEWLINE);
+                stringBuilder.append(s).append(STRING_NEWLINE);
             }
-            sb.append(input);
-            teeApplication.teeFromStdin(true, is, FILE1_NAME);
+            stringBuilder.append(INPUT);
+            teeApplication.teeFromStdin(true, inputStream, FILE1_NAME);
             String fileContent = readString(Paths.get(FILE1_NAME));
-            assertEquals(sb.toString(), fileContent);
+            assertEquals(stringBuilder.toString(), fileContent);
         } catch (Exception e) {
-            throw new TeeException(e.getMessage());
+            throw new TeeException(e);
         }
     }
 
@@ -126,21 +126,21 @@ public class TeeApplicationTest {
     @Test
     void testTee_teeWithSameNameFilesAppend_shouldAppendOrderPreserved() throws TeeException {
         try {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder stringBuilder = new StringBuilder();
             for (String s : LINES1) {
-                sb.append(s).append(STRING_NEWLINE);
+                stringBuilder.append(s).append(STRING_NEWLINE);
             }
-            String[] inputWords = input.split(STRING_NEWLINE);
+            String[] inputWords = INPUT.split(STRING_NEWLINE);
             for (String word : inputWords) {
-                sb.append(word).append(STRING_NEWLINE);
-                sb.append(word).append(STRING_NEWLINE);
+                stringBuilder.append(word).append(STRING_NEWLINE);
+                stringBuilder.append(word).append(STRING_NEWLINE);
             }
             String[] files = {FILE1_NAME, FILE1_NAME};
-            teeApplication.teeFromStdin(true, is, files);
+            teeApplication.teeFromStdin(true, inputStream, files);
             String fileContent = readString(Paths.get(FILE1_NAME));
-            assertEquals(sb.toString(), fileContent);
+            assertEquals(stringBuilder.toString(), fileContent);
         } catch (Exception e) {
-            throw new TeeException(e.getMessage());
+            throw new TeeException(e);
         }
     }
 
@@ -150,12 +150,12 @@ public class TeeApplicationTest {
         String folderPath = ROOT_PATH + CHAR_FILE_SEP + folderName;
         Files.deleteIfExists(Paths.get(folderPath));
         Files.createDirectories(Paths.get(folderPath));
-        assertThrows(TeeException.class, () -> teeApplication.teeFromStdin(false, is, folderName));
+        assertThrows(TeeException.class, () -> teeApplication.teeFromStdin(false, inputStream, folderName));
         deleteDir(new File(folderPath));
     }
 
     @Test
     void testTee_teeWithNonExistentFile_shouldThrowTeeException() {
-        assertThrows(TeeException.class, () -> teeApplication.teeFromStdin(false, is, "nonExistent.txt"));
+        assertThrows(TeeException.class, () -> teeApplication.teeFromStdin(false, inputStream, "nonExistent.txt"));
     }
 }

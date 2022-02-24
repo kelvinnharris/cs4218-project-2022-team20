@@ -41,12 +41,12 @@ public class CpApplicationTest {
     private static final String FILE3_NAME = "file3.xml";
     private static final String DEST_FOLDER_NAME = "destFolder";
 
-    private static final String SRC_FOLDER_PATH = "srcFolder";
-    private static final String SRC_FOLDER1_PATH = "srcFolder" + CHAR_FILE_SEP + "srcFolder1";
-    private static final String SRC_FOLDER2_PATH = "srcFolder" + CHAR_FILE_SEP + "srcFolder1" + CHAR_FILE_SEP + "srcFolder2";
-    private static final String FILE1_PATH = "srcFolder" + CHAR_FILE_SEP + "file1.txt";
-    private static final String FILE2_PATH = "srcFolder" + CHAR_FILE_SEP + "srcFolder1" + CHAR_FILE_SEP + "file2.txt";
-    private static final String FILE3_PATH = "srcFolder" + CHAR_FILE_SEP + "srcFolder1" + CHAR_FILE_SEP + "srcFolder2" + CHAR_FILE_SEP + "file3.xml";
+    private static final String SRC_FOLDER_PATH = SRC_FOLDER_NAME;
+    private static final String SRC_FOLDER1_PATH = SRC_FOLDER_NAME + CHAR_FILE_SEP + SRC_FOLDER1_NAME;
+    private static final String SRC_FOLDER2_PATH = SRC_FOLDER_NAME + CHAR_FILE_SEP + SRC_FOLDER1_NAME + CHAR_FILE_SEP + "srcFolder2";
+    private static final String FILE1_PATH = SRC_FOLDER_NAME + CHAR_FILE_SEP + "file1.txt";
+    private static final String FILE2_PATH = SRC_FOLDER_NAME + CHAR_FILE_SEP + SRC_FOLDER1_NAME + CHAR_FILE_SEP + "file2.txt";
+    private static final String FILE3_PATH = SRC_FOLDER_NAME + CHAR_FILE_SEP + SRC_FOLDER1_NAME + CHAR_FILE_SEP + "srcFolder2" + CHAR_FILE_SEP + "file3.xml";
     private static final String DEST_FOLDER_PATH = "destFolder";
 
 
@@ -102,7 +102,7 @@ public class CpApplicationTest {
             String file2Content = readString(Paths.get(FILE2_PATH));
             assertEquals(file1Content, file2Content);
         } catch (Exception e) {
-            throw new CpException(e.getMessage());
+            throw new CpException(e);
         }
     }
 
@@ -119,7 +119,7 @@ public class CpApplicationTest {
             String file2Content = readString(Paths.get("nonExistent.txt"));
             assertEquals(file1Content, file2Content);
         } catch (Exception e) {
-            throw new CpException(e.getMessage());
+            throw new CpException(e);
         }
     }
 
@@ -133,7 +133,7 @@ public class CpApplicationTest {
             String file2Content = readString(Paths.get(newFilePath));
             assertEquals(file1Content, file2Content);
         } catch (Exception e) {
-            throw new CpException(e.getMessage());
+            throw new CpException(e);
         }
     }
 
@@ -153,7 +153,7 @@ public class CpApplicationTest {
             String newFile2Content = readString(Paths.get(newFile2Path));
             assertEquals(file2Content, newFile2Content);
         } catch (Exception e) {
-            throw new CpException(e.getMessage());
+            throw new CpException(e);
         }
     }
 
@@ -187,7 +187,7 @@ public class CpApplicationTest {
             String newFile3Content = readString(Paths.get(DEST_FOLDER_PATH + CHAR_FILE_SEP + FILE3_PATH));
             assertEquals(file3Content, newFile3Content);
         } catch (Exception e) {
-            throw new CpException(e.getMessage());
+            throw new CpException(e);
         }
     }
 
@@ -207,7 +207,7 @@ public class CpApplicationTest {
             String newFile3Content = readString(Paths.get(DEST_FOLDER_PATH + CHAR_FILE_SEP + SRC_FOLDER2_NAME + CHAR_FILE_SEP + FILE3_NAME));
             assertEquals(file3Content, newFile3Content);
         } catch (Exception e) {
-            throw new CpException(e.getMessage());
+            throw new CpException(e);
         }
     }
 }
