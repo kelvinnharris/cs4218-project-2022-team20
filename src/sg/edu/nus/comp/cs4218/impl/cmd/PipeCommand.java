@@ -43,7 +43,7 @@ public class PipeCommand implements Command {
 
             try {
                 nextOutputStream = new ByteArrayOutputStream();
-                if (i == callCommands.size() ) {
+                if (i == callCommands.size() - 1) {
                     nextOutputStream = stdout;
                 }
                 callCommand.evaluate(nextInputStream, nextOutputStream);

@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static sg.edu.nus.comp.cs4218.impl.parser.ArgsParser.ILLEGAL_FLAG_MSG;
@@ -21,7 +20,9 @@ import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_NO_PERM;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 public class CutApplication implements CutInterface {
-
+    CutArgsParser parser;
+    InputStream stdin;
+    int[] index;
     /**
      * Runs application with specified input data and specified output stream.
      *
@@ -35,13 +36,14 @@ public class CutApplication implements CutInterface {
         if (stdout == null) {
             throw new CutException(ERR_NULL_STREAMS);
         }
-        CutArgsParser parser = new CutArgsParser();
+        this.stdin = stdin;
+        this.parser = new CutArgsParser();
         try {
             parser.parse(args);
             parser.parseIndex();
+            this.index = parser.getIndex();
             if ((parser.isCharPo() && parser.isBytePo()) || (!parser.isCharPo() && !parser.isBytePo())) {
-                String exceptionMessage = ILLEGAL_FLAG_MSG;
-                throw new InvalidArgsException(exceptionMessage);
+                throw new InvalidArgsException(ILLEGAL_FLAG_MSG);
             }
         } catch (InvalidArgsException e) {
             throw new CutException(e.getMessage());
@@ -50,9 +52,10 @@ public class CutApplication implements CutInterface {
         StringBuilder output = new StringBuilder();
         try {
             if (parser.getFiles().isEmpty()) {
-                output.append(cutFromStdin(parser.isCharPo(), parser.isBytePo(), parser.isRange(), parser.getStartIdx(), parser.getEndIdx(), parser.getIndex(), stdin));
+                output.append(cutFromStdin(parser.isCharPo(), parser.isBytePo(), parser.isRange(), parser.getStartIdx(), parser.getEndIdx(), stdin));
             } else {
-                output.append(cutFromFiles(parser.isCharPo(), parser.isBytePo(), parser.isRange(), parser.getStartIdx(), parser.getEndIdx(), parser.getIndex(), stdin, parser.getFiles().toArray(new String[0])));
+                output.append(cutFromFiles(parser.isCharPo(), parser.isBytePo(), parser.isRange(), parser.getStartIdx(), parser.getEndIdx(), parser.getFiles().toArray(new String[0])));
+
             }
         } catch (Exception e) {
             throw new CutException(e.getMessage());//NOPMD
@@ -60,12 +63,12 @@ public class CutApplication implements CutInterface {
         try {
             if (!output.toString().isEmpty()) {
                 stdout.write(output.toString().getBytes());
-                //stdout.write(STRING_NEWLINE.getBytes());
             }
         } catch (IOException e) {
             throw new CutException(ERR_WRITE_STREAM);//NOPMD
         }
     }
+
 
         /**
          * Cuts out selected portions of each line
@@ -80,7 +83,7 @@ public class CutApplication implements CutInterface {
          * @throws Exception
          */
     @Override
-    public String cutFromFiles(Boolean isCharPo, Boolean isBytePo, Boolean isRange, int startIdx, int endIdx, int[] index, InputStream stdin, String... fileName) throws Exception {
+    public String cutFromFiles(Boolean isCharPo, Boolean isBytePo, Boolean isRange, int startIdx, int endIdx, String... fileName) throws Exception {
         if (fileName == null) {
             throw new Exception(ERR_NULL_ARGS);
         }
@@ -105,7 +108,7 @@ public class CutApplication implements CutInterface {
             lines.addAll(IOUtils.getLinesFromInputStream(input));
             IOUtils.closeInputStream(input);
         }
-        String output = cutInputString(isCharPo, isBytePo, isRange, startIdx, endIdx, index, lines);
+        String output = cutInputString(isCharPo, isBytePo, isRange, startIdx, endIdx, lines);
         return output;
     }
 
@@ -122,57 +125,46 @@ public class CutApplication implements CutInterface {
      * @throws Exception
      */
     @Override
-    // not done
-    public String cutFromStdin(Boolean isCharPo, Boolean isBytePo, Boolean isRange, int startIdx, int endIdx, int[] index, InputStream stdin) throws Exception {
+    public String cutFromStdin(Boolean isCharPo, Boolean isBytePo, Boolean isRange, int startIdx, int endIdx, InputStream stdin) throws Exception {
         if (stdin == null) {
             throw new Exception(ERR_NULL_STREAMS);
         }
         List<String> lines = IOUtils.getLinesFromInputStream(stdin);
 
-        String output = cutInputString(isCharPo, isBytePo, isRange, startIdx, endIdx, index, lines);
+        String output = cutInputString(isCharPo, isBytePo, isRange, startIdx, endIdx, lines);
         return output;
     }
 
-    @Override
-    public String cutInputString(Boolean isCharPo, Boolean isBytePo, Boolean isRange, int startIdx, int endIdx, int[] index, List<String> input) {
-        Arrays.sort(index);
-        int len = index.length;
-        int[] res;
-        res = removeDuplicates(index, len);
-        len = res.length;
+
+    public String cutInputString(Boolean isCharPo, Boolean isBytePo, Boolean isRange, int startIdx, int endIdx, List<String> input) {
         String output = "";
-        String charsetName = "IBM01140";
         if (isCharPo) {
             char[] charArray;
             char[] currArray;
             int counter;
             if (isRange) {
                 for (String line : input) {
-                    currArray = new char[endIdx - startIdx];
+                    currArray = new char[Math.min(endIdx + 1 - startIdx, line.length())];
                     counter = 0;
                     charArray = line.toCharArray();
-                    for (int i = startIdx; i < endIdx; i++) {
+                    for (int i = startIdx; i < endIdx + 1; i++) {
                         if (i >= charArray.length) {
                             break;
                         }
                         currArray[counter] = charArray[i];
                         counter += 1;
                     }
-                    output += new String(currArray) + "\n";
+                    output += new String(currArray) + STRING_NEWLINE;
                 }
             } else {
                 for (String line : input) {
-                    currArray = new char[len];
-                    counter = 0;
+                    currArray = new char[Math.min(1, line.length())];
+
                     charArray = line.toCharArray();
-                    for (Integer i : res) {
-                        if (i >= charArray.length) {
-                            break;
-                        }
-                        currArray[counter] = charArray[i];
-                        counter += 1;
+                    if (1 <= line.length()) {
+                        currArray[0] = charArray[startIdx];
                     }
-                    output += new String(currArray) + "\n";
+                    output += new String(currArray) + STRING_NEWLINE;
                 }
             }
         } else if (isBytePo) {
@@ -181,56 +173,30 @@ public class CutApplication implements CutInterface {
             int counter;
             if (isRange) {
                 for (String line : input) {
-                    currArray = new byte[endIdx - startIdx];
+                    currArray = new byte[Math.min(endIdx + 1 - startIdx, line.length())];
                     counter = 0;
                     byteArray = line.getBytes();
-                    for (int i = startIdx; i < endIdx; i++) {
+                    for (int i = startIdx; i < endIdx + 1; i++) {
                         if (i >= byteArray.length) {
                             break;
                         }
                         currArray[counter] = byteArray[i];
                         counter += 1;
                     }
-                    output += new String(currArray) + "\n";
+                    output += new String(currArray) + STRING_NEWLINE;
                 }
             } else {
                 for (String line : input) {
-                    currArray = new byte[len];
-                    counter = 0;
+                    currArray = new byte[Math.min(1, line.length())];
+
                     byteArray = line.getBytes();
-                    for (Integer i : res) {
-                        if (i >= byteArray.length) {
-                            break;
-                        }
-                        currArray[counter] = byteArray[i];
-                        counter += 1;
+                    if (1 <= line.length()) {
+                        currArray[0] = byteArray[startIdx];
                     }
-                    output += new String(currArray) + "\n";
+                    output += new String(currArray) + STRING_NEWLINE;
                 }
             }
         }
         return output;
-    }
-
-    public int[] removeDuplicates(int[] arr, int len) {
-        if (len == 0 || len == 1){
-            return arr;
-        }
-        int[] temp = new int[len];
-        int j = 0;
-        for (int i = 0; i < len - 1; i++){
-            if (arr[i] != arr[i + 1]){
-                temp[j++] = arr[i];
-            }
-        }
-        temp[j++] = arr[len - 1];
-        int[] res = new int[j];
-
-        for (int i = 0; i < j; i++){
-            res[i] = temp[i];
-        }
-
-
-        return res;
     }
 }
