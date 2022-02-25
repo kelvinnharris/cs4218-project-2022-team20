@@ -1,11 +1,13 @@
 package sg.edu.nus.comp.cs4218.impl.cmd;
 
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.impl.app.TestUtils;
+import sg.edu.nus.comp.cs4218.impl.app.WcApplication;
 import sg.edu.nus.comp.cs4218.impl.util.*;
 
 import java.io.*;
@@ -38,13 +40,16 @@ class IORedirectionTest {
     private InputStream inputStream;
     private OutputStream outputStream;
 
-    @BeforeEach
-    void setUp() throws IOException {
+    @BeforeAll
+    static void setUp() throws IOException {
         TestUtils.deleteDir(new File(TEST_PATH));
         Files.createDirectories(Paths.get(TEST_PATH));
 
         TestUtils.createFile(FILE_PATH_1, "This is WC Test file 1" + StringUtils.STRING_NEWLINE);
+    }
 
+    @BeforeEach
+    void setUpEach() throws IOException {
         argsList = new ArrayList<>();
         argumentResolver = new ArgumentResolver();
         inputStream = new InputStream() {
