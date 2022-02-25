@@ -101,7 +101,7 @@ class QuotingCommandTest {
     }
 
     @Test
-    void testQuoting_multipleNestingInvalid_testPassed() throws Exception {
+    void testQuoting_multipleNestingInvalid_testFailedWithException() throws Exception {
         String commandString = "`echo \"echo\"` '\"`hello`\" \"`'echo wor`'ld'\"";
         assertThrows(Exception.class, () -> CommandBuilder.parseCommand(commandString, new ApplicationRunner()));
     }
