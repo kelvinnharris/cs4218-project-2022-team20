@@ -19,11 +19,12 @@ import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
+import static sg.edu.nus.comp.cs4218.impl.util.TestConstants.ECHO_PASTE_FOLDER;
 
 class EchoPasteIntegrationTest {
     ByteArrayOutputStream myOut;
     private static final String ROOT_PATH = Environment.currentDirectory;
-    private static final String TEST_FOLDER_NAME = "tmpEchoPasteTestFolder" + CHAR_FILE_SEP;
+    private static final String TEST_FOLDER_NAME = ECHO_PASTE_FOLDER + CHAR_FILE_SEP;
     private static final String TEST_PATH = ROOT_PATH + CHAR_FILE_SEP + TEST_FOLDER_NAME;
 
     @BeforeAll

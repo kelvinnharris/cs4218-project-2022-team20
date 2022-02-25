@@ -30,7 +30,7 @@ class ArgsParserTest {
     @Test
     void testArgsParser_parseLegalFlag_testPassed() throws InvalidArgsException {
         argsParser.legalFlags.add('z');
-        String[] args = new String[]{ "-z" };
+        String[] args = new String[]{"-z"};
         argsParser.parse(args);
 
         assertEquals(1, argsParser.flags.size());
@@ -45,7 +45,7 @@ class ArgsParserTest {
         argsParser.legalFlags.add('B');
         argsParser.legalFlags.add('c');
 
-        String[] args = new String[]{ "hello", "-BBc", "world!", "-B", "-" };
+        String[] args = new String[]{"hello", "-BBc", "world!", "-B", "-"};
         argsParser.parse(args);
 
         assertEquals(2, argsParser.flags.size());
@@ -62,13 +62,13 @@ class ArgsParserTest {
     void testArgsParser_parseInvalidFlagDifferentCase_throwsException() throws InvalidArgsException {
         argsParser.legalFlags.add('Z');
 
-        String[] args = new String[]{ "-z" };
+        String[] args = new String[]{"-z"};
         assertThrows(InvalidArgsException.class, () -> argsParser.parse(args));
     }
 
     @Test
     void testArgsParser_parseInvalidFlag_throwsException() throws InvalidArgsException {
-        String[] args = new String[]{ "-z" };
+        String[] args = new String[]{"-z"};
         assertThrows(InvalidArgsException.class, () -> argsParser.parse(args));
     }
 }

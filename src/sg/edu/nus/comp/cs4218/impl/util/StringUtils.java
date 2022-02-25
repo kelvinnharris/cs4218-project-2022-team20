@@ -9,6 +9,7 @@ public final class StringUtils {
     public static final String STRING_CURR_DIR = ".";
     public static final String STRING_PARENT_DIR = "..";
     public static final String STRING_TAB = "\t";
+    public static final String STRING_COLON = ":";
     public static final char CHAR_FILE_SEP = File.separatorChar;
     public static final char CHAR_TAB = '\t';
     public static final char CHAR_SPACE = ' ';
@@ -53,11 +54,7 @@ public final class StringUtils {
             return true;
         }
 
-        if (str.trim().length() == 0) {
-            return true;
-        }
-
-        return false;
+        return str.trim().isBlank();
     }
 
     /**

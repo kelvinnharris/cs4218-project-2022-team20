@@ -18,11 +18,12 @@ import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
+import static sg.edu.nus.comp.cs4218.impl.util.TestConstants.CMD_SUBS_FOLDER;
 
 class CommandSubstitutionTest {
     ByteArrayOutputStream myOut;
     private static final String ROOT_PATH = Environment.currentDirectory;
-    private static final String TEST_FOLDER_NAME = "tmpCmdSubsTestFolder" + CHAR_FILE_SEP + "";
+    private static final String TEST_FOLDER_NAME = CMD_SUBS_FOLDER + CHAR_FILE_SEP;
     private static final String TEST_PATH = ROOT_PATH + CHAR_FILE_SEP + TEST_FOLDER_NAME;
 
     @BeforeAll
