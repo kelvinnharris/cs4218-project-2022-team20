@@ -27,26 +27,26 @@ public class WcApplicationTest {
     private static final String TEST_FOLDER_NAME = "tmpWcTestFolder" + StringUtils.CHAR_FILE_SEP;
     private static final String TEST_PATH = ROOT_PATH + StringUtils.CHAR_FILE_SEP + TEST_FOLDER_NAME;
 
-    private static final String stdIn = "-";
+    private static final String STDIN = "-";
 
     static final String NUMBER_FORMAT = " %7d";
+    static final String STRING_WC = "wc: ";
+    static final String STRING_FORMAT = " %s";
+    static final String TOTAL = "total";
 
-    private static final String nonExistentFile = "wc";
+    private static final String NON_EXISTENT_FILE = "wc";
 
-    private static final String fileName1 = "test1.txt";
-    private static final String filePath1 = TEST_FOLDER_NAME + fileName1;
-    private static final String fileName2 = "test2.txt";
-    private static final String filePath2 = TEST_FOLDER_NAME + fileName2;
-    private static final String fileName3 = "test3.txt";
-    private static final String filePath3 = TEST_FOLDER_NAME + fileName3;
-    private static final String fileNameStar1 = "testStar1.txt";
-    private static final String fileNameStar2 = "testStar2.txt";
-    private static final String filePathAllTextFiles = "*.txt";
-    private static final String fileNameWithEOFs = "testEOFs.txt";
-    private static final String filePathWithEOFs = TEST_FOLDER_NAME + fileNameWithEOFs;
+    private static final String FILE_NAME_1 = "test1.txt";
+    private static final String FILE_PATH_1 = TEST_FOLDER_NAME + FILE_NAME_1;
+    private static final String FILE_NAME_2 = "test2.txt";
+    private static final String FILE_PATH_2 = TEST_FOLDER_NAME + FILE_NAME_2;
+    private static final String FILE_NAME_3 = "test3.txt";
+    private static final String FILE_PATH_3 = TEST_FOLDER_NAME + FILE_NAME_3;
+    private static final String FILE_NAME_STAR1 = "testStar1.txt";
+    private static final String FILE_NAME_STAR2 = "testStar2.txt";
 
-    private static final String ERR_IS_A_DIRECTORY = ": Is a directory";
-    private static final String ERR_NO_SUCH_FILE_OR_DIRECTORY = ": No such file or directory";
+    private static final String ERR_IS_DIRECTORY = ": Is a directory";
+    private static final String ERR_NOT_FOUND = ": No such file or directory";
 
     @BeforeAll
     static void setUp() throws IOException {
@@ -54,14 +54,14 @@ public class WcApplicationTest {
         TestUtils.deleteDir(new File(TEST_PATH));
         Files.createDirectories(Paths.get(TEST_PATH));
 
-        TestUtils.createFile(filePath1, "This is WC Test file 1" + StringUtils.STRING_NEWLINE);
-        TestUtils.createFile(filePath2, "This is WC Test file 2" + StringUtils.STRING_NEWLINE + " Test for second line" + StringUtils.STRING_NEWLINE);
-        TestUtils.createFile(filePath3, "This is WC Test file 3" + StringUtils.STRING_NEWLINE
+        TestUtils.createFile(FILE_PATH_1, "This is WC Test file 1" + StringUtils.STRING_NEWLINE);
+        TestUtils.createFile(FILE_PATH_2, "This is WC Test file 2" + StringUtils.STRING_NEWLINE + " Test for second line" + StringUtils.STRING_NEWLINE);
+        TestUtils.createFile(FILE_PATH_3, "This is WC Test file 3" + StringUtils.STRING_NEWLINE
                 + " Test for second line" + StringUtils.STRING_NEWLINE
                 + " Test for third line" + StringUtils.STRING_NEWLINE);
 
-        TestUtils.createFile(fileNameStar1, "This is test star 1" + StringUtils.STRING_NEWLINE);
-        TestUtils.createFile(fileNameStar2, "This is test star 2" + StringUtils.STRING_NEWLINE
+        TestUtils.createFile(FILE_NAME_STAR1, "This is test star 1" + StringUtils.STRING_NEWLINE);
+        TestUtils.createFile(FILE_NAME_STAR2, "This is test star 2" + StringUtils.STRING_NEWLINE
                 + "line 2" + StringUtils.STRING_NEWLINE);
     }
 
@@ -75,26 +75,25 @@ public class WcApplicationTest {
     @AfterAll
     static void tearDown() {
         TestUtils.deleteDir(new File(TEST_PATH));
-        TestUtils.deleteDir(new File(fileNameStar1));
-        TestUtils.deleteDir(new File(fileNameStar2));
+        TestUtils.deleteDir(new File(FILE_NAME_STAR1));
+        TestUtils.deleteDir(new File(FILE_NAME_STAR2));
     }
 
     @Test
     // command: wc tmpWcTestFolder/test1.txt
     void testWc_fileInputWithoutFlag_shouldShowWordsLinesBytesWithFilename() throws Exception {
-        String result = wcApplication.countFromFiles(true, true, true, filePath1);
+        String result = wcApplication.countFromFiles(true, true, true, FILE_PATH_1);
 
-        StringBuilder sbExpected = new StringBuilder();
-        sbExpected.append(String.format(NUMBER_FORMAT, 1)).append(String.format(NUMBER_FORMAT, 6)).append(String.format(NUMBER_FORMAT, 24));
-        sbExpected.append(String.format(" %s", filePath1));
+        String sbExpected = String.format(NUMBER_FORMAT, 1) + String.format(NUMBER_FORMAT, 6) + String.format(NUMBER_FORMAT, 24) +
+                String.format(STRING_FORMAT, FILE_PATH_1);
 
-        assertEquals(sbExpected.toString(), result);
+        assertEquals(sbExpected, result);
     }
 
     @Test
     // command: wc
     void testWc_noFileArgumentsWithoutFlag_shouldShowWordsLinesBytesWithFilename() throws Exception {
-        InputStream input = IOUtils.openInputStream(filePath1);
+        InputStream input = IOUtils.openInputStream(FILE_PATH_1); // NOPMD
         String result = wcApplication.countFromStdin(true, true, true, input);
         IOUtils.closeInputStream(input);
 
@@ -104,148 +103,139 @@ public class WcApplicationTest {
     @Test
     // command: wc -
     void testWc_stdInFileArgumentWithoutFlag_shouldShowWordsLinesBytesWithFilename() throws Exception {
-        InputStream input = IOUtils.openInputStream(filePath1);
-        String result = wcApplication.countFromFileAndStdin(true, true, true, input, stdIn);
+        InputStream input = IOUtils.openInputStream(FILE_PATH_1); // NOPMD
+        String result = wcApplication.countFromFileAndStdin(true, true, true, input, STDIN);
         IOUtils.closeInputStream(input);
 
-        StringBuilder sbExpected = new StringBuilder();
-        sbExpected.append(String.format(NUMBER_FORMAT, 1)).append(String.format(NUMBER_FORMAT, 6)).append(String.format(NUMBER_FORMAT, 24));
-        sbExpected.append(String.format(" %s", stdIn));
+        String sbExpected = String.format(NUMBER_FORMAT, 1) + String.format(NUMBER_FORMAT, 6) + String.format(NUMBER_FORMAT, 24) +
+                String.format(STRING_FORMAT, STDIN);
 
-        assertEquals(sbExpected.toString(), result);
+        assertEquals(sbExpected, result);
     }
 
     @Test
     // command: wc tmpWcTestFolder/test1.txt tmpWcTestFolder/test2.txt
     void testWc_multipleFilesFromSameDirectoryInputWithoutFlag_shouldShowWordsLinesBytesWithFilename() throws Exception {
-        String result = wcApplication.countFromFiles(true, true, true, new String[]{filePath1,filePath2});
+        String result = wcApplication.countFromFiles(true, true, true, new String[]{FILE_PATH_1, FILE_PATH_2});
 
-        StringBuilder sbExpected = new StringBuilder();
-        sbExpected.append(String.format(NUMBER_FORMAT, 1)).append(String.format(NUMBER_FORMAT, 6)).append(String.format(NUMBER_FORMAT, 24));
-        sbExpected.append(String.format(" %s", filePath1)).append(StringUtils.STRING_NEWLINE);
-        sbExpected.append(String.format(NUMBER_FORMAT, 2)).append(String.format(NUMBER_FORMAT, 10)).append(String.format(NUMBER_FORMAT, 47));
-        sbExpected.append(String.format(" %s", filePath2)).append(StringUtils.STRING_NEWLINE);
-        sbExpected.append(String.format(NUMBER_FORMAT, 3)).append(String.format(NUMBER_FORMAT, 16)).append(String.format(NUMBER_FORMAT, 71));
-        sbExpected.append(String.format(" %s", "total"));
+        String sbExpected = String.format(NUMBER_FORMAT, 1) + String.format(NUMBER_FORMAT, 6) + String.format(NUMBER_FORMAT, 24) +
+                String.format(STRING_FORMAT, FILE_PATH_1) + StringUtils.STRING_NEWLINE +
+                String.format(NUMBER_FORMAT, 2) + String.format(NUMBER_FORMAT, 10) + String.format(NUMBER_FORMAT, 47) +
+                String.format(STRING_FORMAT, FILE_PATH_2) + StringUtils.STRING_NEWLINE +
+                String.format(NUMBER_FORMAT, 3) + String.format(NUMBER_FORMAT, 16) + String.format(NUMBER_FORMAT, 71) +
+                String.format(STRING_FORMAT, TOTAL);
 
-        assertEquals(sbExpected.toString(), result);
+        assertEquals(sbExpected, result);
     }
 
     @Test
         // command: wc tmpWcTestFolder/test1.txt tmpWcTestFolder/test2.txt -
     void testWc_multipleFilesFromSameDirectoryAndStandardInputWithoutFlag_shouldShowWordsLinesBytesWithFilename() throws Exception {
-        InputStream input = IOUtils.openInputStream(filePath3);
-        String result = wcApplication.countFromFileAndStdin(true, true, true, input, filePath1,filePath2,stdIn);
+        InputStream input = IOUtils.openInputStream(FILE_PATH_3); // NOPMD
+        String result = wcApplication.countFromFileAndStdin(true, true, true, input, FILE_PATH_1, FILE_PATH_2, STDIN);
         IOUtils.closeInputStream(input);
 
-        StringBuilder sbExpected = new StringBuilder();
-        sbExpected.append(String.format(NUMBER_FORMAT, 1)).append(String.format(NUMBER_FORMAT, 6)).append(String.format(NUMBER_FORMAT, 24));
-        sbExpected.append(String.format(" %s", filePath1)).append(StringUtils.STRING_NEWLINE);
-        sbExpected.append(String.format(NUMBER_FORMAT, 2)).append(String.format(NUMBER_FORMAT, 10)).append(String.format(NUMBER_FORMAT, 47));
-        sbExpected.append(String.format(" %s", filePath2)).append(StringUtils.STRING_NEWLINE);
-        sbExpected.append(String.format(NUMBER_FORMAT, 3)).append(String.format(NUMBER_FORMAT, 14)).append(String.format(NUMBER_FORMAT, 69));
-        sbExpected.append(String.format(" %s", stdIn)).append(StringUtils.STRING_NEWLINE);
-        sbExpected.append(String.format(NUMBER_FORMAT, 6)).append(String.format(NUMBER_FORMAT, 30)).append(String.format(NUMBER_FORMAT, 140));
-        sbExpected.append(String.format(" %s", "total"));
+        String sbExpected = String.format(NUMBER_FORMAT, 1) + String.format(NUMBER_FORMAT, 6) + String.format(NUMBER_FORMAT, 24) +
+                String.format(STRING_FORMAT, FILE_PATH_1) + StringUtils.STRING_NEWLINE +
+                String.format(NUMBER_FORMAT, 2) + String.format(NUMBER_FORMAT, 10) + String.format(NUMBER_FORMAT, 47) +
+                String.format(STRING_FORMAT, FILE_PATH_2) + StringUtils.STRING_NEWLINE +
+                String.format(NUMBER_FORMAT, 3) + String.format(NUMBER_FORMAT, 14) + String.format(NUMBER_FORMAT, 69) +
+                String.format(STRING_FORMAT, STDIN) + StringUtils.STRING_NEWLINE +
+                String.format(NUMBER_FORMAT, 6) + String.format(NUMBER_FORMAT, 30) + String.format(NUMBER_FORMAT, 140) +
+                String.format(STRING_FORMAT, TOTAL);
 
-        assertEquals(sbExpected.toString(), result);
+        assertEquals(sbExpected, result);
     }
 
     @Test
         // command: wc tmpWcTestFolder/test1.txt wc -
     void testWc_singleFileAndNonExistentFilesAndStandardInputWithoutFlag_shouldShowWordsLinesBytesWithFilename() throws Exception {
-        InputStream input = IOUtils.openInputStream(filePath3);
-        String result = wcApplication.countFromFileAndStdin(true, true, true, input, filePath1,nonExistentFile,stdIn);
+        InputStream input = IOUtils.openInputStream(FILE_PATH_3); // NOPMD
+        String result = wcApplication.countFromFileAndStdin(true, true, true, input, FILE_PATH_1, NON_EXISTENT_FILE, STDIN);
         IOUtils.closeInputStream(input);
 
-        StringBuilder sbExpected = new StringBuilder();
-        sbExpected.append(String.format(NUMBER_FORMAT, 1)).append(String.format(NUMBER_FORMAT, 6)).append(String.format(NUMBER_FORMAT, 24));
-        sbExpected.append(String.format(" %s", filePath1)).append(StringUtils.STRING_NEWLINE);
-        sbExpected.append("wc: ").append(nonExistentFile).append(ERR_NO_SUCH_FILE_OR_DIRECTORY).append(StringUtils.STRING_NEWLINE);
-        sbExpected.append(String.format(NUMBER_FORMAT, 3)).append(String.format(NUMBER_FORMAT, 14)).append(String.format(NUMBER_FORMAT, 69));
-        sbExpected.append(String.format(" %s", stdIn)).append(StringUtils.STRING_NEWLINE);
-        sbExpected.append(String.format(NUMBER_FORMAT, 4)).append(String.format(NUMBER_FORMAT, 20)).append(String.format(NUMBER_FORMAT, 93));
-        sbExpected.append(String.format(" %s", "total"));
+        String sbExpected = String.format(NUMBER_FORMAT, 1) + String.format(NUMBER_FORMAT, 6) + String.format(NUMBER_FORMAT, 24) +
+                String.format(STRING_FORMAT, FILE_PATH_1) + StringUtils.STRING_NEWLINE +
+                STRING_WC + NON_EXISTENT_FILE + ERR_NOT_FOUND + StringUtils.STRING_NEWLINE +
+                String.format(NUMBER_FORMAT, 3) + String.format(NUMBER_FORMAT, 14) + String.format(NUMBER_FORMAT, 69) +
+                String.format(STRING_FORMAT, STDIN) + StringUtils.STRING_NEWLINE +
+                String.format(NUMBER_FORMAT, 4) + String.format(NUMBER_FORMAT, 20) + String.format(NUMBER_FORMAT, 93) +
+                String.format(STRING_FORMAT, TOTAL);
 
-        assertEquals(sbExpected.toString(), result);
+        assertEquals(sbExpected, result);
     }
 
     @Test
         // command: wc - - - < tmpWcTestFolder/test1.txt
     void testWc_InputRedirectionWithoutFlag_shouldShowWordsLinesBytesWithFilename() throws Exception {
-        InputStream input = IOUtils.openInputStream(filePath1);
-        String result = wcApplication.countFromFileAndStdin(true, true, true, input, stdIn,stdIn,stdIn);
+        InputStream input = IOUtils.openInputStream(FILE_PATH_1); // NOPMD
+        String result = wcApplication.countFromFileAndStdin(true, true, true, input, STDIN, STDIN, STDIN);
         IOUtils.closeInputStream(input);
 
-        StringBuilder sbExpected = new StringBuilder();
-        sbExpected.append(String.format(NUMBER_FORMAT, 1)).append(String.format(NUMBER_FORMAT, 6)).append(String.format(NUMBER_FORMAT, 24));
-        sbExpected.append(String.format(" %s", stdIn)).append(StringUtils.STRING_NEWLINE);
-        sbExpected.append(String.format(NUMBER_FORMAT, 0)).append(String.format(NUMBER_FORMAT, 0)).append(String.format(NUMBER_FORMAT, 0));
-        sbExpected.append(String.format(" %s", stdIn)).append(StringUtils.STRING_NEWLINE);
-        sbExpected.append(String.format(NUMBER_FORMAT, 0)).append(String.format(NUMBER_FORMAT, 0)).append(String.format(NUMBER_FORMAT, 0));
-        sbExpected.append(String.format(" %s", stdIn)).append(StringUtils.STRING_NEWLINE);
-        sbExpected.append(String.format(NUMBER_FORMAT, 1)).append(String.format(NUMBER_FORMAT, 6)).append(String.format(NUMBER_FORMAT, 24));
-        sbExpected.append(String.format(" %s", "total"));
+        String sbExpected = String.format(NUMBER_FORMAT, 1) + String.format(NUMBER_FORMAT, 6) + String.format(NUMBER_FORMAT, 24) +
+                String.format(STRING_FORMAT, STDIN) + StringUtils.STRING_NEWLINE +
+                String.format(NUMBER_FORMAT, 0) + String.format(NUMBER_FORMAT, 0) + String.format(NUMBER_FORMAT, 0) +
+                String.format(STRING_FORMAT, STDIN) + StringUtils.STRING_NEWLINE +
+                String.format(NUMBER_FORMAT, 0) + String.format(NUMBER_FORMAT, 0) + String.format(NUMBER_FORMAT, 0) +
+                String.format(STRING_FORMAT, STDIN) + StringUtils.STRING_NEWLINE +
+                String.format(NUMBER_FORMAT, 1) + String.format(NUMBER_FORMAT, 6) + String.format(NUMBER_FORMAT, 24) +
+                String.format(STRING_FORMAT, TOTAL);
 
-        assertEquals(sbExpected.toString(), result);
+        assertEquals(sbExpected, result);
     }
 
     @Test
         // command: wc tmpWcTestFolder wc - tmpWcTestFolder/test1.txt
     void testWc_argumentsFromDirectoryNonExistentFileStdInAndSingleFileWithoutFlag_shouldShowWordsLinesBytesWithFilename() throws Exception {
-        InputStream input = IOUtils.openInputStream(filePath1);
-        String result = wcApplication.countFromFileAndStdin(true, true, true, input, TEST_FOLDER_NAME,nonExistentFile,stdIn,filePath2);
+        InputStream input = IOUtils.openInputStream(FILE_PATH_1); // NOPMD
+        String result = wcApplication.countFromFileAndStdin(true, true, true, input, TEST_FOLDER_NAME, NON_EXISTENT_FILE, STDIN, FILE_PATH_2);
         IOUtils.closeInputStream(input);
 
-        StringBuilder sbExpected = new StringBuilder();
-        sbExpected.append("wc: ").append(TEST_FOLDER_NAME).append(ERR_IS_A_DIRECTORY).append(StringUtils.STRING_NEWLINE);
-        sbExpected.append(String.format(NUMBER_FORMAT, 0)).append(String.format(NUMBER_FORMAT, 0)).append(String.format(NUMBER_FORMAT, 0));
-        sbExpected.append(String.format(" %s", TEST_FOLDER_NAME)).append(StringUtils.STRING_NEWLINE);
-        sbExpected.append("wc: ").append(nonExistentFile).append(ERR_NO_SUCH_FILE_OR_DIRECTORY).append(StringUtils.STRING_NEWLINE);
-        sbExpected.append(String.format(NUMBER_FORMAT, 1)).append(String.format(NUMBER_FORMAT, 6)).append(String.format(NUMBER_FORMAT, 24));
-        sbExpected.append(String.format(" %s", stdIn)).append(StringUtils.STRING_NEWLINE);
-        sbExpected.append(String.format(NUMBER_FORMAT, 2)).append(String.format(NUMBER_FORMAT, 10)).append(String.format(NUMBER_FORMAT, 47));
-        sbExpected.append(String.format(" %s", filePath2)).append(StringUtils.STRING_NEWLINE);
-        sbExpected.append(String.format(NUMBER_FORMAT, 3)).append(String.format(NUMBER_FORMAT, 16)).append(String.format(NUMBER_FORMAT, 71));
-        sbExpected.append(String.format(" %s", "total"));
+        String sbExpected = STRING_WC + TEST_FOLDER_NAME + ERR_IS_DIRECTORY + StringUtils.STRING_NEWLINE +
+                String.format(NUMBER_FORMAT, 0) + String.format(NUMBER_FORMAT, 0) + String.format(NUMBER_FORMAT, 0) +
+                String.format(STRING_FORMAT, TEST_FOLDER_NAME) + StringUtils.STRING_NEWLINE +
+                STRING_WC + NON_EXISTENT_FILE + ERR_NOT_FOUND + StringUtils.STRING_NEWLINE +
+                String.format(NUMBER_FORMAT, 1) + String.format(NUMBER_FORMAT, 6) + String.format(NUMBER_FORMAT, 24) +
+                String.format(STRING_FORMAT, STDIN) + StringUtils.STRING_NEWLINE +
+                String.format(NUMBER_FORMAT, 2) + String.format(NUMBER_FORMAT, 10) + String.format(NUMBER_FORMAT, 47) +
+                String.format(STRING_FORMAT, FILE_PATH_2) + StringUtils.STRING_NEWLINE +
+                String.format(NUMBER_FORMAT, 3) + String.format(NUMBER_FORMAT, 16) + String.format(NUMBER_FORMAT, 71) +
+                String.format(STRING_FORMAT, TOTAL);
 
-        assertEquals(sbExpected.toString(), result);
+        assertEquals(sbExpected, result);
     }
 
     @Test
         // command: wc tmpWcTestFolder/test1.txt -l
     void testWc_fileInputWithLineFlag_shouldShowLinesWithFilename() throws Exception {
-        String result = wcApplication.countFromFiles(false, true, false, filePath1);
+        String result = wcApplication.countFromFiles(false, true, false, FILE_PATH_1);
 
-        StringBuilder sbExpected = new StringBuilder();
-        sbExpected.append(String.format(NUMBER_FORMAT, 1));
-        sbExpected.append(String.format(" %s", filePath1));
+        String sbExpected = String.format(NUMBER_FORMAT, 1) +
+                String.format(STRING_FORMAT, FILE_PATH_1);
 
-        assertEquals(sbExpected.toString(), result);
+        assertEquals(sbExpected, result);
     }
 
     @Test
         // command: wc tmpWcTestFolder/test1.txt -w
     void testWc_fileInputWithWordFlag_shouldShowWordsWithFilename() throws Exception {
-        String result = wcApplication.countFromFiles(true, false, false, filePath1);
+        String result = wcApplication.countFromFiles(true, false, false, FILE_PATH_1);
 
-        StringBuilder sbExpected = new StringBuilder();
-        sbExpected.append(String.format(NUMBER_FORMAT, 24));
-        sbExpected.append(String.format(" %s", filePath1));
+        String sbExpected = String.format(NUMBER_FORMAT, 24) +
+                String.format(STRING_FORMAT, FILE_PATH_1);
 
-        assertEquals(sbExpected.toString(), result);
+        assertEquals(sbExpected, result);
     }
 
     @Test
         // command: wc tmpWcTestFolder/test1.txt -c
     void testWc_fileInputWithByteFlag_shouldShowBytesWithFilename() throws Exception {
-        String result = wcApplication.countFromFiles(false, false, true, filePath1);
+        String result = wcApplication.countFromFiles(false, false, true, FILE_PATH_1);
 
-        StringBuilder sbExpected = new StringBuilder();
-        sbExpected.append(String.format(NUMBER_FORMAT, 6));
-        sbExpected.append(String.format(" %s", filePath1));
+        String sbExpected = String.format(NUMBER_FORMAT, 6) +
+                String.format(STRING_FORMAT, FILE_PATH_1);
 
-        assertEquals(sbExpected.toString(), result);
+        assertEquals(sbExpected, result);
     }
 
     @Test
@@ -253,23 +243,19 @@ public class WcApplicationTest {
     void testWc_inputFileIsDirectory_shouldDisplayIsDirectoryError() throws Exception {
         String result = wcApplication.countFromFiles(true, true, true, TEST_FOLDER_NAME);
 
-        StringBuilder sbExpected = new StringBuilder();
-        sbExpected.append("wc: ").append(TEST_FOLDER_NAME).append(ERR_IS_A_DIRECTORY).append(StringUtils.STRING_NEWLINE);
-        sbExpected.append(String.format(NUMBER_FORMAT, 0)).append(String.format(NUMBER_FORMAT, 0)).append(String.format(NUMBER_FORMAT, 0));
-        sbExpected.append(String.format(" %s", TEST_FOLDER_NAME));
+        String sbExpected = STRING_WC + TEST_FOLDER_NAME + ERR_IS_DIRECTORY + StringUtils.STRING_NEWLINE +
+                String.format(NUMBER_FORMAT, 0) + String.format(NUMBER_FORMAT, 0) + String.format(NUMBER_FORMAT, 0) +
+                String.format(STRING_FORMAT, TEST_FOLDER_NAME);
 
-        assertEquals(sbExpected.toString(), result);
+        assertEquals(sbExpected, result);
     }
 
     @Test
         // command: wc nonExistentName
     void testWc_inputNonExistentFileOrDirectory_shouldDisplayNoSuchFileOrDirectory() throws Exception {
-        String result = wcApplication.countFromFiles(true, true, true, nonExistentFile);
+        String result = wcApplication.countFromFiles(true, true, true, NON_EXISTENT_FILE);
 
-        StringBuilder sbExpected = new StringBuilder();
-        sbExpected.append("wc: ").append(nonExistentFile).append(ERR_NO_SUCH_FILE_OR_DIRECTORY);
-
-        assertEquals(sbExpected.toString(), result);
+        assertEquals(STRING_WC + NON_EXISTENT_FILE + ERR_NOT_FOUND, result);
     }
 
     @Test
@@ -285,7 +271,7 @@ public class WcApplicationTest {
     @Test
     void testWc_nullFileNamesAndInputStream_shouldThrowException() throws ShellException {
         assertThrows(WcException.class, () -> wcApplication.countFromFileAndStdin(true, true, true, null, new String[]{}), ERR_NULL_STREAMS);
-        InputStream input = IOUtils.openInputStream(filePath1);
+        InputStream input = IOUtils.openInputStream(FILE_PATH_1); // NOPMD
         assertThrows(WcException.class, () -> wcApplication.countFromFileAndStdin(true, true, true, input, null), ERR_NULL_FILES);
         IOUtils.closeInputStream(input);
     }

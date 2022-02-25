@@ -12,6 +12,9 @@ import java.util.List;
 
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_COLON;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_SPACE;
+import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_IS_DIRECTORY;
 
 public class WcApplication implements WcInterface {
 
@@ -20,12 +23,12 @@ public class WcApplication implements WcInterface {
     private static final int WORDS_INDEX = 1;
     private static final int BYTES_INDEX = 2;
 
-    private static final String ERR_IS_A_DIRECTORY = ": Is a directory";
-    private static final String ERR_NO_SUCH_FILE_OR_DIRECTORY = ": No such file or directory";
+    private static final String ERR_IS_DIR = "" + CHAR_COLON + CHAR_SPACE + ERR_IS_DIRECTORY;
+    private static final String ERR_NOT_FOUND = "" + CHAR_COLON + CHAR_SPACE + ERR_FILE_NOT_FOUND;
 
-    static final Character ERR_CODE_IS_DIRECTORY = 'd';
+    static final Character ERR_CODE_DIR = 'd';
 
-    private List<Result> listResult = new ArrayList<>();
+    List<Result> listResult = new ArrayList<>();
 
     /**
      * Runs the wc application with the specified arguments.
@@ -50,18 +53,17 @@ public class WcApplication implements WcInterface {
             wcArgs.parse(args);
         } catch (Exception e) {
             String errorMessage = e.toString();
-            StringBuilder sb = new StringBuilder();
-            sb.append("invalid option -- '");
-            sb.append(errorMessage.charAt(errorMessage.length() - 1));
-            sb.append("'");
-            throw new WcException(sb.toString());
+            String sBuilder = "invalid option -- '" +
+                    errorMessage.charAt(errorMessage.length() - 1) +
+                    "'";
+            throw new WcException(sBuilder); //NOPMD
         }
 
         String result;
         try {
             if (wcArgs.getFiles().isEmpty()) {
                 result = countFromStdin(wcArgs.isBytes(), wcArgs.isLines(), wcArgs.isWords(), stdin);
-            } else if (!wcArgs.getFiles().contains("-")) {
+            } else if (!wcArgs.getFiles().contains("-")) { //NOPMD
                 result = countFromFiles(wcArgs.isBytes(), wcArgs.isLines(), wcArgs.isWords(), wcArgs.getFiles().toArray(new String[0]));
             } else {
                 result = countFromFileAndStdin(wcArgs.isBytes(), wcArgs.isLines(), wcArgs.isWords(), stdin, wcArgs.getFiles().toArray(new String[0]));
@@ -101,16 +103,16 @@ public class WcApplication implements WcInterface {
             res.setFileName(file);
             File node = IOUtils.resolveFilePath(file).toFile();
             if (!node.exists()) {
-                String error = (new StringBuilder()).append("wc: ").append(file).append(ERR_NO_SUCH_FILE_OR_DIRECTORY).toString();
-                res.setIsErroneous(error, null);
+                String error = (new StringBuilder()).append("wc: ").append(file).append(ERR_NOT_FOUND).toString();
+                res.setIsErroneous(error, 'n');
                 listRes.add(res);
                 result.add(error);
                 continue;
             }
             if (node.isDirectory()) {
                 // wc: folder1/: Is a directory
-                String error = (new StringBuilder()).append("wc: ").append(file).append(ERR_IS_A_DIRECTORY).toString();
-                res.setIsErroneous(error, ERR_CODE_IS_DIRECTORY);
+                String error = (new StringBuilder()).append("wc: ").append(file).append(ERR_IS_DIR).toString();
+                res.setIsErroneous(error, ERR_CODE_DIR);
                 listRes.add(res);
                 result.add(error);
                 result.add(getCountReportInString(isBytes, isLines, isWords, new long[]{0, 0, 0}, file));
@@ -118,13 +120,13 @@ public class WcApplication implements WcInterface {
             }
             if (!node.canRead()) {
                 String error = "wc: " + ERR_NO_PERM;
-                res.setIsErroneous(error, null);
+                res.setIsErroneous(error, 'n');
                 listRes.add(res);
                 result.add(error);
                 continue;
             }
 
-            InputStream input = IOUtils.openInputStream(file);
+            InputStream input = IOUtils.openInputStream(file); // NOPMD
             long[] count = getCountReport(input); // lines words bytes
             IOUtils.closeInputStream(input);
 
@@ -181,22 +183,22 @@ public class WcApplication implements WcInterface {
         long[] count = getCountReport(stdin); // lines words bytes;
 
         Result res = new Result(); //NOPMD
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sBuilder = new StringBuilder();
         if (isLines) {
-            sb.append(String.format(NUMBER_FORMAT, count[0]));
+            sBuilder.append(String.format(NUMBER_FORMAT, count[0]));
             res.setLines(count[0]);
         }
         if (isWords) {
-            sb.append(String.format(NUMBER_FORMAT, count[1]));
+            sBuilder.append(String.format(NUMBER_FORMAT, count[1]));
             res.setWords(count[1]);
         }
         if (isBytes) {
-            sb.append(String.format(NUMBER_FORMAT, count[2]));
+            sBuilder.append(String.format(NUMBER_FORMAT, count[2]));
             res.setBytes(count[2]);
         }
 
         listResult.add(res);
-        return sb.toString();
+        return sBuilder.toString();
     }
 
     @Override
@@ -211,7 +213,7 @@ public class WcApplication implements WcInterface {
         }
 
         for (String s : fileName) {
-            if (s.equals("-")) {
+            if (s != null && s.equals("-")) {
                 String res = countFromStdin(isBytes, isLines, isWords, stdin);
                 this.listResult.get(listResult.size() - 1).setFileName("-");
             } else {
@@ -224,7 +226,7 @@ public class WcApplication implements WcInterface {
         long totalBytes = 0, totalLines = 0, totalWords = 0;
 
         for (Result res : listResult) {
-            if (res.getIsErroneous()) {
+            if (res.isErroneous()) {
                 result.add(res.toString());
                 continue;
             }
@@ -301,19 +303,17 @@ public class WcApplication implements WcInterface {
         if (isBytes) {
             sb.append(String.format(NUMBER_FORMAT, count[2]));
         }
-        sb.append(" ");
-        sb.append(name);
-        return sb.toString();
+        return sb.append(' ').append(name).toString();
     }
 
-    static class Result {
+    static class Result { // NOPMD
         long bytes = -1;
         long lines = -1;
         long words = -1;
 
         String fileName;
 
-        boolean isErroneous = false;
+        boolean erroneous = false;
         String errorMessage;
         Character errorCode;
 
@@ -331,7 +331,7 @@ public class WcApplication implements WcInterface {
 
         public void setIsErroneous(String message, Character errorCode) {
             this.errorMessage = message;
-            this.isErroneous = true;
+            this.erroneous = true;
             this.errorCode = errorCode;
             bytes = 0;
             lines = 0;
@@ -342,8 +342,8 @@ public class WcApplication implements WcInterface {
             return this.errorCode;
         }
 
-        public boolean getIsErroneous() {
-            return this.isErroneous;
+        public boolean isErroneous() {
+            return this.erroneous;
         }
 
         public void setFileName(String fileName) {
@@ -352,14 +352,11 @@ public class WcApplication implements WcInterface {
 
         @Override
         public String toString() {
-            if (isErroneous && errorCode != WcApplication.ERR_CODE_IS_DIRECTORY) {
+            if (erroneous && errorCode.compareTo(WcApplication.ERR_CODE_DIR) != 0) {
                 return errorMessage;
-            } else if (isErroneous && errorCode == WcApplication.ERR_CODE_IS_DIRECTORY) {
-                StringBuilder sb = new StringBuilder();
-                sb.append(errorMessage);
-                sb.append(STRING_NEWLINE);
-                sb.append((new WcApplication()).getCountReportInString(bytes != -1, lines != -1, words != -1, new long[]{0, 0, 0}, fileName));
-                return sb.toString();
+            } else if (erroneous && errorCode.compareTo(WcApplication.ERR_CODE_DIR) == 0) {
+                String countReportErr = (new WcApplication()).getCountReportInString(bytes != -1, lines != -1, words != -1, new long[]{0, 0, 0}, fileName);
+                return errorMessage + STRING_NEWLINE + countReportErr;
             }
 
             StringBuilder sb = new StringBuilder(); //NOPMD

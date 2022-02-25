@@ -27,6 +27,7 @@ public class ErrorConstants {
     public static final String ERR_FILE_NOT_FOUND = "No such file or directory";
     public static final String ERR_READING_FILE = "Could not read file";
     public static final String ERR_IS_DIR = "This is a directory";
+    public static final String ERR_IS_DIRECTORY = "Is a directory";
     public static final String ERR_IS_NOT_DIR = "Not a directory";
     public static final String ERR_NO_PERM = "Permission denied";
     public static final String ERR_DIR_NOT_EMPTY = "Directory not empty";
