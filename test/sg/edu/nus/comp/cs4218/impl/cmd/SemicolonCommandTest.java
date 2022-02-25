@@ -8,6 +8,7 @@ import sg.edu.nus.comp.cs4218.Command;
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
+import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 import sg.edu.nus.comp.cs4218.impl.util.ApplicationRunner;
 import sg.edu.nus.comp.cs4218.impl.util.CommandBuilder;
 import sg.edu.nus.comp.cs4218.impl.util.StringUtils;
@@ -18,7 +19,9 @@ import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_SYNTAX;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 class SemicolonCommandTest {
     ByteArrayOutputStream myOut;
@@ -61,7 +64,7 @@ class SemicolonCommandTest {
 
         command.evaluate(System.in, System.out);
         final String standardOutput = myOut.toString();
-        String expected = "first output" + StringUtils.STRING_NEWLINE + "second output" + StringUtils.STRING_NEWLINE;
+        String expected = "first output" + STRING_NEWLINE + "second output" + STRING_NEWLINE;
         assertEquals(expected, standardOutput);
     }
 
@@ -72,7 +75,7 @@ class SemicolonCommandTest {
 
         command.evaluate(System.in, System.out);
         final String standardOutput = myOut.toString();
-        String expected = "first output" + StringUtils.STRING_NEWLINE + "second output" + StringUtils.STRING_NEWLINE + "third output" + StringUtils.STRING_NEWLINE;
+        String expected = "first output" + STRING_NEWLINE + "second output" + STRING_NEWLINE + "third output" + STRING_NEWLINE;
         assertEquals(expected, standardOutput);    }
 
     @Test
@@ -82,23 +85,46 @@ class SemicolonCommandTest {
 
         command.evaluate(System.in, System.out);
         final String standardOutput = myOut.toString();
-        String expected = "first output" + StringUtils.STRING_NEWLINE + "file1.xml" + StringUtils.STRING_NEWLINE + "folder1" + StringUtils.STRING_NEWLINE;
+        String expected = "first output" + STRING_NEWLINE + "file1.xml" + STRING_NEWLINE + "folder1" + STRING_NEWLINE;
         assertEquals(expected, standardOutput);
     }
 
     @Test
-    void testSemicolon_semicolonAtStart_returnException() throws Exception {
+    void testSemicolon_validCommandInvalidCommand_returnFirstOutputAndException() throws Exception {
+        ShellImpl shell = new ShellImpl();
+        String commandString = "echo \"first output\"; grep";
+        String expectedOutput = "first output" + STRING_NEWLINE + String.format("grep: %s", ERR_SYNTAX) + STRING_NEWLINE;
+        shell.parseAndEvaluate(commandString, myOut);
+        assertEquals(expectedOutput, myOut.toString());
+    }
+
+    @Test
+    void testSemicolon_invalidCommandValidCommand_returnExceptionAndSecondOutput() throws Exception {
+        ShellImpl shell = new ShellImpl();
+        String commandString = "grep; echo \"second output\"";
+        String expectedOutput = String.format("grep: %s", ERR_SYNTAX) + STRING_NEWLINE + "second output" + STRING_NEWLINE;
+        shell.parseAndEvaluate(commandString, myOut);
+        assertEquals(expectedOutput, myOut.toString());
+    }
+
+
+    @Test
+    void testSemicolon_semicolonAtEnd_returnResult() throws Exception {
+        String inputString = "echo first output;";
+        Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
+
+        command.evaluate(System.in, System.out);
+        final String standardOutput = myOut.toString();
+        String expected = "first output" + STRING_NEWLINE;
+        assertEquals(expected, standardOutput);
+    }
+
+
+    @Test
+    void testSemicolon_semicolonAtStart_returnException() {
         String inputString = ";echo first output";
 
         assertThrows(Exception.class, () -> CommandBuilder.parseCommand(inputString, new ApplicationRunner()));
     }
-
-    @Test
-    void testSemicolon_semicolonAtEnd_returnException() throws Exception {
-        String inputString = "echo first output; echo second output;";
-
-        assertThrows(Exception.class, () -> CommandBuilder.parseCommand(inputString, new ApplicationRunner()));
-    }
-
 
 }
