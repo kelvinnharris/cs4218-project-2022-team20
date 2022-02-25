@@ -78,7 +78,7 @@ public class CpApplication implements CpInterface {
         Path destAbsPath = getAbsolutePath(destFile);
 
         if (!Files.exists(srcAbsPath)) {
-            throw new CpException(String.format("cannot stat '%s': no such file or directory", srcFile));
+            throw new CpException(String.format("cannot stat '%s': No such file or directory", srcFile));
         }
         if (srcAbsPath.toString().equals(destAbsPath.toString())) {
             throw new CpException(String.format("'%s' and '%s' are the same file", srcFile, destFile));
