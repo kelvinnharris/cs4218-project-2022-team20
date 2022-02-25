@@ -65,16 +65,6 @@ class EchoPasteIntegrationTest {
     }
 
     @Test
-    void testEchoPaste_echoToFileAndReadFromStdin_testPassed() throws Exception {
-        String inputString = "echo hello world > file1.txt; paste - < file1.txt";
-        Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
-
-        command.evaluate(System.in, myOut);
-        final String standardOutput = myOut.toString();
-        assertEquals("hello world" + StringUtils.STRING_NEWLINE, standardOutput);
-    }
-
-    @Test
     void testEchoPaste_echoToFileAndPasteReadFromStdin_testPassed() throws Exception {
         String inputString = "echo hello world > tmp.txt; paste tmp.txt;";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
