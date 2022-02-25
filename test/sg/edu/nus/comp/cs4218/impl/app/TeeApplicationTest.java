@@ -155,7 +155,13 @@ public class TeeApplicationTest {
     }
 
     @Test
-    void testTee_teeWithNonExistentFile_shouldThrowTeeException() {
-        assertThrows(TeeException.class, () -> teeApplication.teeFromStdin(false, inputStream, "nonExistent.txt"));
+    void testTee_teeWithNonExistentFile_shouldCreateNewFileAndWrite() throws TeeException {
+        try {
+            teeApplication.teeFromStdin(false, inputStream, "nonExistent.txt");
+            String fileContent = readString(Paths.get("nonExistent.txt"));
+            assertEquals(INPUT, fileContent);
+        } catch (Exception e) {
+            throw new TeeException(e);
+        }
     }
 }

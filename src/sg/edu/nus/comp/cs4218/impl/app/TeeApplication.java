@@ -69,7 +69,11 @@ public class TeeApplication implements TeeInterface {
             String cwd = Environment.currentDirectory;
             Path filePath = Paths.get(cwd, file).normalize();
             if (!Files.exists(filePath)) {
-                throw new TeeException(String.format("File '%s' does not exist.", filePath));
+                try {
+                    Files.createFile(filePath);
+                } catch (IOException ioe) {
+                    throw new TeeException(ioe.getMessage());
+                }
             }
             if (!Files.isRegularFile(filePath)) {
                 throw new TeeException(String.format("File '%s' is not a regular file.", filePath));
