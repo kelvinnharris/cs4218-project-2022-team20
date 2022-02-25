@@ -11,6 +11,9 @@ import java.nio.file.Paths;
 
 class CutApplicationTest {
     private CutApplication cutApplication;
+    private static final String FILE_SINGLE_LINE = "fileSingleLine.txt";
+    private static final String FILE_MULTIPLE_LINES = "fileMultipleLines.txt";
+
 
     @BeforeEach
     public void setUpEach() {
@@ -20,16 +23,16 @@ class CutApplicationTest {
     @BeforeAll
     static void setUp() {
         try {
-            deleteDir(new File("fileSingleLine.txt"));
-            deleteDir(new File("fileMultipleLines.txt"));
-            Files.createFile(Paths.get("fileSingleLine.txt"));
-            Files.createFile(Paths.get("fileMultipleLines.txt"));
-            FileWriter fw1 = new FileWriter("fileSingleLine.txt");
+            deleteDir(new File(FILE_SINGLE_LINE));
+            deleteDir(new File(FILE_MULTIPLE_LINES));
+            Files.createFile(Paths.get(FILE_SINGLE_LINE));
+            Files.createFile(Paths.get(FILE_MULTIPLE_LINES));
+            FileWriter fw1 = new FileWriter(FILE_SINGLE_LINE);
             BufferedWriter bw1 = new BufferedWriter(fw1);
             bw1.write("abcd");
             bw1.close();
 
-            FileWriter fw2 = new FileWriter("fileMultipleLines.txt");
+            FileWriter fw2 = new FileWriter(FILE_MULTIPLE_LINES);
             BufferedWriter bw2 = new BufferedWriter(fw2);
 
             bw2.write("abcd" + STRING_NEWLINE + "efgh");
@@ -42,8 +45,8 @@ class CutApplicationTest {
 
     @AfterAll
     static void tearDown() throws IOException {
-        deleteDir(new File("fileSingleLine.txt"));
-        deleteDir(new File("fileMultipleLines.txt"));
+        deleteDir(new File(FILE_SINGLE_LINE));
+        deleteDir(new File(FILE_MULTIPLE_LINES));
     }
 
     static void deleteDir(File file) {
@@ -60,7 +63,7 @@ class CutApplicationTest {
     void cutFromFiles_byCharSingleIndexSingleLine_returnsLines() throws Exception {
         InputStream input = new ByteArrayInputStream("".getBytes());
         cutApplication.stdin = input;
-        String output = cutApplication.cutFromFiles(true, false, false, 0, 1, new String[]{"fileSingleLine.txt"});
+        String output = cutApplication.cutFromFiles(true, false, false, 0, 1, new String[]{FILE_SINGLE_LINE});
         assertEquals("a" + STRING_NEWLINE, output);
     }
 
@@ -68,7 +71,7 @@ class CutApplicationTest {
     void cutFromFiles_byByteSingleIndexSingleLine_returnsLines() throws Exception {
         InputStream input = new ByteArrayInputStream("".getBytes());
         cutApplication.stdin = input;
-        String output = cutApplication.cutFromFiles(false, true, false, 0, 1, new String[]{"fileSingleLine.txt"});
+        String output = cutApplication.cutFromFiles(false, true, false, 0, 1, new String[]{FILE_SINGLE_LINE});
         assertEquals("a" + STRING_NEWLINE, output);
     }
 
@@ -76,7 +79,7 @@ class CutApplicationTest {
     void cutFromFiles_byCharRangeIndexSingleLine_returnsLines() throws Exception {
         InputStream input = new ByteArrayInputStream("".getBytes());
         cutApplication.stdin = input;
-        String output = cutApplication.cutFromFiles(true, false, true, 0, 2, new String[]{"fileSingleLine.txt"});
+        String output = cutApplication.cutFromFiles(true, false, true, 0, 2, new String[]{FILE_SINGLE_LINE});
         assertEquals("abc" + STRING_NEWLINE, output);
     }
 
@@ -84,7 +87,7 @@ class CutApplicationTest {
     void cutFromFiles_byByteRangeIndexSingleLine_returnsLines() throws Exception {
         InputStream input = new ByteArrayInputStream("".getBytes());
         cutApplication.stdin = input;
-        String output = cutApplication.cutFromFiles(false, true, true, 0, 2, new String[]{"fileSingleLine.txt"});
+        String output = cutApplication.cutFromFiles(false, true, true, 0, 2, new String[]{FILE_SINGLE_LINE});
         assertEquals("abc" + STRING_NEWLINE, output);
     }
 
@@ -92,7 +95,7 @@ class CutApplicationTest {
     void cutFromFiles_byCharSingleIndexMultipleLines_returnsLines() throws Exception {
         InputStream input = new ByteArrayInputStream("".getBytes());
         cutApplication.stdin = input;
-        String output = cutApplication.cutFromFiles(true, false, false, 0, 1, new String[]{"fileMultipleLines.txt"});
+        String output = cutApplication.cutFromFiles(true, false, false, 0, 1, new String[]{FILE_MULTIPLE_LINES});
         assertEquals("a" + STRING_NEWLINE + "e" + STRING_NEWLINE, output);
     }
 
@@ -100,7 +103,7 @@ class CutApplicationTest {
     void cutFromFiles_byByteSingleIndexMultipleLines_returnsLines() throws Exception {
         InputStream input = new ByteArrayInputStream("".getBytes());
         cutApplication.stdin = input;
-        String output = cutApplication.cutFromFiles(false, true, false, 0, 1, new String[]{"fileMultipleLines.txt"});
+        String output = cutApplication.cutFromFiles(false, true, false, 0, 1, new String[]{FILE_MULTIPLE_LINES});
         assertEquals("a" + STRING_NEWLINE + "e" + STRING_NEWLINE, output);
     }
 
@@ -108,7 +111,7 @@ class CutApplicationTest {
     void cutFromFiles_byCharRangeIndexMultipleLines_returnsLines() throws Exception {
         InputStream input = new ByteArrayInputStream("".getBytes());
         cutApplication.stdin = input;
-        String output = cutApplication.cutFromFiles(true, false, true, 0, 2, new String[]{"fileMultipleLines.txt"});
+        String output = cutApplication.cutFromFiles(true, false, true, 0, 2, new String[]{FILE_MULTIPLE_LINES});
         assertEquals("abc" + STRING_NEWLINE + "efg" + STRING_NEWLINE, output);
     }
 
@@ -116,7 +119,7 @@ class CutApplicationTest {
     void cutFromFiles_byByteRangeIndexMultipleLines_returnsLines() throws Exception {
         InputStream input = new ByteArrayInputStream("".getBytes());
         cutApplication.stdin = input;
-        String output = cutApplication.cutFromFiles(false, true, true, 0, 2, new String[]{"fileMultipleLines.txt"});
+        String output = cutApplication.cutFromFiles(false, true, true, 0, 2, new String[]{FILE_MULTIPLE_LINES});
         assertEquals("abc" + STRING_NEWLINE + "efg" + STRING_NEWLINE, output);
     }
 
@@ -124,7 +127,7 @@ class CutApplicationTest {
     void cutFromFiles_byByteRangeIndexMultipleFiles_returnsLines() throws Exception {
         InputStream input = new ByteArrayInputStream("".getBytes());
         cutApplication.stdin = input;
-        String output = cutApplication.cutFromFiles(false, true, true, 0, 2, new String[]{"fileSingleLine.txt", "fileMultipleLines.txt"});
+        String output = cutApplication.cutFromFiles(false, true, true, 0, 2, new String[]{FILE_SINGLE_LINE, FILE_MULTIPLE_LINES});
         assertEquals(output, "abc" + STRING_NEWLINE + "abc" + STRING_NEWLINE + "efg" + STRING_NEWLINE);
     }
 
@@ -133,7 +136,7 @@ class CutApplicationTest {
         String inputString = "z" + STRING_NEWLINE + "yy" + STRING_NEWLINE + "x" + STRING_NEWLINE + "www";
         InputStream input = new ByteArrayInputStream(inputString.getBytes());
         cutApplication.stdin = input;
-        String output = cutApplication.cutFromFiles(false, true, true, 0, 2, new String[]{"fileSingleLine.txt", "-", "fileMultipleLines.txt"});
+        String output = cutApplication.cutFromFiles(false, true, true, 0, 2, new String[]{FILE_SINGLE_LINE, "-", FILE_MULTIPLE_LINES});
         assertEquals(output, "abc" + STRING_NEWLINE + "z" + STRING_NEWLINE + "yy" + STRING_NEWLINE + "x" + STRING_NEWLINE + "www" + STRING_NEWLINE + "abc" + STRING_NEWLINE + "efg" + STRING_NEWLINE);
     }
 

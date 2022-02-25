@@ -35,7 +35,7 @@ public class RmApplication implements RmInterface {
         try {
             parser.parse(args);
         } catch (InvalidArgsException e) {
-            throw new RmException(e.getMessage());
+            throw new RmException(e.getMessage());//NOPMD
         }
 
         try {

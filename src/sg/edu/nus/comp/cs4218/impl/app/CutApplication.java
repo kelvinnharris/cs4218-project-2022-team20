@@ -51,7 +51,7 @@ public class CutApplication implements CutInterface {
             this.index = parser.getIndex();
 
         } catch (InvalidArgsException e) {
-            throw new CutException(e.getMessage());
+            throw new CutException(e.getMessage());//NOPMD
         } catch (IndexOutOfBoundsException e) {
             String errorMessage = "option requires an argument -- '";
             if (parser.isCharPo()) {
@@ -59,7 +59,7 @@ public class CutApplication implements CutInterface {
             } else if (parser.isBytePo()) {
                 errorMessage += "b'";
             }
-            throw new CutException(errorMessage);
+            throw new CutException(errorMessage);//NOPMD
         }
 
         StringBuilder output = new StringBuilder();
@@ -120,7 +120,7 @@ public class CutApplication implements CutInterface {
                 String errorMessage = file + "': " + ERR_NO_PERM;
                 throw new Exception(errorMessage);
             }
-            InputStream input = IOUtils.openInputStream(file);
+            InputStream input = IOUtils.openInputStream(file);//NOPMD
             try {
                 lines.addAll(IOUtils.getLinesFromInputStream(input));
             } finally {
@@ -153,7 +153,7 @@ public class CutApplication implements CutInterface {
     }
 
 
-    public String cutInputString(Boolean isCharPo, Boolean isBytePo, Boolean isRange, int startIdx, int endIdx, List<String> input) {
+    public String cutInputString(Boolean isCharPo, Boolean isBytePo, Boolean isRange, int startIdx, int endIdx, List<String> input) {//NOPMD
         String output = "";
         if (isCharPo) {
             char[] charArray;

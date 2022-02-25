@@ -43,7 +43,7 @@ public class SortApplication implements SortInterface {
         try {
             parser.parse(args);
         } catch (InvalidArgsException e) {
-            throw new SortException(e.getMessage());
+            throw new SortException(e.getMessage());//NOPMD
         }
         StringBuilder output = new StringBuilder();
         try {
@@ -94,7 +94,7 @@ public class SortApplication implements SortInterface {
             if (!node.canRead()) {
                 throw new Exception(ERR_NO_PERM);
             }
-            InputStream input = IOUtils.openInputStream(file);
+            InputStream input = IOUtils.openInputStream(file);//NOPMD
             lines.addAll(IOUtils.getLinesFromInputStream(input));
             IOUtils.closeInputStream(input);
         }

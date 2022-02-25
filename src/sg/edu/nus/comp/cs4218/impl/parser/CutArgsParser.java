@@ -70,9 +70,9 @@ public class CutArgsParser extends ArgsParser {
                 endIdx = index[0];
             }
         } catch (IndexOutOfBoundsException e) {
-            throw new IndexOutOfBoundsException(e.getMessage());
+            throw new IndexOutOfBoundsException(e.getMessage());//NOPMD
         } catch (Exception e) {
-            throw new InvalidArgsException(e.getMessage());
+            throw new InvalidArgsException(e.getMessage());//NOPMD
         }
     }
 
