@@ -33,7 +33,7 @@ class CallCommandTest {
     private static final String FILE_NAME_2 = "test2.txt";
     private static final String FILE_PATH_2 = TEST_PATH + FILE_NAME_2;
 
-    private static final String NONEXISTENTFILE = "nofile.txt";
+    private static final String NON_EXISTENT_FILE = "nofile.txt";
 
     CallCommand callCommand;
     List<String> argsList;
@@ -77,14 +77,14 @@ class CallCommandTest {
 
     @Test
     void testCallCommand_getArgsList_shouldReturnSameList() {
-        argsList.addAll(Arrays.asList("wc", "<", NONEXISTENTFILE));
+        argsList.addAll(Arrays.asList("wc", "<", NON_EXISTENT_FILE));
         callCommand = new CallCommand(argsList, appRunner, argResolver);
         assertEquals(argsList, callCommand.getArgsList());
     }
 
     @Test
     void testCallCommand_invalidFileForInStream_shouldThrowShellException() {
-        argsList.addAll(Arrays.asList("wc", "<", NONEXISTENTFILE));
+        argsList.addAll(Arrays.asList("wc", "<", NON_EXISTENT_FILE));
         callCommand = new CallCommand(argsList, appRunner, argResolver);
         assertThrows(ShellException.class, () -> callCommand.evaluate(inputStream, outputStream), ERR_FILE_NOT_FOUND);
     }
