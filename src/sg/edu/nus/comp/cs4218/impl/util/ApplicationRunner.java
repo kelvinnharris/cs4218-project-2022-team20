@@ -48,50 +48,42 @@ public class ApplicationRunner {
         switch (app) {
             case APP_CAT:
                 application = new CatApplication();
-                System.out.println("[CAT] CALLED");
                 break;
             case APP_CP:
                 application = new CpApplication();
-                System.out.println("[CP] CALLED");
                 break;
             case APP_CUT:
                 application = new CutApplication();
-                System.out.println("[CUT] CALLED");
                 break;
             case APP_ECHO:
                 application = new EchoApplication();
-                System.out.println("[ECHO] CALLED");
                 break;
             case APP_EXIT:
                 application = new ExitApplication();
-                System.out.println("[EXIT] CALLED");
                 break;
             case APP_GREP:
                 application = new GrepApplication();
-                System.out.println("[GREP] CALLED");
                 break;
             case APP_LS:
                 application = new LsApplication();
-                System.out.println("[LS] CALLED");
                 break;
             case APP_RM:
                 application = new RmApplication();
-                System.out.println("[RM] CALLED");
                 break;
             case APP_SORT:
                 application = new SortApplication();
-                System.out.println("[SORT] CALLED");
                 break;
             case APP_TEE:
                 application = new TeeApplication();
-                System.out.println("[TEE] CALLED");
                 break;
             case APP_WC:
                 application = new WcApplication();
-                System.out.println("[WC] CALLED");
+                break;
+            case APP_PASTE:
+                application = new PasteApplication();
+                System.out.println("[PASTE] CALLED");
                 break;
             default:
-                System.out.println("[ERROR]");
                 throw new ShellException(app + ": " + ERR_INVALID_APP);
         }
 

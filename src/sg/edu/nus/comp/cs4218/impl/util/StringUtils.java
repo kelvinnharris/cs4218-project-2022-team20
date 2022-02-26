@@ -8,6 +8,7 @@ public final class StringUtils {
     public static final String STRING_NEWLINE = System.lineSeparator();
     public static final String STRING_CURR_DIR = ".";
     public static final String STRING_PARENT_DIR = "..";
+    public static final String STRING_TAB = "\t";
     public static final char CHAR_FILE_SEP = File.separatorChar;
     public static final char CHAR_TAB = '\t';
     public static final char CHAR_SPACE = ' ';
@@ -18,6 +19,7 @@ public final class StringUtils {
     public static final char CHAR_REDIR_OUTPUT = '>';
     public static final char CHAR_PIPE = '|';
     public static final char CHAR_SEMICOLON = ';';
+    public static final char CHAR_COLON = ':';
     public static final char CHAR_ASTERISK = '*';
     public static final char CHAR_FLAG_PREFIX = '-';
 

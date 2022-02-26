@@ -21,11 +21,14 @@ public class ErrorConstants {
     public static final String ERR_TOO_MANY_ARGS = "Too many arguments";
     public static final String ERR_INVALID_FLAG = "Invalid flag option supplied";
     public static final String ERR_BAD_REGEX = "Invalid pattern";
+    public static final String ERR_NULL_FILES = "Null Files";
 
     // Files and folders related
     public static final String ERR_FILE_NOT_FOUND = "No such file or directory";
     public static final String ERR_READING_FILE = "Could not read file";
+
     public static final String ERR_IS_DIR = "Is a directory";
+    public static final String ERR_IS_DIRECTORY = "Is a directory";
     public static final String ERR_IS_NOT_DIR = "Not a directory";
     public static final String ERR_NO_PERM = "Permission denied";
     public static final String ERR_DIR_NOT_EMPTY = "Directory not empty";

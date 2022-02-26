@@ -3,6 +3,7 @@ package sg.edu.nus.comp.cs4218.impl.app;
 import sg.edu.nus.comp.cs4218.app.CatInterface;
 import sg.edu.nus.comp.cs4218.exception.CatException;
 import sg.edu.nus.comp.cs4218.impl.parser.CatArgsParser;
+import sg.edu.nus.comp.cs4218.impl.util.ErrorConstants;
 import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 
 import java.io.File;
@@ -22,12 +23,12 @@ public class CatApplication implements CatInterface {
     public static final String ERR_NULL_STREAMS = "Null Pointer Exception";
     public static final String ERR_GENERAL = "Exception Caught";
 
-    private static final String ERR_IS_A_DIRECTORY = ": Is a directory";
-    private static final String ERR_NO_SUCH_FILE_OR_DIRECTORY = ": No such file or directory";
+    private static final String ERR_IS_DIRECTORY = ": Is a directory";
+    private static final String ERR_NOT_FOUND = ": No such file or directory";
 
     private static final String NUMBER_FORMAT = "%6d ";
 
-    private List<String> listResult = new ArrayList<>();
+    List<String> listResult = new ArrayList<>();
     private int numOfErrors = 0;
 
     /**
@@ -52,51 +53,50 @@ public class CatApplication implements CatInterface {
             catArgs.parse(args);
         } catch (Exception e) {
             String errorMessage = e.toString();
-            StringBuilder sb = new StringBuilder();
-            sb.append("invalid option -- '");
-            sb.append(errorMessage.charAt(errorMessage.length()-1));
-            sb.append("'");
-            throw new CatException(sb.toString());
+            String sBuilder = "invalid option -- '" +
+                    errorMessage.charAt(errorMessage.length() - 1) +
+                    "'";
+            throw new CatException(sBuilder); // NOPMD
         }
 
         String result;
         try {
             if (catArgs.getFiles().isEmpty()) {
                 result = catStdin(catArgs.isFlagNumber(), stdin);
-            } else if (!catArgs.getFiles().contains("-")) {
+            } else if (!catArgs.getFiles().contains("-")) { // NOPMD
                 result = catFiles(catArgs.isFlagNumber(), catArgs.getFiles().toArray(new String[0]));
             } else {
                 result = catFileAndStdin(catArgs.isFlagNumber(), stdin, catArgs.getFiles().toArray(new String[0]));
             }
         } catch (Exception e) {
             // Will never happen
-            throw new CatException(ERR_GENERAL);
+            throw new CatException(ERR_GENERAL); // NOPMD
         }
 
         try {
             stdout.write(result.getBytes());
             stdout.write(STRING_NEWLINE.getBytes());
         } catch (IOException e) {
-            throw new CatException(ERR_WRITE_STREAM);
+            throw new CatException(ERR_WRITE_STREAM); // NOPMD
         }
     }
 
     @Override
     public String catFiles(Boolean isLineNumber, String... fileName) throws Exception {
         if (fileName == null) {
-            throw new Exception(ERR_GENERAL);
+            throw new CatException(ERR_NULL_FILES);
         }
 
         for (String file : fileName) {
             File node = IOUtils.resolveFilePath(file).toFile();
             if (!node.exists()) {
-                String error = (new StringBuilder()).append("cat: ").append(file).append(ERR_NO_SUCH_FILE_OR_DIRECTORY).toString();
+                String error = (new StringBuilder()).append("cat: ").append(file).append(ERR_NOT_FOUND).toString();
                 listResult.add(error);
                 numOfErrors++;
                 continue;
             }
             if (node.isDirectory()) {
-                String error = (new StringBuilder()).append("cat: ").append(file).append(ERR_IS_A_DIRECTORY).toString();
+                String error = (new StringBuilder()).append("cat: ").append(file).append(ERR_IS_DIRECTORY).toString();
                 listResult.add(error);
                 numOfErrors++;
                 continue;
@@ -107,7 +107,7 @@ public class CatApplication implements CatInterface {
                 continue;
             }
 
-            InputStream input = IOUtils.openInputStream(file);
+            InputStream input = IOUtils.openInputStream(file); // NOPMD
             List<String> fileDatas = IOUtils.getLinesFromInputStream(input);
             IOUtils.closeInputStream(input);
 
@@ -125,7 +125,7 @@ public class CatApplication implements CatInterface {
     @Override
     public String catStdin(Boolean isLineNumber, InputStream stdin) throws Exception {
         if (stdin == null) {
-            throw new Exception(ERR_NULL_STREAMS);
+            throw new CatException(ErrorConstants.ERR_NULL_STREAMS);
         }
 
         List<String> data = IOUtils.getLinesFromInputStream(stdin);
@@ -141,12 +141,15 @@ public class CatApplication implements CatInterface {
 
     @Override
     public String catFileAndStdin(Boolean isLineNumber, InputStream stdin, String... fileName) throws Exception {
-        if (stdin == null && fileName == null) {
-            throw new Exception(ERR_GENERAL);
+        if (stdin == null) {
+            throw new CatException(ErrorConstants.ERR_NULL_STREAMS);
+        }
+        if (fileName == null) {
+            throw new CatException(ERR_NULL_FILES);
         }
 
         for (String s : fileName) {
-            if (s.equals("-")) {
+            if (s != null && s.equals("-")) {
                 String res = catStdin(isLineNumber, stdin);
             } else {
                 String res = catFiles(isLineNumber, s);
@@ -159,10 +162,9 @@ public class CatApplication implements CatInterface {
     public void appendLineNumberToListString(List<String> data, List<String> result, long lineNumber) {
         long lineNum = lineNumber;
         for (String s : data) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(String.format(NUMBER_FORMAT, lineNum));
-            sb.append(s);
-            result.add(sb.toString());
+            StringBuilder sBuilder = new StringBuilder();
+            sBuilder.append(String.format(NUMBER_FORMAT, lineNum)).append(s);
+            result.add(sBuilder.toString());
             lineNum += 1;
         }
     }
