@@ -1,5 +1,6 @@
 package sg.edu.nus.comp.cs4218.impl.app;
 
+import static java.nio.file.StandardOpenOption.APPEND;
 import static org.junit.jupiter.api.Assertions.*;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
@@ -20,6 +21,7 @@ class SortApplicationTest {
         try {
             deleteDir(new File(file));
             Files.createFile(Paths.get(file));
+            Files.write(Paths.get(file), ("10" + STRING_NEWLINE + "1" + STRING_NEWLINE + "2").getBytes(), APPEND);
         } catch (IOException ioe) {
             System.err.println("error creating temporary test file " + ioe);
         }
@@ -43,57 +45,37 @@ class SortApplicationTest {
 
     @Test
     void sortFromFiles_firstWordNumberNotReverseOrderNotCaseIndependent_returnsLines() throws Exception {
-        FileWriter fileWriter = new FileWriter(file);
-        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-        bufferedWriter.write("10" + STRING_NEWLINE + "1" + STRING_NEWLINE + "2");
-        bufferedWriter.close();
         String output = sortApplication.sortFromFiles(true, false, false, new String[]{file});
         assertEquals("1" + STRING_NEWLINE + "2" + STRING_NEWLINE + "10", output);
-        fileWriter.close();
+
     }
 
     @Test
     void sortFromFiles_notFirstWordNumberReverseOrderNotCaseIndependent_returnsLines() throws Exception {
-        FileWriter fileWriter = new FileWriter(file);
-        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-        bufferedWriter.write("10" + STRING_NEWLINE + "1" + STRING_NEWLINE + "2");
-        bufferedWriter.close();
         String output = sortApplication.sortFromFiles(false, true, false, new String[]{file});
         assertEquals("2" + STRING_NEWLINE + "10" + STRING_NEWLINE + "1", output);
-        fileWriter.close();
+
     }
 
     @Test
     void sortFromFiles_notFirstWordNumberNotReverseOrderCaseIndependent_returnsLines() throws Exception {
-        FileWriter fileWriter = new FileWriter(file);
-        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-        bufferedWriter.write("10" + STRING_NEWLINE + "1" + STRING_NEWLINE + "2");
-        bufferedWriter.close();
         String output = sortApplication.sortFromFiles(false, false, true, new String[]{file});
         assertEquals("1" + STRING_NEWLINE + "10" + STRING_NEWLINE + "2", output);
-        fileWriter.close();
+
     }
 
     @Test
     void sortFromFiles_firstWordNumberReverseOrderCaseIndependent_returnsLines() throws Exception {
-        FileWriter fileWriter = new FileWriter(file);
-        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-        bufferedWriter.write("10" + STRING_NEWLINE + "1" + STRING_NEWLINE + "2");
-        bufferedWriter.close();
         String output = sortApplication.sortFromFiles(true, true, true, new String[]{file});
         assertEquals("10" + STRING_NEWLINE + "2" + STRING_NEWLINE + "1", output);
-        fileWriter.close();
+
     }
 
     @Test
     void sortFromFiles_notFirstWordNumberNotReverseOrderNotCaseIndependent_returnsLines() throws Exception {
-        FileWriter fileWriter = new FileWriter(file);
-        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-        bufferedWriter.write("10" + STRING_NEWLINE + "1" + STRING_NEWLINE + "2");
-        bufferedWriter.close();
         String output = sortApplication.sortFromFiles(false, false, false, new String[]{file});
         assertEquals("1" + STRING_NEWLINE + "10" + STRING_NEWLINE + "2", output);
-        fileWriter.close();
+
     }
 
     @Test
