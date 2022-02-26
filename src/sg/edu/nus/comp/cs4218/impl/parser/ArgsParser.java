@@ -11,16 +11,18 @@ import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FLAG_PREFIX;
  * information.
  */
 public class ArgsParser {
-    public static final String ILLEGAL_FLAG_MSG = "illegal option -- ";
+    public static final String ILLEGAL_FLAG_MSG = "invalid option -- ";
 
     protected Set<Character> flags;
     protected Set<Character> legalFlags;
     protected List<String> nonFlagArgs;
+    protected List<Character> illegalFlags;
 
     protected ArgsParser() {
         flags = new HashSet<>();
         legalFlags = new HashSet<>();
         nonFlagArgs = new ArrayList<>();
+        illegalFlags = new ArrayList<>();
     }
 
     /**
@@ -34,6 +36,7 @@ public class ArgsParser {
                 // Treat the characters (excluding CHAR_FLAG_PREFIX) as individual flags.
                 for (int i = 1; i < arg.length(); i++) {
                     flags.add(arg.charAt(i));
+                    illegalFlags.add(arg.charAt(i));
                 }
             } else {
                 nonFlagArgs.add(arg);
@@ -52,7 +55,6 @@ public class ArgsParser {
      * @throws InvalidArgsException
      */
     protected void validateArgs() throws InvalidArgsException {
-        Set<Character> illegalFlags = new HashSet<>(flags);
         illegalFlags.removeAll(legalFlags);
 
         // construct exception message with the first illegal flag encountered

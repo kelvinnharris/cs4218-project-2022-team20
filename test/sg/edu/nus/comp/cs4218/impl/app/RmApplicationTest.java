@@ -20,22 +20,36 @@ class RmApplicationTest {
     private static final String ROOT_PATH = Environment.currentDirectory;
     private static final String TEST_FOLDER_NAME = "tmpRmTestFolder" + CHAR_FILE_SEP;
     private static final String TEST_PATH = ROOT_PATH + CHAR_FILE_SEP + TEST_FOLDER_NAME;
+    private static final String FOLDER_1 = "folder1";
+    private static final String FOLDER_2 = "folder2";
+    private static final String FOLDER_3 = "folder3";
+    private static final String FOLDER_4 = "folder4";
+    private static final String FOLDER_5 = "folder5";
+    private static final String FOLDER_6 = "folder6";
+    private static final String FOLDER_7 = "folder7";
+    private static final String FILE_1 = "file1.txt";
+    private static final String FILE_2 = "file2.iml";
+    private static final String FILE_3 = "file3.txt";
+    private static final String FILE_4 = "file4.xml";
+    private static final String FILE_5 = "file5.txt";
+    private static final String FILE_6 = "file6.txt";
+
 
     @BeforeAll
     static void setUp() throws IOException {
         rmApplication = new RmApplication();
 
         deleteDir(new File(TEST_PATH));
-        Files.createDirectories(Paths.get(TEST_PATH + "folder1" + CHAR_FILE_SEP + "folder2"));
-        Files.createDirectories(Paths.get(TEST_PATH + "folder3" + CHAR_FILE_SEP + "folder4"));
-        Files.createDirectories(Paths.get(TEST_PATH + "folder5"));
-        Files.createDirectories(Paths.get(TEST_PATH + "folder6" + CHAR_FILE_SEP + "folder7"));
-        Files.createFile(Paths.get(TEST_PATH + "folder1" + CHAR_FILE_SEP + "file1.txt"));
-        Files.createFile(Paths.get(TEST_PATH + "folder1" + CHAR_FILE_SEP + "file2.iml"));
-        Files.createFile(Paths.get(TEST_PATH + "file4.xml"));
-        Files.createFile(Paths.get(TEST_PATH + "file5.txt"));
-        Files.createFile(Paths.get(TEST_PATH + "folder3" + CHAR_FILE_SEP + "folder4" + CHAR_FILE_SEP + "file3.txt"));
-        Files.createFile(Paths.get(TEST_PATH + "folder6" + CHAR_FILE_SEP + "folder7" + CHAR_FILE_SEP + "file6.txt"));
+        Files.createDirectories(Paths.get(TEST_PATH + FOLDER_1 + CHAR_FILE_SEP + FOLDER_2));
+        Files.createDirectories(Paths.get(TEST_PATH + FOLDER_3 + CHAR_FILE_SEP + FOLDER_4));
+        Files.createDirectories(Paths.get(TEST_PATH + FOLDER_5));
+        Files.createDirectories(Paths.get(TEST_PATH + FOLDER_6 + CHAR_FILE_SEP + FOLDER_7));
+        Files.createFile(Paths.get(TEST_PATH + FOLDER_1 + CHAR_FILE_SEP + FILE_1));
+        Files.createFile(Paths.get(TEST_PATH + FOLDER_1 + CHAR_FILE_SEP + FILE_2));
+        Files.createFile(Paths.get(TEST_PATH + FILE_4));
+        Files.createFile(Paths.get(TEST_PATH + FILE_5));
+        Files.createFile(Paths.get(TEST_PATH + FOLDER_3 + CHAR_FILE_SEP + FOLDER_4 + CHAR_FILE_SEP + FILE_3));
+        Files.createFile(Paths.get(TEST_PATH + FOLDER_6 + CHAR_FILE_SEP + FOLDER_7 + CHAR_FILE_SEP + FILE_6));
 
     }
 
@@ -61,55 +75,55 @@ class RmApplicationTest {
 
     @Test
     void remove_emptyFolderNotRecursiveFolder_removeEmptyFolder() throws Exception {
-        String path = TEST_PATH + "folder5";
-        rmApplication.remove(true, false, new String[] {path});
+        String path = TEST_PATH + FOLDER_5;
+        rmApplication.remove(true, false, new String[]{path});
         File tempFile = new File(path);
         assertFalse(tempFile.exists());
     }
 
     @Test
     void remove_emptyFolderNotRecursiveFile_removeFile() throws Exception {
-        String path = TEST_PATH + "file4.xml";
-        rmApplication.remove(true, false, new String[] {path});
+        String path = TEST_PATH + FILE_4;
+        rmApplication.remove(true, false, new String[]{path});
         File tempFile = new File(path);
         assertFalse(tempFile.exists());
     }
 
     @Test
     void remove_notEmptyFolderRecursiveFolder_removeFolderRecursively() throws Exception {
-        String path = TEST_PATH + "folder1";
-        rmApplication.remove(false, true, new String[] {path});
+        String path = TEST_PATH + FOLDER_1;
+        rmApplication.remove(false, true, new String[]{path});
         File tempFile = new File(path);
         assertFalse(tempFile.exists());
     }
 
     @Test
     void remove_notEmptyFolderRecursiveFile_removeFile() throws Exception {
-        String path = TEST_PATH + "file5.txt";
-        rmApplication.remove(false, true, new String[] {path});
+        String path = TEST_PATH + FILE_5;
+        rmApplication.remove(false, true, new String[]{path});
         File tempFile = new File(path);
         assertFalse(tempFile.exists());
     }
 
     @Test
     void remove_emptyFolderRecursiveFolder_removeFolderRecursively() throws Exception {
-        String path = TEST_PATH + "folder3";
-        rmApplication.remove(true, true, new String[] {path});
+        String path = TEST_PATH + FOLDER_3;
+        rmApplication.remove(true, true, new String[]{path});
         File tempFile = new File(path);
         assertFalse(tempFile.exists());
     }
 
     @Test
     void remove_notEmptyFolderNotRecursiveFolder_removeFile() throws Exception {
-        String path = TEST_PATH + "folder6" + CHAR_FILE_SEP + "folder7" + CHAR_FILE_SEP + "file6.txt";
-        rmApplication.remove(false, false, new String[] {path});
+        String path = TEST_PATH + FOLDER_6 + CHAR_FILE_SEP + FOLDER_7 + CHAR_FILE_SEP + FILE_6;
+        rmApplication.remove(false, false, new String[]{path});
         File tempFile = new File(path);
         assertFalse(tempFile.exists());
     }
 
     @Test
     void remove_notEmptyFolderNotRecursiveFolder_throwsError() throws Exception {
-        String path = TEST_PATH + "folder6" + CHAR_FILE_SEP + "folder7";
-        assertThrows(Exception.class, () -> rmApplication.remove(false, false, new String[] {path}));
+        String path = TEST_PATH + FOLDER_6 + CHAR_FILE_SEP + FOLDER_7;
+        assertThrows(Exception.class, () -> rmApplication.remove(false, false, new String[]{path}));
     }
 }

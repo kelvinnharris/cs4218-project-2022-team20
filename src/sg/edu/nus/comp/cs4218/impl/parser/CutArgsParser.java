@@ -69,8 +69,10 @@ public class CutArgsParser extends ArgsParser {
                 startIdx = index[0];
                 endIdx = index[0];
             }
+        } catch (IndexOutOfBoundsException e) {
+            throw new IndexOutOfBoundsException(e.getMessage());//NOPMD
         } catch (Exception e) {
-            throw new InvalidArgsException(e.getMessage());
+            throw new InvalidArgsException(e.getMessage());//NOPMD
         }
     }
 
@@ -78,10 +80,16 @@ public class CutArgsParser extends ArgsParser {
         return range;
     }
 
-    public int getStartIdx() { return startIdx; }
+    public int getStartIdx() {
+        return startIdx;
+    }
 
-    public int getEndIdx() { return endIdx; }
+    public int getEndIdx() {
+        return endIdx;
+    }
 
-    public int[] getIndex() { return index; }
+    public int[] getIndex() {
+        return index;
+    }
 
 }
