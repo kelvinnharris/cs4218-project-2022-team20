@@ -218,4 +218,24 @@ class CutApplicationTest {
         assertEquals(STRING_NEWLINE + STRING_NEWLINE, output);
     }
 
+    @Test
+    void cutFromStdin_byCharIndexMoreThanInputSize_returnsNull() throws Exception {
+        String inputString = "a";
+        InputStream input = new ByteArrayInputStream(inputString.getBytes());
+        String output = cutApplication.cutFromStdin(true, false, false, 1, 2, input);
+        char[] charArray = new char[1];
+        String expected = new String(charArray) + STRING_NEWLINE;
+        assertEquals(expected , output);
+    }
+
+    @Test
+    void cutFromStdin_byByteIndexMoreThanInputSize_returnsNull() throws Exception {
+        String inputString = "a";
+        InputStream input = new ByteArrayInputStream(inputString.getBytes());
+        String output = cutApplication.cutFromStdin(false, true, false, 1, 2, input);
+        byte[] byteArray = new byte[1];
+        String expected = new String(byteArray) + STRING_NEWLINE;
+        assertEquals(expected , output);
+    }
+
 }

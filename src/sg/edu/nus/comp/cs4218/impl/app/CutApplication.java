@@ -178,7 +178,7 @@ public class CutApplication implements CutInterface {
                     currArray = new char[Math.min(1, line.length())];
 
                     charArray = line.toCharArray();
-                    if (1 <= line.length()) {
+                    if (1 <= line.length() && startIdx < charArray.length) {
                         currArray[0] = charArray[startIdx];
                     }
                     output += new String(currArray) + STRING_NEWLINE;
@@ -207,7 +207,7 @@ public class CutApplication implements CutInterface {
                     currArray = new byte[Math.min(1, line.length())];
 
                     byteArray = line.getBytes();
-                    if (1 <= line.length()) {
+                    if (1 <= line.length() && startIdx < byteArray.length) {
                         currArray[0] = byteArray[startIdx];
                     }
                     output += new String(currArray) + STRING_NEWLINE;
