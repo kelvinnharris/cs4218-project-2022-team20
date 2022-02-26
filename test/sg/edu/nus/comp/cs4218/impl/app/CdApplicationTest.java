@@ -15,6 +15,7 @@ import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
+import static sg.edu.nus.comp.cs4218.impl.util.TestConstants.CD_FOLDER;
 
 class CdApplicationTest {
     /* before each file path:
@@ -27,11 +28,12 @@ class CdApplicationTest {
 
     private static CdApplication cdApplication;
     private static final String ROOT_PATH = Environment.currentDirectory;
-    private static final String TEST_FOLDER_NAME = "tmpCdTestFolder" + CHAR_FILE_SEP + "";
+    private static final String TEST_FOLDER_NAME = CD_FOLDER + CHAR_FILE_SEP;
     private static final String TEST_PATH = ROOT_PATH + CHAR_FILE_SEP + TEST_FOLDER_NAME;
 
 
     @BeforeAll
+    @SuppressWarnings("PMD.AvoidDuplicateLiterals")
     static void setUp() throws IOException {
         cdApplication = new CdApplication();
         deleteDir(new File(TEST_PATH));
@@ -115,13 +117,13 @@ class CdApplicationTest {
 
     @Test
     void testCd_noArgs_shouldReturnCdError() throws CdException {
-        String[] emptyArgs = new String[]{ "" };
+        String[] emptyArgs = new String[]{""};
         assertThrows(CdException.class, () -> cdApplication.run(emptyArgs, System.in, System.out));
     }
 
     @Test
     void testCd_multipleArgs_shouldTakeFirstArgumentOnly() throws CdException {
-        String[] args = new String[]{ TEST_PATH + "folder1" + CHAR_FILE_SEP + "folder2", TEST_PATH + "folder1", "." };
+        String[] args = new String[]{TEST_PATH + "folder1" + CHAR_FILE_SEP + "folder2", TEST_PATH + "folder1", "."};
         cdApplication.run(args, System.in, System.out);
         Path currentPath = Paths.get(Environment.currentDirectory).normalize();
         Path givenPath = Paths.get(TEST_PATH + "folder1" + CHAR_FILE_SEP + "folder2").normalize();

@@ -1,6 +1,7 @@
 package sg.edu.nus.comp.cs4218.impl.app;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.*;
 import sg.edu.nus.comp.cs4218.exception.EchoException;
 
@@ -15,39 +16,39 @@ class EchoApplicationTest {
     @Test
     void testEcho_emptyArgument_shouldReturnNewLine() throws EchoException {
         String[] emptyArgs = new String[]{};
-        String outputEmptyArgs = echoApplication.constructResult(emptyArgs);
-        assertEquals(System.lineSeparator(), outputEmptyArgs);
+        String outputEmpty = echoApplication.constructResult(emptyArgs);
+        assertEquals(System.lineSeparator(), outputEmpty);
     }
 
     @Test
     void testEcho_emptyStringArgument_shouldReturnNewLine() throws EchoException {
-        String[] emptyStringArgs = new String[]{ "" };
-        String outputEmptyStringArgs = echoApplication.constructResult(emptyStringArgs);
-        assertEquals(System.lineSeparator(), outputEmptyStringArgs);
+        String[] emptyStringArgs = new String[]{""};
+        String outputEmptyString = echoApplication.constructResult(emptyStringArgs);
+        assertEquals(System.lineSeparator(), outputEmptyString);
     }
 
     @Test
     void testEcho_passUnicodeAsParameter_shouldReturnSameAsInput() throws EchoException {
-        String[] unicodeArgs = new String[]{ "🐯" };
-        String outputUnicodeArgs = echoApplication.constructResult(unicodeArgs);
+        String[] unicodeArgs = new String[]{"🐯"};
+        String outputUnicode = echoApplication.constructResult(unicodeArgs);
 
-        assertEquals("🐯" + System.lineSeparator(), outputUnicodeArgs);
+        assertEquals("🐯" + System.lineSeparator(), outputUnicode);
     }
 
     @Test
     void testEcho_passOneNormalText_shouldReturnSameAsInput() throws EchoException {
-        String[] oneArgs = new String[]{ "hello1" };
-        String outputOneArgs = echoApplication.constructResult(oneArgs);
-        assertEquals("hello1" + System.lineSeparator(), outputOneArgs);
+        String[] oneArgs = new String[]{"hello1"};
+        String outputOne = echoApplication.constructResult(oneArgs);
+        assertEquals("hello1" + System.lineSeparator(), outputOne);
     }
 
     @Test
     void testEcho_passMultipleNormalText_shouldReturnSameAsInput() throws EchoException {
-        String[] multipleArgs = new String[]{ "hello1", "hello2", "\"hello3\"" };
-        String outputMultipleArgs = echoApplication.constructResult(multipleArgs);
+        String[] multipleArgs = new String[]{"hello1", "hello2", "\"hello3\""};
+        String outputMultiple = echoApplication.constructResult(multipleArgs);
 
         // on actually echo, args that is passed to constructResult, the double quote of hello3 has been removed
-        assertEquals("hello1 hello2 \"hello3\"" + System.lineSeparator(), outputMultipleArgs);
+        assertEquals("hello1 hello2 \"hello3\"" + System.lineSeparator(), outputMultiple);
     }
 
     @Test
