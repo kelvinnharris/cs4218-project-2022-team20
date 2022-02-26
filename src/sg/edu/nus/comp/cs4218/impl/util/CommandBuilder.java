@@ -61,6 +61,12 @@ public final class CommandBuilder {
 
             // no valid arguments found
             if (!matcher.find()) {
+                char firstChar = commandSubstring.charAt(0);
+                // can end a command with semicolon
+                if (firstChar == ';') {
+                    commandSubstring = commandSubstring.substring(1);
+                    continue;
+                }
                 throw new ShellException(ERR_SYNTAX);
             }
 
