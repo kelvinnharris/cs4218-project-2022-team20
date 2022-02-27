@@ -22,9 +22,9 @@ public class TeeApplication implements TeeInterface {
     /**
      * Runs application with specified input data and specified output stream.
      *
-     * @param args      The arguments representing the files/folders
-     * @param stdin     The input stream
-     * @param stdout    The output stream
+     * @param args   The arguments representing the files/folders
+     * @param stdin  The input stream
+     * @param stdout The output stream
      */
     @Override
     public void run(String[] args, InputStream stdin, OutputStream stdout) throws AbstractApplicationException {
@@ -39,7 +39,7 @@ public class TeeApplication implements TeeInterface {
         try {
             parser.parse(args);
         } catch (InvalidArgsException e) {
-            throw new TeeException(e.getMessage());
+            throw new TeeException(e);
         }
 
         Boolean isAppend = parser.isAppend();
@@ -49,39 +49,25 @@ public class TeeApplication implements TeeInterface {
         try {
             stdout.write(result.getBytes());
         } catch (Exception e) {
-            throw new TeeException("Cannot write to output stream");
+            throw new TeeException(e);
         }
     }
 
     /**
      * Reads from standard input and write to both the standard output and files.
      *
-     * @param isAppend      Boolean option to append the standard input to the contents of the input files
-     * @param stdin         Input stream containing arguments from Stdin
-     * @param fileName      Array of String of file names
-     * @return              A string to be written to output stream
+     * @param isAppend Boolean option to append the standard input to the contents of the input files
+     * @param stdin    Input stream containing arguments from Stdin
+     * @param files    Array of String of file names
+     * @return A string to be written to output stream
      * @throws TeeException Exception related to tee
      */
     @Override
-    public String teeFromStdin(Boolean isAppend, InputStream stdin, String... fileName) throws TeeException {
-        // check all files are regular files and exist
-        for (String file : fileName) {
-            String cwd = Environment.currentDirectory;
-            Path filePath = Paths.get(cwd, file).normalize();
-            if (!Files.exists(filePath)) {
-                try {
-                    Files.createFile(filePath);
-                } catch (IOException ioe) {
-                    throw new TeeException(ioe.getMessage());
-                }
-            }
-            if (!Files.isRegularFile(filePath)) {
-                throw new TeeException(String.format("File '%s' is not a regular file.", filePath));
-            }
-        }
+    public String teeFromStdin(Boolean isAppend, InputStream stdin, String... files) throws TeeException { //NOPMD
+        checkFilesExist(files);
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(stdin));
-        StringBuilder sb = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder();
 
         while (true) {
             try {
@@ -90,7 +76,7 @@ public class TeeApplication implements TeeInterface {
                 try {
                     input = reader.readLine();
                 } catch (IOException e) {
-                    throw new TeeException("Streams are closed"); // Streams are closed, terminate process
+                    throw new TeeException("Streams are closed"); // Streams are closed, terminate proces // NOPMD
                 }
 
                 if (StringUtils.isBlank(input)) {
@@ -98,17 +84,17 @@ public class TeeApplication implements TeeInterface {
                 }
 
                 String toAppend = input + STRING_NEWLINE;
-                sb.append(toAppend);
+                stringBuilder.append(toAppend);
 
                 // write each line to files immediately to preserve order
                 if (isAppend) {
-                    for (String file : fileName) {
+                    for (String file : files) {
                         String cwd = Environment.currentDirectory;
                         Path filePath = Paths.get(cwd, file).normalize();
                         try {
                             Files.write(filePath, toAppend.getBytes(), APPEND);
                         } catch (Exception e) {
-                            throw new TeeException(String.format("Cannot write to file '%s'.", filePath));
+                            throw new TeeException(String.format("Cannot write to file '%s'.", filePath)); //NOPMD
                         }
                     }
                 }
@@ -119,17 +105,35 @@ public class TeeApplication implements TeeInterface {
         }
 
         if (!isAppend) {
-            for (String file : fileName) {
+            for (String file : files) {
                 String cwd = Environment.currentDirectory;
                 Path filePath = Paths.get(cwd, file).normalize();
                 try {
-                    Files.write(filePath, sb.toString().getBytes());
+                    Files.write(filePath, stringBuilder.toString().getBytes());
                 } catch (Exception e) {
-                    throw new TeeException(String.format("Cannot write to file '%s'.", filePath));
+                    throw new TeeException(String.format("Cannot write to file '%s'.", filePath)); //NOPMD
                 }
             }
         }
 
-        return sb.toString();
+        return stringBuilder.toString();
+    }
+
+    public void checkFilesExist(String... files) throws TeeException {
+        // check all files are regular files and exist
+        for (String file : files) {
+            String cwd = Environment.currentDirectory;
+            Path filePath = Paths.get(cwd, file).normalize();
+            if (!Files.exists(filePath)) {
+                try {
+                    Files.createFile(filePath);
+                } catch (IOException ioe) {
+                    throw new TeeException(ioe);
+                }
+            }
+            if (!Files.isRegularFile(filePath)) {
+                throw new TeeException(String.format("File '%s' is not a regular file.", filePath));
+            }
+        }
     }
 }

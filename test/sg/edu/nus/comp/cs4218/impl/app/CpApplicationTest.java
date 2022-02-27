@@ -30,9 +30,7 @@ public class CpApplicationTest {
         > destFolder
      */
 
-    private static CpApplication cpApplication;
     private static final String ROOT_PATH = Environment.currentDirectory;
-
     private static final String SRC_FOLDER_NAME = "srcFolder";
     private static final String SRC_FOLDER1_NAME = "srcFolder1";
     private static final String SRC_FOLDER2_NAME = "srcFolder2";
@@ -40,7 +38,6 @@ public class CpApplicationTest {
     private static final String FILE2_NAME = "file2.txt";
     private static final String FILE3_NAME = "file3.xml";
     private static final String DEST_FOLDER_NAME = "destFolder";
-
     private static final String SRC_FOLDER_PATH = SRC_FOLDER_NAME;
     private static final String SRC_FOLDER1_PATH = SRC_FOLDER_NAME + CHAR_FILE_SEP + SRC_FOLDER1_NAME;
     private static final String SRC_FOLDER2_PATH = SRC_FOLDER_NAME + CHAR_FILE_SEP + SRC_FOLDER1_NAME + CHAR_FILE_SEP + "srcFolder2";
@@ -48,29 +45,11 @@ public class CpApplicationTest {
     private static final String FILE2_PATH = SRC_FOLDER_NAME + CHAR_FILE_SEP + SRC_FOLDER1_NAME + CHAR_FILE_SEP + "file2.txt";
     private static final String FILE3_PATH = SRC_FOLDER_NAME + CHAR_FILE_SEP + SRC_FOLDER1_NAME + CHAR_FILE_SEP + "srcFolder2" + CHAR_FILE_SEP + "file3.xml";
     private static final String DEST_FOLDER_PATH = "destFolder";
-
+    private static CpApplication cpApplication;
 
     @BeforeAll
     static void setUp() {
         cpApplication = new CpApplication();
-    }
-
-    @BeforeEach
-    void setUpEach() throws IOException {
-        Environment.currentDirectory = ROOT_PATH;
-        deleteDir(new File(SRC_FOLDER_PATH));
-        deleteDir(new File(DEST_FOLDER_PATH));
-        Files.createDirectories(Paths.get(SRC_FOLDER_PATH));
-        Files.createDirectories(Paths.get(SRC_FOLDER1_PATH));
-        Files.createDirectories(Paths.get(SRC_FOLDER2_PATH));
-        Files.createFile(Paths.get(FILE1_PATH));
-        Files.createFile(Paths.get(FILE2_PATH));
-        Files.createFile(Paths.get(FILE3_PATH));
-
-        Files.createDirectories(Paths.get(DEST_FOLDER_PATH));
-
-        List<String> lines = Arrays.asList("The first line", "The second line");
-        Files.write(Paths.get(FILE1_PATH), lines, StandardCharsets.UTF_8);
     }
 
     @AfterAll
@@ -92,6 +71,24 @@ public class CpApplicationTest {
 
     static String readString(Path path) throws IOException {
         return Files.readString(path, StandardCharsets.UTF_8);
+    }
+
+    @BeforeEach
+    void setUpEach() throws IOException {
+        Environment.currentDirectory = ROOT_PATH;
+        deleteDir(new File(SRC_FOLDER_PATH));
+        deleteDir(new File(DEST_FOLDER_PATH));
+        Files.createDirectories(Paths.get(SRC_FOLDER_PATH));
+        Files.createDirectories(Paths.get(SRC_FOLDER1_PATH));
+        Files.createDirectories(Paths.get(SRC_FOLDER2_PATH));
+        Files.createFile(Paths.get(FILE1_PATH));
+        Files.createFile(Paths.get(FILE2_PATH));
+        Files.createFile(Paths.get(FILE3_PATH));
+
+        Files.createDirectories(Paths.get(DEST_FOLDER_PATH));
+
+        List<String> lines = Arrays.asList("The first line", "The second line");
+        Files.write(Paths.get(FILE1_PATH), lines, StandardCharsets.UTF_8);
     }
 
     @Test

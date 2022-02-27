@@ -16,9 +16,7 @@ import java.util.regex.PatternSyntaxException;
 import java.util.stream.Stream;
 
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
-import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
-import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FLAG_PREFIX;
-import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.*;
 
 public class GrepApplication implements GrepInterface {
     public static final String INVALID_PATTERN = "Invalid pattern syntax";
@@ -42,10 +40,10 @@ public class GrepApplication implements GrepInterface {
 
         String results = "";
         if (isCountLines) {
-            results = countResults.toString() + STRING_NEWLINE;
+            results = countResults + STRING_NEWLINE;
         } else {
             if (!lineResults.toString().isEmpty()) {
-                results = lineResults.toString() + STRING_NEWLINE;
+                results = lineResults + STRING_NEWLINE;
             }
         }
         return results;
@@ -154,7 +152,7 @@ public class GrepApplication implements GrepInterface {
      */
     private String convertPathToSystemPath(String path) {
         String convertedPath = path;
-        String pathIdentifier = "\\" + Character.toString(CHAR_FILE_SEP);
+        String pathIdentifier = "\\" + CHAR_FILE_SEP;
         convertedPath = convertedPath.replaceAll("(\\\\)+", pathIdentifier);
         convertedPath = convertedPath.replaceAll("/+", pathIdentifier);
 
@@ -208,7 +206,7 @@ public class GrepApplication implements GrepInterface {
             results = countResults + STRING_NEWLINE;
         } else {
             if (!lineResults.toString().isEmpty()) {
-                results = lineResults.toString() + STRING_NEWLINE;
+                results = lineResults + STRING_NEWLINE;
             }
         }
         return results;

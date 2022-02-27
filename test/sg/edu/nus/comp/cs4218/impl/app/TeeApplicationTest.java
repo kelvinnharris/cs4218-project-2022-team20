@@ -20,36 +20,21 @@ import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 public class TeeApplicationTest {
 
-    private static TeeApplication teeApplication;
-    private static final String ROOT_PATH = Environment.currentDirectory;
-
     public static final String INPUT = "hello" + STRING_NEWLINE + "world" + STRING_NEWLINE + "goodbye" + STRING_NEWLINE + "world" + STRING_NEWLINE;
-    public final InputStream inputStream = new ByteArrayInputStream(INPUT.getBytes());
-    public final OutputStream outputStream = new ByteArrayOutputStream();
-
     public static final String FILE1_NAME = "file1.txt";
-    public static final String FILE1_PATH = ROOT_PATH + CHAR_FILE_SEP + FILE1_NAME;
     public static final String FILE2_NAME = "file2.txt";
-    public static final String FILE2_PATH = ROOT_PATH + CHAR_FILE_SEP + FILE2_NAME;
-
     public static final String[] LINES1 = {"The first file", "The second line"};
     public static final String[] LINES2 = {"The second file", "The second line"};
+    private static final String ROOT_PATH = Environment.currentDirectory;
+    public static final String FILE1_PATH = ROOT_PATH + CHAR_FILE_SEP + FILE1_NAME;
+    public static final String FILE2_PATH = ROOT_PATH + CHAR_FILE_SEP + FILE2_NAME;
+    private static TeeApplication teeApplication;
+    public final InputStream inputStream = new ByteArrayInputStream(INPUT.getBytes());
+    public final OutputStream outputStream = new ByteArrayOutputStream();
 
     @BeforeAll
     static void setUp() {
         teeApplication = new TeeApplication();
-    }
-
-    @BeforeEach
-    void setUpEach() throws IOException {
-        Environment.currentDirectory = ROOT_PATH;
-        Files.deleteIfExists(Paths.get(FILE1_PATH));
-        Files.createFile(Paths.get(FILE1_PATH));
-        Files.deleteIfExists(Paths.get(FILE2_PATH));
-        Files.createFile(Paths.get(FILE2_PATH));
-
-        appendToFile(Paths.get(FILE1_PATH), LINES1);
-        appendToFile(Paths.get(FILE2_PATH), LINES2);
     }
 
     @AfterAll
@@ -76,6 +61,18 @@ public class TeeApplicationTest {
 
     static String readString(Path path) throws IOException {
         return Files.readString(path, StandardCharsets.UTF_8);
+    }
+
+    @BeforeEach
+    void setUpEach() throws IOException {
+        Environment.currentDirectory = ROOT_PATH;
+        Files.deleteIfExists(Paths.get(FILE1_PATH));
+        Files.createFile(Paths.get(FILE1_PATH));
+        Files.deleteIfExists(Paths.get(FILE2_PATH));
+        Files.createFile(Paths.get(FILE2_PATH));
+
+        appendToFile(Paths.get(FILE1_PATH), LINES1);
+        appendToFile(Paths.get(FILE2_PATH), LINES2);
     }
 
     @Test
