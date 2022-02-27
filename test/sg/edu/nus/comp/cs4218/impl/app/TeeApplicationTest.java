@@ -7,18 +7,14 @@ import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.impl.exception.TeeException;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static java.nio.file.StandardOpenOption.APPEND;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
@@ -27,8 +23,9 @@ public class TeeApplicationTest {
     private static TeeApplication teeApplication;
     private static final String ROOT_PATH = Environment.currentDirectory;
 
-    public static final String INPUT = "hello" + STRING_NEWLINE + "world" + STRING_NEWLINE +"goodbye" + STRING_NEWLINE + "world" + STRING_NEWLINE;
+    public static final String INPUT = "hello" + STRING_NEWLINE + "world" + STRING_NEWLINE + "goodbye" + STRING_NEWLINE + "world" + STRING_NEWLINE;
     public final InputStream inputStream = new ByteArrayInputStream(INPUT.getBytes());
+    public final OutputStream outputStream = new ByteArrayOutputStream();
 
     public static final String FILE1_NAME = "file1.txt";
     public static final String FILE1_PATH = ROOT_PATH + CHAR_FILE_SEP + FILE1_NAME;
@@ -163,5 +160,23 @@ public class TeeApplicationTest {
         } catch (Exception e) {
             throw new TeeException(e);
         }
+    }
+
+    @Test
+    void testTee_teeWithEmptyArgs_shouldPass() {
+        String[] args = {};
+        assertDoesNotThrow(() -> teeApplication.run(args, inputStream, outputStream));
+    }
+
+    @Test
+    void testTee_teeWithNullStdin_shouldThrowException() {
+        String[] args = {FILE1_NAME};
+        assertThrows(TeeException.class, () -> teeApplication.run(args, null, outputStream));
+    }
+
+    @Test
+    void testTee_teeWithNullStdout_shouldThrowException() {
+        String[] args = {FILE1_NAME};
+        assertThrows(TeeException.class, () -> teeApplication.run(args, inputStream, null));
     }
 }
