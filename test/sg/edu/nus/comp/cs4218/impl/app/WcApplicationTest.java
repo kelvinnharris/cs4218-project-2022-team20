@@ -88,11 +88,13 @@ public class WcApplicationTest {
 
         StringBuilder sbExpected = new StringBuilder();
         int totalByte = 23;
-        if (System.getProperty("os.name").toLowerCase().contains("win")) {
+        if (System.getProperty("os.name").toLowerCase().contains("win")) { // NOPMD
             totalByte = 24;
         }
-        sbExpected.append(String.format(NUMBER_FORMAT, 1)).append(String.format(NUMBER_FORMAT, 6)).append(String.format(NUMBER_FORMAT, totalByte));
-        sbExpected.append(String.format(" %s", FILE_PATH_1));
+        sbExpected.append(String.format(NUMBER_FORMAT, 1))
+                .append(String.format(NUMBER_FORMAT, 6))
+                .append(String.format(NUMBER_FORMAT, totalByte))
+                .append(String.format(STRING_FORMAT, FILE_PATH_1));
 
         assertEquals(sbExpected.toString(), result);
     }
@@ -105,7 +107,7 @@ public class WcApplicationTest {
         IOUtils.closeInputStream(input);
 
         int totalByte = 23;
-        if (System.getProperty("os.name").toLowerCase().contains("win")) {
+        if (isWindowsSystem()) {
             totalByte = 24;
         }
         assertEquals(String.format(NUMBER_FORMAT, 1) + String.format(NUMBER_FORMAT, 6) + String.format(NUMBER_FORMAT, totalByte), result);
@@ -119,14 +121,13 @@ public class WcApplicationTest {
         IOUtils.closeInputStream(input);
 
         int totalByte = 23;
-        if (System.getProperty("os.name").toLowerCase().contains("win")) {
+        if (isWindowsSystem()) {
             totalByte = 24;
         }
-        StringBuilder sbExpected = new StringBuilder();
-        sbExpected.append(String.format(NUMBER_FORMAT, 1)).append(String.format(NUMBER_FORMAT, 6)).append(String.format(NUMBER_FORMAT, totalByte));
-        sbExpected.append(String.format(" %s", STDIN));
+        String sbExpected = String.format(NUMBER_FORMAT, 1) + String.format(NUMBER_FORMAT, 6) + String.format(NUMBER_FORMAT, totalByte) +
+                String.format(STRING_FORMAT, STDIN);
 
-        assertEquals(sbExpected.toString(), result);
+        assertEquals(sbExpected, result);
     }
 
     @Test
@@ -137,16 +138,16 @@ public class WcApplicationTest {
         StringBuilder sbExpected = new StringBuilder();
         int totalByte = 23;
         int totalBytes2 = 45;
-        if (System.getProperty("os.name").toLowerCase().contains("win")) {
+        if (isWindowsSystem()) {
             totalByte = 24;
             totalBytes2 = 47;
         }
-        sbExpected.append(String.format(NUMBER_FORMAT, 1)).append(String.format(NUMBER_FORMAT, 6)).append(String.format(NUMBER_FORMAT, totalByte));
-        sbExpected.append(String.format(" %s", FILE_PATH_1)).append(STRING_NEWLINE);
-        sbExpected.append(String.format(NUMBER_FORMAT, 2)).append(String.format(NUMBER_FORMAT, 10)).append(String.format(NUMBER_FORMAT, totalBytes2));
-        sbExpected.append(String.format(" %s", FILE_PATH_2)).append(STRING_NEWLINE);
-        sbExpected.append(String.format(NUMBER_FORMAT, 3)).append(String.format(NUMBER_FORMAT, 16)).append(String.format(NUMBER_FORMAT, totalByte + totalBytes2));
-        sbExpected.append(String.format(" %s", "total"));
+        sbExpected.append(String.format(NUMBER_FORMAT, 1)).append(String.format(NUMBER_FORMAT, 6)).append(String.format(NUMBER_FORMAT, totalByte))
+                .append(String.format(STRING_FORMAT, FILE_PATH_1)).append(STRING_NEWLINE)
+                .append(String.format(NUMBER_FORMAT, 2)).append(String.format(NUMBER_FORMAT, 10)).append(String.format(NUMBER_FORMAT, totalBytes2))
+                .append(String.format(STRING_FORMAT, FILE_PATH_2)).append(STRING_NEWLINE)
+                .append(String.format(NUMBER_FORMAT, 3)).append(String.format(NUMBER_FORMAT, 16)).append(String.format(NUMBER_FORMAT, totalByte + totalBytes2))
+                .append(String.format(STRING_FORMAT, TOTAL));
 
         assertEquals(sbExpected.toString(), result);
     }
@@ -162,19 +163,19 @@ public class WcApplicationTest {
         int totalByte = 23;
         int totalBytes2 = 45;
         int totalBytes3 = 66;
-        if (System.getProperty("os.name").toLowerCase().contains("win")) {
+        if (isWindowsSystem()) {
             totalByte = 24;
             totalBytes2 = 47;
             totalBytes3 = 69;
         }
-        sbExpected.append(String.format(NUMBER_FORMAT, 1)).append(String.format(NUMBER_FORMAT, 6)).append(String.format(NUMBER_FORMAT, totalByte));
-        sbExpected.append(String.format(" %s", FILE_PATH_1)).append(STRING_NEWLINE);
-        sbExpected.append(String.format(NUMBER_FORMAT, 2)).append(String.format(NUMBER_FORMAT, 10)).append(String.format(NUMBER_FORMAT, totalBytes2));
-        sbExpected.append(String.format(" %s", FILE_PATH_2)).append(STRING_NEWLINE);
-        sbExpected.append(String.format(NUMBER_FORMAT, 3)).append(String.format(NUMBER_FORMAT, 14)).append(String.format(NUMBER_FORMAT, totalBytes3));
-        sbExpected.append(String.format(" %s", STDIN)).append(STRING_NEWLINE);
-        sbExpected.append(String.format(NUMBER_FORMAT, 6)).append(String.format(NUMBER_FORMAT, 30)).append(String.format(NUMBER_FORMAT, totalByte + totalBytes2 + totalBytes3));
-        sbExpected.append(String.format(" %s", "total"));
+        sbExpected.append(String.format(NUMBER_FORMAT, 1)).append(String.format(NUMBER_FORMAT, 6)).append(String.format(NUMBER_FORMAT, totalByte))
+                .append(String.format(STRING_FORMAT, FILE_PATH_1)).append(STRING_NEWLINE)
+                .append(String.format(NUMBER_FORMAT, 2)).append(String.format(NUMBER_FORMAT, 10)).append(String.format(NUMBER_FORMAT, totalBytes2))
+                .append(String.format(STRING_FORMAT, FILE_PATH_2)).append(STRING_NEWLINE)
+                .append(String.format(NUMBER_FORMAT, 3)).append(String.format(NUMBER_FORMAT, 14)).append(String.format(NUMBER_FORMAT, totalBytes3))
+                .append(String.format(STRING_FORMAT, STDIN)).append(STRING_NEWLINE)
+                .append(String.format(NUMBER_FORMAT, 6)).append(String.format(NUMBER_FORMAT, 30)).append(String.format(NUMBER_FORMAT, totalByte + totalBytes2 + totalBytes3))
+                .append(String.format(STRING_FORMAT, TOTAL));
 
         assertEquals(sbExpected.toString(), result);
     }
@@ -189,17 +190,17 @@ public class WcApplicationTest {
         StringBuilder sbExpected = new StringBuilder();
         int totalByte = 23;
         int totalBytes3 = 66;
-        if (System.getProperty("os.name").toLowerCase().contains("win")) {
+        if (isWindowsSystem()) {
             totalByte = 24;
             totalBytes3 = 69;
         }
-        sbExpected.append(String.format(NUMBER_FORMAT, 1)).append(String.format(NUMBER_FORMAT, 6)).append(String.format(NUMBER_FORMAT, totalByte));
-        sbExpected.append(String.format(" %s", FILE_PATH_1)).append(STRING_NEWLINE);
-        sbExpected.append("wc: ").append(NON_EXISTENT_FILE).append(ERR_NOT_FOUND).append(STRING_NEWLINE);
-        sbExpected.append(String.format(NUMBER_FORMAT, 3)).append(String.format(NUMBER_FORMAT, 14)).append(String.format(NUMBER_FORMAT, totalBytes3));
-        sbExpected.append(String.format(" %s", STDIN)).append(STRING_NEWLINE);
-        sbExpected.append(String.format(NUMBER_FORMAT, 4)).append(String.format(NUMBER_FORMAT, 20)).append(String.format(NUMBER_FORMAT, totalByte + totalBytes3));
-        sbExpected.append(String.format(" %s", "total"));
+        sbExpected.append(String.format(NUMBER_FORMAT, 1)).append(String.format(NUMBER_FORMAT, 6)).append(String.format(NUMBER_FORMAT, totalByte))
+                .append(String.format(STRING_FORMAT, FILE_PATH_1)).append(STRING_NEWLINE)
+                .append(STRING_WC).append(NON_EXISTENT_FILE).append(ERR_NOT_FOUND).append(STRING_NEWLINE)
+                .append(String.format(NUMBER_FORMAT, 3)).append(String.format(NUMBER_FORMAT, 14)).append(String.format(NUMBER_FORMAT, totalBytes3))
+                .append(String.format(STRING_FORMAT, STDIN)).append(STRING_NEWLINE)
+                .append(String.format(NUMBER_FORMAT, 4)).append(String.format(NUMBER_FORMAT, 20)).append(String.format(NUMBER_FORMAT, totalByte + totalBytes3))
+                .append(String.format(STRING_FORMAT, TOTAL));
 
         assertEquals(sbExpected.toString(), result);
     }
@@ -213,17 +214,17 @@ public class WcApplicationTest {
 
         StringBuilder sbExpected = new StringBuilder();
         int totalByte = 23;
-        if (System.getProperty("os.name").toLowerCase().contains("win")) {
+        if (isWindowsSystem()) {
             totalByte = 24;
         }
-        sbExpected.append(String.format(NUMBER_FORMAT, 1)).append(String.format(NUMBER_FORMAT, 6)).append(String.format(NUMBER_FORMAT, totalByte));
-        sbExpected.append(String.format(" %s", STDIN)).append(STRING_NEWLINE);
-        sbExpected.append(String.format(NUMBER_FORMAT, 0)).append(String.format(NUMBER_FORMAT, 0)).append(String.format(NUMBER_FORMAT, 0));
-        sbExpected.append(String.format(" %s", STDIN)).append(STRING_NEWLINE);
-        sbExpected.append(String.format(NUMBER_FORMAT, 0)).append(String.format(NUMBER_FORMAT, 0)).append(String.format(NUMBER_FORMAT, 0));
-        sbExpected.append(String.format(" %s", STDIN)).append(STRING_NEWLINE);
-        sbExpected.append(String.format(NUMBER_FORMAT, 1)).append(String.format(NUMBER_FORMAT, 6)).append(String.format(NUMBER_FORMAT, totalByte));
-        sbExpected.append(String.format(" %s", "total"));
+        sbExpected.append(String.format(NUMBER_FORMAT, 1)).append(String.format(NUMBER_FORMAT, 6)).append(String.format(NUMBER_FORMAT, totalByte))
+                .append(String.format(STRING_FORMAT, STDIN)).append(STRING_NEWLINE)
+                .append(String.format(NUMBER_FORMAT, 0)).append(String.format(NUMBER_FORMAT, 0)).append(String.format(NUMBER_FORMAT, 0))
+                .append(String.format(STRING_FORMAT, STDIN)).append(STRING_NEWLINE)
+                .append(String.format(NUMBER_FORMAT, 0)).append(String.format(NUMBER_FORMAT, 0)).append(String.format(NUMBER_FORMAT, 0))
+                .append(String.format(STRING_FORMAT, STDIN)).append(STRING_NEWLINE)
+                .append(String.format(NUMBER_FORMAT, 1)).append(String.format(NUMBER_FORMAT, 6)).append(String.format(NUMBER_FORMAT, totalByte))
+                .append(String.format(STRING_FORMAT, TOTAL));
 
         assertEquals(sbExpected.toString(), result);
     }
@@ -238,20 +239,20 @@ public class WcApplicationTest {
         StringBuilder sbExpected = new StringBuilder();
         int totalByte = 23;
         int totalBytes2 = 45;
-        if (System.getProperty("os.name").toLowerCase().contains("win")) {
+        if (isWindowsSystem()) {
             totalByte = 24;
             totalBytes2 = 47;
         }
-        sbExpected.append("wc: ").append(TEST_FOLDER_NAME).append(ERR_IS_DIRECTORY).append(STRING_NEWLINE);
-        sbExpected.append(String.format(NUMBER_FORMAT, 0)).append(String.format(NUMBER_FORMAT, 0)).append(String.format(NUMBER_FORMAT, 0));
-        sbExpected.append(String.format(" %s", TEST_FOLDER_NAME)).append(STRING_NEWLINE);
-        sbExpected.append("wc: ").append(NON_EXISTENT_FILE).append(ERR_NOT_FOUND).append(STRING_NEWLINE);
-        sbExpected.append(String.format(NUMBER_FORMAT, 1)).append(String.format(NUMBER_FORMAT, 6)).append(String.format(NUMBER_FORMAT, totalByte));
-        sbExpected.append(String.format(" %s", STDIN)).append(STRING_NEWLINE);
-        sbExpected.append(String.format(NUMBER_FORMAT, 2)).append(String.format(NUMBER_FORMAT, 10)).append(String.format(NUMBER_FORMAT, totalBytes2));
-        sbExpected.append(String.format(" %s", FILE_PATH_2)).append(STRING_NEWLINE);
-        sbExpected.append(String.format(NUMBER_FORMAT, 3)).append(String.format(NUMBER_FORMAT, 16)).append(String.format(NUMBER_FORMAT, totalBytes2 + totalByte));
-        sbExpected.append(String.format(" %s", "total"));
+        sbExpected.append(STRING_WC).append(TEST_FOLDER_NAME).append(ERR_IS_DIRECTORY).append(STRING_NEWLINE)
+                .append(String.format(NUMBER_FORMAT, 0)).append(String.format(NUMBER_FORMAT, 0)).append(String.format(NUMBER_FORMAT, 0))
+                .append(String.format(STRING_FORMAT, TEST_FOLDER_NAME)).append(STRING_NEWLINE)
+                .append(STRING_WC).append(NON_EXISTENT_FILE).append(ERR_NOT_FOUND).append(STRING_NEWLINE)
+                .append(String.format(NUMBER_FORMAT, 1)).append(String.format(NUMBER_FORMAT, 6)).append(String.format(NUMBER_FORMAT, totalByte))
+                .append(String.format(STRING_FORMAT, STDIN)).append(STRING_NEWLINE)
+                .append(String.format(NUMBER_FORMAT, 2)).append(String.format(NUMBER_FORMAT, 10)).append(String.format(NUMBER_FORMAT, totalBytes2))
+                .append(String.format(STRING_FORMAT, FILE_PATH_2)).append(STRING_NEWLINE)
+                .append(String.format(NUMBER_FORMAT, 3)).append(String.format(NUMBER_FORMAT, 16)).append(String.format(NUMBER_FORMAT, totalBytes2 + totalByte))
+                .append(String.format(STRING_FORMAT, TOTAL));
 
         assertEquals(sbExpected.toString(), result);
     }
@@ -274,8 +275,8 @@ public class WcApplicationTest {
 
         StringBuilder sbExpected = new StringBuilder();
         int totalByte = 22 + STRING_NEWLINE.getBytes().length;
-        sbExpected.append(String.format(NUMBER_FORMAT, totalByte));
-        sbExpected.append(String.format(" %s", FILE_PATH_1));
+        sbExpected.append(String.format(NUMBER_FORMAT, totalByte))
+                .append(String.format(STRING_FORMAT, FILE_PATH_1));
 
         assertEquals(sbExpected.toString(), result);
     }
@@ -327,6 +328,10 @@ public class WcApplicationTest {
         InputStream input = IOUtils.openInputStream(FILE_PATH_1); // NOPMD
         assertThrows(WcException.class, () -> wcApplication.countFromFileAndStdin(true, true, true, input, null), ERR_NULL_FILES);
         IOUtils.closeInputStream(input);
+    }
+
+    public boolean isWindowsSystem() {
+        return System.getProperty("os.name").toLowerCase().contains("win"); // NOPMD
     }
 
     // TODO:
