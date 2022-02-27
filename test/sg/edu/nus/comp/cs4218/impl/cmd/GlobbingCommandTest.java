@@ -26,13 +26,17 @@ class GlobbingCommandTest {
     private static final String ROOT_PATH = Environment.currentDirectory;
     private static final String TEST_FOLDER_NAME = GLOBBING_FOLDER + CHAR_FILE_SEP;
     private static final String TEST_PATH = ROOT_PATH + CHAR_FILE_SEP + TEST_FOLDER_NAME;
+    private static final String FOLDER1 = "folder1";
+    private static final String FILE1 = "file1.xml";
+    private static final String FILE2 = "file2.xml";
+    private static final String FILE3 = "file3.txt";
 
     @BeforeAll
     static void setUp() throws IOException {
-        Files.createDirectories(Paths.get(TEST_PATH + "folder1"));
-        Files.createFile(Paths.get(TEST_PATH + "folder1" + CHAR_FILE_SEP + "file1.xml"));
-        Files.createFile(Paths.get(TEST_PATH + "folder1" + CHAR_FILE_SEP + "file2.xml"));
-        Files.createFile(Paths.get(TEST_PATH + "folder1" + CHAR_FILE_SEP + "file3.txt"));
+        Files.createDirectories(Paths.get(TEST_PATH + FOLDER1));
+        Files.createFile(Paths.get(TEST_PATH + FOLDER1 + CHAR_FILE_SEP + FILE1));
+        Files.createFile(Paths.get(TEST_PATH + FOLDER1 + CHAR_FILE_SEP + FILE2));
+        Files.createFile(Paths.get(TEST_PATH + FOLDER1 + CHAR_FILE_SEP + FILE3));
         Files.createFile(Paths.get(TEST_PATH + "file4.txt"));
         Files.createFile(Paths.get(TEST_PATH + "tmp_file1.txt"));
     }
@@ -83,13 +87,13 @@ class GlobbingCommandTest {
 
     @Test
     void testGlobbing_specifiedDirectory_shouldReturnCorrectOutput() throws Exception {
-        String inputString = "ls folder1" + CHAR_FILE_SEP + "*.xml";
+        String inputString = "ls " + FOLDER1 + CHAR_FILE_SEP + "*.xml";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
         command.evaluate(System.in, System.out);
         final String standardOutput = myOut.toString();
-        assertEquals("folder1" + CHAR_FILE_SEP + "file1.xml" + STRING_NEWLINE + STRING_NEWLINE +
-                "folder1" + CHAR_FILE_SEP + "file2.xml" + STRING_NEWLINE, standardOutput);
+        assertEquals(FOLDER1 + CHAR_FILE_SEP + FILE1 + STRING_NEWLINE + STRING_NEWLINE +
+                FOLDER1 + CHAR_FILE_SEP + FILE2 + STRING_NEWLINE, standardOutput);
     }
 
     @Test
@@ -99,8 +103,8 @@ class GlobbingCommandTest {
 
         command.evaluate(System.in, System.out);
         final String standardOutput = myOut.toString();
-        assertEquals("folder1" + CHAR_FILE_SEP + "file1.xml" + STRING_NEWLINE + STRING_NEWLINE +
-                "folder1" + CHAR_FILE_SEP + "file2.xml" + STRING_NEWLINE, standardOutput);
+        assertEquals(FOLDER1 + CHAR_FILE_SEP + FILE1 + STRING_NEWLINE + STRING_NEWLINE +
+                FOLDER1 + CHAR_FILE_SEP + FILE2 + STRING_NEWLINE, standardOutput);
     }
 
     @Test
@@ -110,6 +114,6 @@ class GlobbingCommandTest {
 
         command.evaluate(System.in, System.out);
         final String standardOutput = myOut.toString();
-        assertEquals("file1.xml" + STRING_NEWLINE + "file2.xml" + STRING_NEWLINE + "file3.txt" + STRING_NEWLINE, standardOutput);
+        assertEquals(FILE1 + STRING_NEWLINE + FILE2 + STRING_NEWLINE + FILE3 + STRING_NEWLINE, standardOutput);
     }
 }
