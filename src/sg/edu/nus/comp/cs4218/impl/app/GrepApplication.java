@@ -116,7 +116,7 @@ public class GrepApplication implements GrepInterface { //NOPMD
                 }
                 reader.close();
             } catch (PatternSyntaxException pse) {
-                throw new GrepException(pse);
+                throw new GrepException(ERR_INVALID_REGEX);
             } finally {
                 if (reader != null) {
                     reader.close();
@@ -196,8 +196,10 @@ public class GrepApplication implements GrepInterface { //NOPMD
                 countResults.add(String.valueOf(count));
             }
             reader.close();
-        } catch (PatternSyntaxException | NullPointerException e) {
-            throw new GrepException(e);
+        } catch (PatternSyntaxException pse) {
+            throw new GrepException(ERR_INVALID_REGEX);
+        } catch (NullPointerException npe) {
+            throw new GrepException(ERR_FILE_NOT_FOUND);
         }
 
         String results = "";
