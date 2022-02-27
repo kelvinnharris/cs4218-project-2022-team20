@@ -40,6 +40,7 @@ public class MvApplicationTest {
     private static final String FILE3_NAME = "file3.xml";
     private static final String DEST_FOLDER_NAME = "destFolder";
     private static final String NE_FILE_NAME = "nonExistent.txt";
+    private static final String TEST_PATH = Environment.currentDirectory + CHAR_FILE_SEP + MV_FOLDER;
     private static final String SRC_FOLDER_PATH = MV_FOLDER + CHAR_FILE_SEP + SRC_FOLDER_NAME;
     private static final String SRC_FOLDER1_PATH = MV_FOLDER + CHAR_FILE_SEP + SRC_FOLDER_NAME + CHAR_FILE_SEP + SRC_FOLDER1_NAME;
     private static final String SRC_FOLDER2_PATH = MV_FOLDER + CHAR_FILE_SEP + SRC_FOLDER_NAME + CHAR_FILE_SEP + SRC_FOLDER1_NAME + CHAR_FILE_SEP + SRC_FOLDER2_NAME;
@@ -57,9 +58,7 @@ public class MvApplicationTest {
 
     @AfterAll
     static void tearDown() throws IOException {
-        deleteDir(new File(SRC_FOLDER_PATH));
-        deleteDir(new File(DEST_FOLDER_PATH));
-        Files.deleteIfExists(Paths.get(NE_FILE_PATH));
+        deleteDir(new File(TEST_PATH));
     }
 
     static void deleteDir(File file) {
