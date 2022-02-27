@@ -5,7 +5,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Environment;
-import sg.edu.nus.comp.cs4218.impl.exception.GrepException;
+import sg.edu.nus.comp.cs4218.exception.GrepException;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
