@@ -12,6 +12,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 
 import static java.nio.file.StandardOpenOption.APPEND;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_NO_ISTREAM;
@@ -64,10 +65,11 @@ public class TeeApplication implements TeeInterface {
      */
     @Override
     public String teeFromStdin(Boolean isAppend, InputStream stdin, String... files) throws TeeException { //NOPMD
-        checkFilesExist(files);
+        StringBuilder errorMsgBuilder = new StringBuilder();
+        StringBuilder resultBuilder = new StringBuilder();
+        ArrayList<String> writableFiles = filterWritableFiles(errorMsgBuilder, files);
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(stdin));
-        StringBuilder stringBuilder = new StringBuilder();
 
         while (true) {
             try {
@@ -84,11 +86,11 @@ public class TeeApplication implements TeeInterface {
                 }
 
                 String toAppend = input + STRING_NEWLINE;
-                stringBuilder.append(toAppend);
+                resultBuilder.append(toAppend);
 
                 // write each line to files immediately to preserve order
                 if (isAppend) {
-                    for (String file : files) {
+                    for (String file : writableFiles) {
                         String cwd = Environment.currentDirectory;
                         Path filePath = Paths.get(cwd, file).normalize();
                         try {
@@ -105,35 +107,39 @@ public class TeeApplication implements TeeInterface {
         }
 
         if (!isAppend) {
-            for (String file : files) {
+            for (String file : writableFiles) {
                 String cwd = Environment.currentDirectory;
                 Path filePath = Paths.get(cwd, file).normalize();
                 try {
-                    Files.write(filePath, stringBuilder.toString().getBytes());
+                    Files.write(filePath, resultBuilder.toString().getBytes());
                 } catch (Exception e) {
                     throw new TeeException(String.format("Cannot write to file '%s'.", filePath)); //NOPMD
                 }
             }
         }
 
-        return stringBuilder.toString();
+        return errorMsgBuilder.toString() + resultBuilder;
     }
 
-    public void checkFilesExist(String... files) throws TeeException {
+    public ArrayList<String> filterWritableFiles(StringBuilder stringBuilder, String... files) throws TeeException {
         // check all files are regular files and exist
+        ArrayList<String> writableFiles = new ArrayList<>();
         for (String file : files) {
             String cwd = Environment.currentDirectory;
             Path filePath = Paths.get(cwd, file).normalize();
             if (!Files.exists(filePath)) {
                 try {
                     Files.createFile(filePath);
+                    writableFiles.add(file);
                 } catch (IOException ioe) {
                     throw new TeeException(ioe);
                 }
-            }
-            if (!Files.isRegularFile(filePath)) {
-                throw new TeeException(String.format("File '%s' is not a regular file.", filePath));
+            } else if (Files.isDirectory(filePath)) {
+                stringBuilder.append(String.format("%s: Is a directory" + STRING_NEWLINE, file));
+            } else {
+                writableFiles.add(file);
             }
         }
+        return writableFiles;
     }
 }
