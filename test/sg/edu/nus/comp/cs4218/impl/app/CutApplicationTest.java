@@ -2,9 +2,11 @@ package sg.edu.nus.comp.cs4218.impl.app;
 
 import static java.nio.file.StandardOpenOption.APPEND;
 import static org.junit.jupiter.api.Assertions.*;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 import org.junit.jupiter.api.*;
+import sg.edu.nus.comp.cs4218.Environment;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -12,8 +14,11 @@ import java.nio.file.Paths;
 
 class CutApplicationTest {
     private CutApplication cutApplication;
-    private static final String FILE_SINGLE_LINE = "fileSingleLine.txt";
-    private static final String FILE_MULTIPLE_LINES = "fileMultipleLines.txt"; //NOPMD
+    private static final String ROOT_PATH = Environment.currentDirectory;
+    private static final String TEST_FOLDER_NAME = "tmpCutTestFolder" + CHAR_FILE_SEP;
+    private static final String TEST_PATH = ROOT_PATH + CHAR_FILE_SEP + TEST_FOLDER_NAME;
+    private static final String FILE_SINGLE_LINE = TEST_PATH + "fileSingleLine.txt";
+    private static final String FILE_MULTIPLE_LINES = TEST_PATH + "fileMultipleLines.txt"; //NOPMD
     private static final String ABC = "abc";
     private static final String EFG = "efg";
     private static final String ABCD = "abcd";
@@ -29,8 +34,8 @@ class CutApplicationTest {
     @BeforeAll
     static void setUp() {
         try {
-            deleteDir(new File(FILE_SINGLE_LINE));
-            deleteDir(new File(FILE_MULTIPLE_LINES));
+            deleteDir(new File(TEST_PATH));
+            Files.createDirectories(Paths.get(TEST_PATH));
             Files.createFile(Paths.get(FILE_SINGLE_LINE));
             Files.createFile(Paths.get(FILE_MULTIPLE_LINES));
             Files.write(Paths.get(FILE_SINGLE_LINE), (ABCD).getBytes(), APPEND);
