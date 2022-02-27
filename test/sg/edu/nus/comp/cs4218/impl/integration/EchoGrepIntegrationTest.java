@@ -7,7 +7,10 @@ import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,28 +23,36 @@ import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 public class EchoGrepIntegrationTest {
 
-    private static ShellImpl shell;
-    private static ByteArrayOutputStream stdOut;
-    private static final String ROOT_PATH = Environment.currentDirectory;
-
     public static final String INPUT = "The first file" + STRING_NEWLINE + "The second line" + STRING_NEWLINE + "1000" + STRING_NEWLINE; // NOPMD
-    public final InputStream inputStream = new ByteArrayInputStream(INPUT.getBytes());
-
     public static final String FILE1_NAME = "file1.txt";
-    public static final String FILE1_PATH = ROOT_PATH + CHAR_FILE_SEP + FILE1_NAME;
     public static final String FILE2_NAME = "file2.txt";
-    public static final String FILE2_PATH = ROOT_PATH + CHAR_FILE_SEP + FILE2_NAME;
-
     public static final String NE_FILE_NAME = "nonExistent.txt";
-
     public static final String[] LINES1 = {"The first file", "The second line", "1000"};
     public static final String[] LINES2 = {"The second file", "The second line", "10"};
     public static final String PATTERN1 = "The second";
     public static final String PATTERN1_INSEN = "THE SECoND";
+    private static final String ROOT_PATH = Environment.currentDirectory;
+    public static final String FILE1_PATH = ROOT_PATH + CHAR_FILE_SEP + FILE1_NAME;
+    public static final String FILE2_PATH = ROOT_PATH + CHAR_FILE_SEP + FILE2_NAME;
+    private static ShellImpl shell;
+    private static ByteArrayOutputStream stdOut;
+    public final InputStream inputStream = new ByteArrayInputStream(INPUT.getBytes());
 
     @BeforeAll
     static void setUp() {
         shell = new ShellImpl();
+    }
+
+    @AfterAll
+    static void tearDown() throws IOException {
+        Files.delete(Paths.get(FILE1_PATH));
+        Files.delete(Paths.get(FILE2_PATH));
+    }
+
+    static void appendToFile(Path file, String... lines) throws IOException {
+        for (String line : lines) {
+            Files.write(file, (line + STRING_NEWLINE).getBytes(), APPEND);
+        }
     }
 
     @BeforeEach
@@ -56,18 +67,6 @@ public class EchoGrepIntegrationTest {
 
         appendToFile(Paths.get(FILE1_PATH), LINES1);
         appendToFile(Paths.get(FILE2_PATH), LINES2);
-    }
-
-    @AfterAll
-    static void tearDown() throws IOException {
-        Files.delete(Paths.get(FILE1_PATH));
-        Files.delete(Paths.get(FILE2_PATH));
-    }
-
-    static void appendToFile(Path file, String... lines) throws IOException {
-        for (String line : lines) {
-            Files.write(file, (line + STRING_NEWLINE).getBytes(), APPEND);
-        }
     }
 
     @Test

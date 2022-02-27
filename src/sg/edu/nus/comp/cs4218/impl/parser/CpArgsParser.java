@@ -2,16 +2,16 @@ package sg.edu.nus.comp.cs4218.impl.parser;
 
 public class CpArgsParser extends ArgsParser {
     private final static char FLAG_IS_RECURSIVE = 'r';
-    private final static char FLAG_IS_RECURSIVE_UPPERCASE = 'R';
+    private final static char FLAG_IS_REC_UP = 'R'; // recursive uppercase
 
     public CpArgsParser() {
         super();
         legalFlags.add(FLAG_IS_RECURSIVE);
-        legalFlags.add(FLAG_IS_RECURSIVE_UPPERCASE);
+        legalFlags.add(FLAG_IS_REC_UP);
     }
 
     public Boolean isRecursive() {
-        return flags.contains(FLAG_IS_RECURSIVE) || flags.contains(FLAG_IS_RECURSIVE_UPPERCASE);
+        return flags.contains(FLAG_IS_RECURSIVE) || flags.contains(FLAG_IS_REC_UP);
     }
 
     public String[] getSourceFiles() {

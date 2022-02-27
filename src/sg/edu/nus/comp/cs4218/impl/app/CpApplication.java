@@ -23,9 +23,9 @@ public class CpApplication implements CpInterface {
     /**
      * Runs application with specified input data and specified output stream.
      *
-     * @param args      The arguments representing the files/folders
-     * @param stdin     Standard input
-     * @param stdout    Standard output
+     * @param args   The arguments representing the files/folders
+     * @param stdin  Standard input
+     * @param stdout Standard output
      */
     @Override
     public void run(String[] args, InputStream stdin, OutputStream stdout) throws AbstractApplicationException {
@@ -40,7 +40,7 @@ public class CpApplication implements CpInterface {
         try {
             parser.parse(args);
         } catch (InvalidArgsException e) {
-            throw new CpException(e.getMessage());
+            throw new CpException(e);
         }
 
         Boolean isRecursive = parser.isRecursive();
@@ -55,9 +55,7 @@ public class CpApplication implements CpInterface {
 
         if (Files.isDirectory(destAbsPath)) {
             cpFilesToFolder(isRecursive, destFile, srcFiles);
-        }
-
-        else {
+        } else {
             if (srcFiles.length > 1) {
                 throw new CpException(ERR_TOO_MANY_ARGS);
             }
@@ -94,17 +92,17 @@ public class CpApplication implements CpInterface {
         try {
             Files.copy(srcAbsPath, destAbsPath, REPLACE_EXISTING);
         } catch (Exception e) {
-            throw new CpException("Cannot copy");
+            throw new CpException(e);
         }
     }
 
     /**
      * Wrapper function for copying files to destination folder.
      *
-     * @param isRecursive   Copy folders (directories) recursively
-     * @param destFolder    Name of destination folder in cwd
-     * @param fileName      Array of String of file names
-     * @throws CpException  Exception related to cp
+     * @param isRecursive Copy folders (directories) recursively
+     * @param destFolder  Name of destination folder in cwd
+     * @param fileName    Array of String of file names
+     * @throws CpException Exception related to cp
      */
     @Override
     public void cpFilesToFolder(Boolean isRecursive, String destFolder, String... fileName) throws CpException {
@@ -135,7 +133,7 @@ public class CpApplication implements CpInterface {
      * @param srcFile       Source file/folder to copy from relative to srcCwd
      * @param destFolderArg Original argument provided in input for destination folder
      * @param srcFileArg    Original argument provided in input for source file
-     * @throws CpException  Exception related to cp
+     * @throws CpException Exception related to cp
      */
     public void cpFilesToFolderImpl(Boolean isRecursive, String destCwd, String srcCwd, String destFolder,
                                     String srcFile, String destFolderArg, String srcFileArg,
@@ -153,7 +151,7 @@ public class CpApplication implements CpInterface {
                                 destFolderArg + "/" + srcFile));
                     }
 
-                    isCopiedOnce = true;
+                    isCopiedOnce = true; //NOPMD
 
                     // Copy the directory itself
                     if (!Files.exists(destAbsPath)) {
@@ -180,7 +178,7 @@ public class CpApplication implements CpInterface {
         } catch (CpException e) {
             throw e;
         } catch (Exception e) {
-            throw new CpException(e.getMessage());
+            throw new CpException(e);
         }
     }
 
@@ -192,8 +190,7 @@ public class CpApplication implements CpInterface {
 
     public Path getAbsolutePath(String fileName) {
         String cwd = Environment.currentDirectory;
-        Path absPath = Paths.get(cwd, fileName).normalize();
-        return absPath;
+        return Paths.get(cwd, fileName).normalize();
     }
 
 }
