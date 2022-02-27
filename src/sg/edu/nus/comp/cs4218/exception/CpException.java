@@ -10,7 +10,7 @@ public class CpException extends AbstractApplicationException {
         super("cp: " + message);
     }
 
-    public CpException(Exception e) {
-        super("cp: " + e.getMessage());
+    public CpException(Exception exception) {
+        super("cp: " + exception.getMessage());
     }
 }

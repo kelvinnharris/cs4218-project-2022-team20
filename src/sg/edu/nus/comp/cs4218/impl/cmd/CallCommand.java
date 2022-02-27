@@ -9,6 +9,7 @@ import sg.edu.nus.comp.cs4218.impl.util.IORedirectionHandler;
 import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
@@ -42,8 +43,8 @@ public class CallCommand implements Command {
         IORedirectionHandler redirHandler = new IORedirectionHandler(argsList, stdin, stdout, argumentResolver);
         redirHandler.extractRedirOptions();
         List<String> noRedirArgsList = redirHandler.getNoRedirArgsList();
-        InputStream inputStream = redirHandler.getInputStream();
-        OutputStream outputStream = redirHandler.getOutputStream();
+        InputStream inputStream = redirHandler.getInputStream(); //NOPMD
+        OutputStream outputStream = redirHandler.getOutputStream(); //NOPMD
 
         // Handle quoting + globing + command substitution
         List<String> parsedArgsList = argumentResolver.parseArguments(noRedirArgsList);
@@ -51,7 +52,6 @@ public class CallCommand implements Command {
             String app = parsedArgsList.remove(0);
             appRunner.runApp(app, parsedArgsList.toArray(new String[0]), inputStream, outputStream);
         }
-
     }
 
     @Override
