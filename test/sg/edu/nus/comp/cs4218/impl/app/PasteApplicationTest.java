@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 import sg.edu.nus.comp.cs4218.impl.util.StringUtils;
+import sg.edu.nus.comp.cs4218.impl.util.TestUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,7 +22,7 @@ import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 public class PasteApplicationTest {
     private static PasteApplication pasteApplication;
     private static final String ROOT_PATH = Environment.currentDirectory;
-    private static final String TEST_FOLDER_NAME = "tmpPasteTestFolder/";
+    private static final String TEST_FOLDER_NAME = "tmpPasteTestFolder" + CHAR_FILE_SEP;
     private static final String TEST_PATH = ROOT_PATH + CHAR_FILE_SEP + TEST_FOLDER_NAME;
 
     private static final String ERR_IS_DIRECTORY = ": Is a directory";

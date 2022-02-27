@@ -8,7 +8,7 @@ import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.exception.WcException;
 import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
-import sg.edu.nus.comp.cs4218.impl.util.StringUtils;
+import sg.edu.nus.comp.cs4218.impl.util.TestUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,13 +19,15 @@ import java.nio.file.Paths;
 import static org.junit.jupiter.api.Assertions.*;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_NULL_FILES;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_NULL_STREAMS;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 public class WcApplicationTest {
 
     private static WcApplication wcApplication;
     private static final String ROOT_PATH = Environment.currentDirectory;
-    private static final String TEST_FOLDER_NAME = "tmpWcTestFolder" + StringUtils.CHAR_FILE_SEP;
-    private static final String TEST_PATH = ROOT_PATH + StringUtils.CHAR_FILE_SEP + TEST_FOLDER_NAME;
+    private static final String TEST_FOLDER_NAME = "tmpWcTestFolder" + CHAR_FILE_SEP;
+    private static final String TEST_PATH = ROOT_PATH + CHAR_FILE_SEP + TEST_FOLDER_NAME;
 
     private static final String STDIN = "-";
 
@@ -54,15 +56,15 @@ public class WcApplicationTest {
         TestUtils.deleteDir(new File(TEST_PATH));
         Files.createDirectories(Paths.get(TEST_PATH));
 
-        TestUtils.createFile(FILE_PATH_1, "This is WC Test file 1" + StringUtils.STRING_NEWLINE);
-        TestUtils.createFile(FILE_PATH_2, "This is WC Test file 2" + StringUtils.STRING_NEWLINE + " Test for second line" + StringUtils.STRING_NEWLINE);
-        TestUtils.createFile(FILE_PATH_3, "This is WC Test file 3" + StringUtils.STRING_NEWLINE
-                + " Test for second line" + StringUtils.STRING_NEWLINE
-                + " Test for third line" + StringUtils.STRING_NEWLINE);
+        TestUtils.createFile(FILE_PATH_1, "This is WC Test file 1" + STRING_NEWLINE);
+        TestUtils.createFile(FILE_PATH_2, "This is WC Test file 2" + STRING_NEWLINE + " Test for second line" + STRING_NEWLINE);
+        TestUtils.createFile(FILE_PATH_3, "This is WC Test file 3" + STRING_NEWLINE
+                + " Test for second line" + STRING_NEWLINE
+                + " Test for third line" + STRING_NEWLINE);
 
-        TestUtils.createFile(FILE_NAME_STAR1, "This is test star 1" + StringUtils.STRING_NEWLINE);
-        TestUtils.createFile(FILE_NAME_STAR2, "This is test star 2" + StringUtils.STRING_NEWLINE
-                + "line 2" + StringUtils.STRING_NEWLINE);
+        TestUtils.createFile(FILE_NAME_STAR1, "This is test star 1" + STRING_NEWLINE);
+        TestUtils.createFile(FILE_NAME_STAR2, "This is test star 2" + STRING_NEWLINE
+                + "line 2" + STRING_NEWLINE);
     }
 
     @BeforeEach
@@ -140,9 +142,9 @@ public class WcApplicationTest {
             totalBytes2 = 47;
         }
         sbExpected.append(String.format(NUMBER_FORMAT, 1)).append(String.format(NUMBER_FORMAT, 6)).append(String.format(NUMBER_FORMAT, totalByte));
-        sbExpected.append(String.format(" %s", FILE_PATH_1)).append(StringUtils.STRING_NEWLINE);
+        sbExpected.append(String.format(" %s", FILE_PATH_1)).append(STRING_NEWLINE);
         sbExpected.append(String.format(NUMBER_FORMAT, 2)).append(String.format(NUMBER_FORMAT, 10)).append(String.format(NUMBER_FORMAT, totalBytes2));
-        sbExpected.append(String.format(" %s", FILE_PATH_2)).append(StringUtils.STRING_NEWLINE);
+        sbExpected.append(String.format(" %s", FILE_PATH_2)).append(STRING_NEWLINE);
         sbExpected.append(String.format(NUMBER_FORMAT, 3)).append(String.format(NUMBER_FORMAT, 16)).append(String.format(NUMBER_FORMAT, totalByte + totalBytes2));
         sbExpected.append(String.format(" %s", "total"));
 
@@ -166,11 +168,11 @@ public class WcApplicationTest {
             totalBytes3 = 69;
         }
         sbExpected.append(String.format(NUMBER_FORMAT, 1)).append(String.format(NUMBER_FORMAT, 6)).append(String.format(NUMBER_FORMAT, totalByte));
-        sbExpected.append(String.format(" %s", FILE_PATH_1)).append(StringUtils.STRING_NEWLINE);
+        sbExpected.append(String.format(" %s", FILE_PATH_1)).append(STRING_NEWLINE);
         sbExpected.append(String.format(NUMBER_FORMAT, 2)).append(String.format(NUMBER_FORMAT, 10)).append(String.format(NUMBER_FORMAT, totalBytes2));
-        sbExpected.append(String.format(" %s", FILE_PATH_2)).append(StringUtils.STRING_NEWLINE);
+        sbExpected.append(String.format(" %s", FILE_PATH_2)).append(STRING_NEWLINE);
         sbExpected.append(String.format(NUMBER_FORMAT, 3)).append(String.format(NUMBER_FORMAT, 14)).append(String.format(NUMBER_FORMAT, totalBytes3));
-        sbExpected.append(String.format(" %s", STDIN)).append(StringUtils.STRING_NEWLINE);
+        sbExpected.append(String.format(" %s", STDIN)).append(STRING_NEWLINE);
         sbExpected.append(String.format(NUMBER_FORMAT, 6)).append(String.format(NUMBER_FORMAT, 30)).append(String.format(NUMBER_FORMAT, totalByte + totalBytes2 + totalBytes3));
         sbExpected.append(String.format(" %s", "total"));
 
@@ -192,10 +194,10 @@ public class WcApplicationTest {
             totalBytes3 = 69;
         }
         sbExpected.append(String.format(NUMBER_FORMAT, 1)).append(String.format(NUMBER_FORMAT, 6)).append(String.format(NUMBER_FORMAT, totalByte));
-        sbExpected.append(String.format(" %s", FILE_PATH_1)).append(StringUtils.STRING_NEWLINE);
-        sbExpected.append("wc: ").append(NON_EXISTENT_FILE).append(ERR_NOT_FOUND).append(StringUtils.STRING_NEWLINE);
+        sbExpected.append(String.format(" %s", FILE_PATH_1)).append(STRING_NEWLINE);
+        sbExpected.append("wc: ").append(NON_EXISTENT_FILE).append(ERR_NOT_FOUND).append(STRING_NEWLINE);
         sbExpected.append(String.format(NUMBER_FORMAT, 3)).append(String.format(NUMBER_FORMAT, 14)).append(String.format(NUMBER_FORMAT, totalBytes3));
-        sbExpected.append(String.format(" %s", STDIN)).append(StringUtils.STRING_NEWLINE);
+        sbExpected.append(String.format(" %s", STDIN)).append(STRING_NEWLINE);
         sbExpected.append(String.format(NUMBER_FORMAT, 4)).append(String.format(NUMBER_FORMAT, 20)).append(String.format(NUMBER_FORMAT, totalByte + totalBytes3));
         sbExpected.append(String.format(" %s", "total"));
 
@@ -215,11 +217,11 @@ public class WcApplicationTest {
             totalByte = 24;
         }
         sbExpected.append(String.format(NUMBER_FORMAT, 1)).append(String.format(NUMBER_FORMAT, 6)).append(String.format(NUMBER_FORMAT, totalByte));
-        sbExpected.append(String.format(" %s", STDIN)).append(StringUtils.STRING_NEWLINE);
+        sbExpected.append(String.format(" %s", STDIN)).append(STRING_NEWLINE);
         sbExpected.append(String.format(NUMBER_FORMAT, 0)).append(String.format(NUMBER_FORMAT, 0)).append(String.format(NUMBER_FORMAT, 0));
-        sbExpected.append(String.format(" %s", STDIN)).append(StringUtils.STRING_NEWLINE);
+        sbExpected.append(String.format(" %s", STDIN)).append(STRING_NEWLINE);
         sbExpected.append(String.format(NUMBER_FORMAT, 0)).append(String.format(NUMBER_FORMAT, 0)).append(String.format(NUMBER_FORMAT, 0));
-        sbExpected.append(String.format(" %s", STDIN)).append(StringUtils.STRING_NEWLINE);
+        sbExpected.append(String.format(" %s", STDIN)).append(STRING_NEWLINE);
         sbExpected.append(String.format(NUMBER_FORMAT, 1)).append(String.format(NUMBER_FORMAT, 6)).append(String.format(NUMBER_FORMAT, totalByte));
         sbExpected.append(String.format(" %s", "total"));
 
@@ -240,14 +242,14 @@ public class WcApplicationTest {
             totalByte = 24;
             totalBytes2 = 47;
         }
-        sbExpected.append("wc: ").append(TEST_FOLDER_NAME).append(ERR_IS_DIRECTORY).append(StringUtils.STRING_NEWLINE);
+        sbExpected.append("wc: ").append(TEST_FOLDER_NAME).append(ERR_IS_DIRECTORY).append(STRING_NEWLINE);
         sbExpected.append(String.format(NUMBER_FORMAT, 0)).append(String.format(NUMBER_FORMAT, 0)).append(String.format(NUMBER_FORMAT, 0));
-        sbExpected.append(String.format(" %s", TEST_FOLDER_NAME)).append(StringUtils.STRING_NEWLINE);
-        sbExpected.append("wc: ").append(NON_EXISTENT_FILE).append(ERR_NOT_FOUND).append(StringUtils.STRING_NEWLINE);
+        sbExpected.append(String.format(" %s", TEST_FOLDER_NAME)).append(STRING_NEWLINE);
+        sbExpected.append("wc: ").append(NON_EXISTENT_FILE).append(ERR_NOT_FOUND).append(STRING_NEWLINE);
         sbExpected.append(String.format(NUMBER_FORMAT, 1)).append(String.format(NUMBER_FORMAT, 6)).append(String.format(NUMBER_FORMAT, totalByte));
-        sbExpected.append(String.format(" %s", STDIN)).append(StringUtils.STRING_NEWLINE);
+        sbExpected.append(String.format(" %s", STDIN)).append(STRING_NEWLINE);
         sbExpected.append(String.format(NUMBER_FORMAT, 2)).append(String.format(NUMBER_FORMAT, 10)).append(String.format(NUMBER_FORMAT, totalBytes2));
-        sbExpected.append(String.format(" %s", FILE_PATH_2)).append(StringUtils.STRING_NEWLINE);
+        sbExpected.append(String.format(" %s", FILE_PATH_2)).append(STRING_NEWLINE);
         sbExpected.append(String.format(NUMBER_FORMAT, 3)).append(String.format(NUMBER_FORMAT, 16)).append(String.format(NUMBER_FORMAT, totalBytes2 + totalByte));
         sbExpected.append(String.format(" %s", "total"));
 
@@ -271,7 +273,7 @@ public class WcApplicationTest {
         String result = wcApplication.countFromFiles(true, false, false, FILE_PATH_1);
 
         StringBuilder sbExpected = new StringBuilder();
-        int totalByte = 22 + StringUtils.STRING_NEWLINE.getBytes().length;
+        int totalByte = 22 + STRING_NEWLINE.getBytes().length;
         sbExpected.append(String.format(NUMBER_FORMAT, totalByte));
         sbExpected.append(String.format(" %s", FILE_PATH_1));
 
@@ -294,7 +296,7 @@ public class WcApplicationTest {
     void testWc_inputFileIsDirectory_shouldDisplayIsDirectoryError() throws Exception {
         String result = wcApplication.countFromFiles(true, true, true, TEST_FOLDER_NAME);
 
-        String sbExpected = STRING_WC + TEST_FOLDER_NAME + ERR_IS_DIRECTORY + StringUtils.STRING_NEWLINE +
+        String sbExpected = STRING_WC + TEST_FOLDER_NAME + ERR_IS_DIRECTORY + STRING_NEWLINE +
                 String.format(NUMBER_FORMAT, 0) + String.format(NUMBER_FORMAT, 0) + String.format(NUMBER_FORMAT, 0) +
                 String.format(STRING_FORMAT, TEST_FOLDER_NAME);
 

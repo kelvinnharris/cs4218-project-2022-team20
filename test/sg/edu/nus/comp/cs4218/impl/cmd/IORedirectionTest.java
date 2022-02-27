@@ -6,8 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
-import sg.edu.nus.comp.cs4218.impl.app.TestUtils;
-import sg.edu.nus.comp.cs4218.impl.app.WcApplication;
+import sg.edu.nus.comp.cs4218.impl.util.TestUtils;
 import sg.edu.nus.comp.cs4218.impl.util.*;
 
 import java.io.*;

@@ -1,11 +1,11 @@
-package sg.edu.nus.comp.cs4218.impl.app;
+package sg.edu.nus.comp.cs4218.impl.util;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 
-public class TestUtils {
+public class TestUtils { // NOPMD
 
     public static void deleteDir(File file) {
         File[] contents = file.listFiles();
@@ -17,20 +17,24 @@ public class TestUtils {
         file.delete();
     }
 
-    public static void createFile(String filePath, String fileContent) {
+    public static void createFile(String filePath, String fileContent) throws IOException {
         File newFile = new File(filePath);
+        FileWriter myWriter = null;
 
         try {
             boolean result = newFile.createNewFile();
             if (result) {
-                FileWriter myWriter = new FileWriter(newFile.getCanonicalPath());
+                myWriter = new FileWriter(newFile.getCanonicalPath());
                 myWriter.write(fileContent);
-                myWriter.close();
             } else { // File already exists
                 System.out.println("File already exist at location: "+ newFile.getCanonicalPath());
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            if (myWriter != null) {
+                myWriter.close();
+            }
         }
     }
 
