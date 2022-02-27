@@ -59,9 +59,10 @@ public class RmApplication implements RmInterface {
         if (fileNames == null) {
             throw new Exception(ERR_NULL_ARGS);
         }
-        List<String> lines = new ArrayList<>();
+
         boolean checkRemove;
         for (String file : fileNames) {
+            String errorMessage = "cannot remove '" + file + "': ";
             File node = IOUtils.resolveFilePath(file).toFile();
             if (!node.exists()) {
                 throw new Exception(ERR_FILE_NOT_FOUND);
@@ -73,15 +74,15 @@ public class RmApplication implements RmInterface {
                 File[] contents = node.listFiles();
 
                 if (contents != null && contents.length != 0) {
-                    String errorMessage = "cannot remove '" + file + "': " + ERR_DIR_NOT_EMPTY;
+                    errorMessage += ERR_DIR_NOT_EMPTY;
                     throw new Exception(errorMessage);
                 }
                 checkRemove = node.delete();
             } else if (node.isDirectory()) {
-                String errorMessage = "cannot remove '" + file + "': " + ERR_IS_DIR;
+                errorMessage += ERR_IS_DIR;
                 throw new Exception(errorMessage);
-            } else if (!node.canRead()) {
-                String errorMessage = "cannot remove '" + file + "': " + ERR_NO_PERM;
+            } else if (!node.canRead()) { //NOPMD
+                errorMessage += ERR_NO_PERM;
                 throw new Exception(errorMessage);
             } else {
                 // if it is a file
@@ -89,7 +90,7 @@ public class RmApplication implements RmInterface {
             }
 
             if (!checkRemove) {
-                String errorMessage = "cannot remove '" + file;
+                errorMessage += file;
                 throw new Exception(errorMessage);
             }
         }
