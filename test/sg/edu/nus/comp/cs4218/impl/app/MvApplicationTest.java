@@ -132,11 +132,11 @@ public class MvApplicationTest {
         try {
             Files.createFile(Paths.get(DEST_FOLDER_PATH + FILE1_NAME));
 
-            String destFileContentBefore = readString(Paths.get(FILE1_PATH));
+            String fileContentBefore = readString(Paths.get(FILE1_PATH));
             mvApplication.mvFilesToFolder(false, DEST_FOLDER_PATH + FILE1_NAME, FILE1_PATH);
-            String destFileContentAfter = readString(Paths.get(FILE1_PATH));
+            String fileContentAfter = readString(Paths.get(FILE1_PATH));
 
-            assertEquals(destFileContentBefore, destFileContentAfter); // assert not overwritten
+            assertEquals(fileContentBefore, fileContentAfter); // assert not overwritten
             assertTrue(Files.exists(Paths.get(DEST_FOLDER_PATH + FILE1_NAME))); // still exists, not moved
             Files.delete(Paths.get(DEST_FOLDER_PATH + FILE1_NAME));
         } catch (Exception e) {

@@ -61,7 +61,7 @@ class SemicolonCommandTest {
 
         command.evaluate(System.in, System.out);
         final String standardOutput = myOut.toString();
-        String expected = "first output" + STRING_NEWLINE + "second output" + STRING_NEWLINE;
+        String expected = "first output" + STRING_NEWLINE + "second output" + STRING_NEWLINE; // NOPMD
         assertEquals(expected, standardOutput);
     }
 
@@ -73,7 +73,8 @@ class SemicolonCommandTest {
         command.evaluate(System.in, System.out);
         final String standardOutput = myOut.toString();
         String expected = "first output" + STRING_NEWLINE + "second output" + STRING_NEWLINE + "third output" + STRING_NEWLINE;
-        assertEquals(expected, standardOutput);    }
+        assertEquals(expected, standardOutput);
+    }
 
     @Test
     void testSemicolon_oneEchoOneLs_returnResultFromBothCommands() throws Exception {
