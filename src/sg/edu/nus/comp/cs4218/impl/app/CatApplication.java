@@ -63,10 +63,10 @@ public class CatApplication implements CatInterface {
         try {
             if (catArgs.getFiles().isEmpty()) {
                 result = catStdin(catArgs.isFlagNumber(), stdin);
-            } else if (!catArgs.getFiles().contains("-")) { // NOPMD
-                result = catFiles(catArgs.isFlagNumber(), catArgs.getFiles().toArray(new String[0]));
-            } else {
+            } else if (catArgs.getFiles().contains("-")) {
                 result = catFileAndStdin(catArgs.isFlagNumber(), stdin, catArgs.getFiles().toArray(new String[0]));
+            } else {
+                result = catFiles(catArgs.isFlagNumber(), catArgs.getFiles().toArray(new String[0]));
             }
         } catch (Exception e) {
             // Will never happen

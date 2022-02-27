@@ -6,7 +6,9 @@ import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+@SuppressWarnings("PMD.UncommentedEmptyMethodBody")
 public class UniqApplication implements UniqInterface {
+
     @Override
     public void run(String[] args, InputStream stdin, OutputStream stdout) throws AbstractApplicationException {
 

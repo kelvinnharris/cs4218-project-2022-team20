@@ -7,6 +7,7 @@ import sg.edu.nus.comp.cs4218.exception.MvException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+@SuppressWarnings("PMD.UncommentedEmptyMethodBody")
 public class MvApplication implements MvInterface {
 
     @Override

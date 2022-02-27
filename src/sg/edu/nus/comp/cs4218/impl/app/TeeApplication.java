@@ -123,7 +123,7 @@ public class TeeApplication implements TeeInterface {
         ArrayList<String> writableFiles = new ArrayList<>();
         for (String file : files) {
             Path filePath = IOUtils.resolveFilePath(file);
-            if (!Files.exists(filePath)) {
+            if (!Files.exists(filePath)) { //NOPMD
                 try {
                     Files.createFile(filePath);
                     writableFiles.add(file);
