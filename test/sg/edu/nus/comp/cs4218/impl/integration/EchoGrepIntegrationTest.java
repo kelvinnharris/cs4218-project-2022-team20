@@ -6,16 +6,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.impl.ShellImpl;
-import sg.edu.nus.comp.cs4218.impl.app.GrepApplication;
-import sg.edu.nus.comp.cs4218.impl.exception.GrepException;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.regex.Pattern;
 
 import static java.nio.file.StandardOpenOption.APPEND;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -67,16 +62,6 @@ public class EchoGrepIntegrationTest {
     static void tearDown() throws IOException {
         Files.delete(Paths.get(FILE1_PATH));
         Files.delete(Paths.get(FILE2_PATH));
-    }
-
-    static void deleteDir(File file) {
-        File[] contents = file.listFiles();
-        if (contents != null) {
-            for (File f : contents) {
-                deleteDir(f);
-            }
-        }
-        file.delete();
     }
 
     static void appendToFile(Path file, String... lines) throws IOException {
