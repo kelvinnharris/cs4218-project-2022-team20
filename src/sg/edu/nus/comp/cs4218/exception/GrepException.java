@@ -9,7 +9,7 @@ public class GrepException extends AbstractApplicationException {
     }
 
     public GrepException(Exception e) {
-        super("grep: " + e);
+        super("grep: " + e.getMessage());
     }
 
 }
