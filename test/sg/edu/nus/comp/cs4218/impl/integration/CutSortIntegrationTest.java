@@ -129,7 +129,7 @@ public class CutSortIntegrationTest {
     @Test
     void testCutSort_sortInvalidAndCutValid_shouldReturnPartialCorrectOutput() throws Exception {
         String commandString = String.format("sort -s %s; cut -b 1 %s", FILE1_PATH, FILE1_PATH);
-        String expected = "sort: illegal option -- s" + STRING_NEWLINE +
+        String expected = "sort: invalid option -- s" + STRING_NEWLINE +
                 "1" + STRING_NEWLINE +
                 "2" + STRING_NEWLINE +
                 "1" + STRING_NEWLINE +
