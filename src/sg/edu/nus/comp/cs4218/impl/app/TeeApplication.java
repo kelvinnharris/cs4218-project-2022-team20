@@ -1,17 +1,16 @@
 package sg.edu.nus.comp.cs4218.impl.app;
 
-import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.app.TeeInterface;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.InvalidArgsException;
 import sg.edu.nus.comp.cs4218.impl.exception.TeeException;
 import sg.edu.nus.comp.cs4218.impl.parser.TeeArgsParser;
+import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 import sg.edu.nus.comp.cs4218.impl.util.StringUtils;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import static java.nio.file.StandardOpenOption.APPEND;
@@ -91,8 +90,7 @@ public class TeeApplication implements TeeInterface {
                 // write each line to files immediately to preserve order
                 if (isAppend) {
                     for (String file : writableFiles) {
-                        String cwd = Environment.currentDirectory;
-                        Path filePath = Paths.get(cwd, file).normalize();
+                        Path filePath = IOUtils.resolveFilePath(file);
                         try {
                             Files.write(filePath, toAppend.getBytes(), APPEND);
                         } catch (Exception e) {
@@ -108,8 +106,7 @@ public class TeeApplication implements TeeInterface {
 
         if (!isAppend) {
             for (String file : writableFiles) {
-                String cwd = Environment.currentDirectory;
-                Path filePath = Paths.get(cwd, file).normalize();
+                Path filePath = IOUtils.resolveFilePath(file);
                 try {
                     Files.write(filePath, resultBuilder.toString().getBytes());
                 } catch (Exception e) {
@@ -125,8 +122,7 @@ public class TeeApplication implements TeeInterface {
         // check all files are regular files and exist
         ArrayList<String> writableFiles = new ArrayList<>();
         for (String file : files) {
-            String cwd = Environment.currentDirectory;
-            Path filePath = Paths.get(cwd, file).normalize();
+            Path filePath = IOUtils.resolveFilePath(file);
             if (!Files.exists(filePath)) {
                 try {
                     Files.createFile(filePath);

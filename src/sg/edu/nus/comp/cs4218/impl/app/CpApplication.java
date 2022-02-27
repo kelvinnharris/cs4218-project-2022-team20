@@ -1,11 +1,11 @@
 package sg.edu.nus.comp.cs4218.impl.app;
 
-import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.app.CpInterface;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.InvalidArgsException;
 import sg.edu.nus.comp.cs4218.impl.exception.CpException;
 import sg.edu.nus.comp.cs4218.impl.parser.CpArgsParser;
+import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 
 import java.io.File;
 import java.io.InputStream;
@@ -47,7 +47,7 @@ public class CpApplication implements CpInterface {
         String[] srcFiles = parser.getSourceFiles();
         String destFile = parser.getDestinationFile();
 
-        Path destAbsPath = getAbsolutePath(destFile);
+        Path destAbsPath = IOUtils.resolveFilePath(destFile);
 
         if (srcFiles.length == 0) {
             throw new CpException(String.format("missing destination file operand after '%s'", destFile));
@@ -72,8 +72,8 @@ public class CpApplication implements CpInterface {
      */
     @Override
     public void cpSrcFileToDestFile(Boolean isRecursive, String srcFile, String destFile) throws CpException {
-        Path srcAbsPath = getAbsolutePath(srcFile);
-        Path destAbsPath = getAbsolutePath(destFile);
+        Path srcAbsPath = IOUtils.resolveFilePath(srcFile);
+        Path destAbsPath = IOUtils.resolveFilePath(destFile);
 
         if (!Files.exists(srcAbsPath)) {
             throw new CpException(String.format("cannot stat '%s': No such file or directory", srcFile));
@@ -108,17 +108,17 @@ public class CpApplication implements CpInterface {
     public void cpFilesToFolder(Boolean isRecursive, String destFolder, String... fileName) throws CpException {
         // Check if all sources exist before copying
         for (String srcFile : fileName) {
-            Path srcAbsPath = getAbsolutePath(srcFile);
+            Path srcAbsPath = IOUtils.resolveFilePath(srcFile);
             if (!srcAbsPath.toFile().exists()) {
                 throw new CpException(String.format("cannot stat '%s': No such file or directory", srcFile));
             }
         }
 
         for (String srcFile : fileName) {
-            String destCwd = String.valueOf(getAbsolutePath(destFolder).getParent());
-            String srcCwd = String.valueOf(getAbsolutePath(srcFile).getParent());
-            String destFolderName = getAbsolutePath(destFolder).toFile().getName();
-            String srcFileName = getAbsolutePath(srcFile).toFile().getName();
+            String destCwd = String.valueOf(IOUtils.resolveFilePath(destFolder).getParent());
+            String srcCwd = String.valueOf(IOUtils.resolveFilePath(srcFile).getParent());
+            String destFolderName = IOUtils.resolveFilePath(destFolder).toFile().getName();
+            String srcFileName = IOUtils.resolveFilePath(srcFile).toFile().getName();
             cpFilesToFolderImpl(isRecursive, destCwd, srcCwd, destFolderName, srcFileName, destFolder, srcFile, false);
         }
     }
@@ -187,10 +187,4 @@ public class CpApplication implements CpInterface {
                 .map(File::getName)
                 .collect(Collectors.toList()).toArray(new String[0]);
     }
-
-    public Path getAbsolutePath(String fileName) {
-        String cwd = Environment.currentDirectory;
-        return Paths.get(cwd, fileName).normalize();
-    }
-
 }
