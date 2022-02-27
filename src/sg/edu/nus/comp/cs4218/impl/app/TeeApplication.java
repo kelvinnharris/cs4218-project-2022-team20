@@ -1,6 +1,5 @@
 package sg.edu.nus.comp.cs4218.impl.app;
 
-import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.app.TeeInterface;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.InvalidArgsException;
@@ -12,7 +11,6 @@ import sg.edu.nus.comp.cs4218.impl.util.StringUtils;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import static java.nio.file.StandardOpenOption.APPEND;

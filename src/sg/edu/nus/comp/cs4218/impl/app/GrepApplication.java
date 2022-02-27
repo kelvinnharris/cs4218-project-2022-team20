@@ -1,6 +1,5 @@
 package sg.edu.nus.comp.cs4218.impl.app;
 
-import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.app.GrepInterface;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.GrepException;
@@ -126,26 +125,6 @@ public class GrepApplication implements GrepInterface { //NOPMD
             }
         }
     }
-
-    /**
-     * Converts filename to absolute path, if initially was relative path
-     *
-     * @param fileName supplied by user
-     * @return a String of the absolute path of the filename
-     */
-//    private String convertToAbsolutePath(String fileName) {
-//        String home = System.getProperty("user.home").trim();
-//        String currentDir = Environment.currentDirectory.trim();
-//        String convertedPath = convertPathToSystemPath(fileName);
-//
-//        String newPath;
-//        if (convertedPath.length() >= home.length() && convertedPath.substring(0, home.length()).trim().equals(home)) {
-//            newPath = convertedPath;
-//        } else {
-//            newPath = currentDir + CHAR_FILE_SEP + convertedPath;
-//        }
-//        return newPath;
-//    }
 
     /**
      * Converts path provided by user into path recognised by the system
