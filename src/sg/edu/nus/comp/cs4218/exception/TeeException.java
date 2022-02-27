@@ -10,7 +10,7 @@ public class TeeException extends AbstractApplicationException {
         super("tee: " + message);
     }
 
-    public TeeException(Exception e) {
-        super("tee: " + e.getMessage());
+    public TeeException(Exception exception) {
+        super("tee: " + exception.getMessage());
     }
 }

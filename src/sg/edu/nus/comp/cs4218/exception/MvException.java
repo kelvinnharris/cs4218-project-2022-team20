@@ -10,7 +10,7 @@ public class MvException extends AbstractApplicationException {
         super("mv: " + message);
     }
 
-    public MvException(Exception e) {
-        super("mv: " + e.getMessage());
+    public MvException(Exception exception) {
+        super("mv: " + exception.getMessage());
     }
 }

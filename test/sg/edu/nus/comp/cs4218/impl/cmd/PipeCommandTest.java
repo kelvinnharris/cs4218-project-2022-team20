@@ -10,20 +10,22 @@ import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 import sg.edu.nus.comp.cs4218.impl.util.ApplicationRunner;
 import sg.edu.nus.comp.cs4218.impl.util.CommandBuilder;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_SYNTAX;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
-class SemicolonCommandTest {
+public class PipeCommandTest {
+
     ByteArrayOutputStream myOut;
     private static final String ROOT_PATH = Environment.currentDirectory;
-    private static final String TEST_FOLDER_NAME = "tmpSemicolonTestFolder" + CHAR_FILE_SEP + "";
+    private static final String TEST_FOLDER_NAME = "tmpPipeTestFolder" + CHAR_FILE_SEP + "";
     private static final String TEST_PATH = ROOT_PATH + CHAR_FILE_SEP + TEST_FOLDER_NAME;
 
     @BeforeAll
@@ -55,74 +57,56 @@ class SemicolonCommandTest {
     }
 
     @Test
-    void testSemicolon_twoEchos_returnResultFromBothEchos() throws Exception {
-        String inputString = "echo first output; echo second output";
+    void testPipe_twoEcho_returnCorrectResultOfLastCommand() throws Exception {
+        String inputString = "echo abc | echo def";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
         command.evaluate(System.in, System.out);
         final String standardOutput = myOut.toString();
-        String expected = "first output" + STRING_NEWLINE + "second output" + STRING_NEWLINE; // NOPMD
+        String expected = "def" + STRING_NEWLINE;
         assertEquals(expected, standardOutput);
     }
 
     @Test
-    void testSemicolon_threeEchos_returnResultFromAllEchos() throws Exception {
-        String inputString = "echo first output; echo second output; echo third output";
+    void testPipe_oneLsOneEcho_returnCorrectResultOfLastCommand() throws Exception {
+        String inputString = "ls | echo abc";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
         command.evaluate(System.in, System.out);
         final String standardOutput = myOut.toString();
-        String expected = "first output" + STRING_NEWLINE + "second output" + STRING_NEWLINE + "third output" + STRING_NEWLINE;
+        String expected = "abc" + STRING_NEWLINE;
         assertEquals(expected, standardOutput);
     }
 
     @Test
-    void testSemicolon_oneEchoOneLs_returnResultFromBothCommands() throws Exception {
-        String inputString = "echo first output; ls " + TEST_PATH;
+    void testPipe_cutFromEchoAsStdin_returnCorrectResultOfLastCommand() throws Exception {
+        String inputString = "echo abc | cut -c 1-2";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
         command.evaluate(System.in, System.out);
         final String standardOutput = myOut.toString();
-        String expected = "first output" + STRING_NEWLINE + "file1.xml" + STRING_NEWLINE + "folder1" + STRING_NEWLINE;
+        String expected = "ab" + STRING_NEWLINE;
         assertEquals(expected, standardOutput);
     }
 
     @Test
-    void testSemicolon_validCommandInvalidCommand_returnFirstOutputAndException() throws Exception {
+    void testPipe_multipleCommands_returnCorrectResultOfLastCommand() throws Exception {
+        String inputString = "echo abc | cut -c 1-2 | cut -c 1";
+        Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
+
+        command.evaluate(System.in, System.out);
+        final String standardOutput = myOut.toString();
+        String expected = "a" + STRING_NEWLINE;
+        assertEquals(expected, standardOutput);
+    }
+
+    @Test
+    void testPipe_oneInvalidCommand_throwsErrorAndTerminates() throws Exception {
         ShellImpl shell = new ShellImpl();
-        String commandString = "echo \"first output\"; grep";
-        String expectedOutput = "first output" + STRING_NEWLINE + String.format("grep: %s", ERR_SYNTAX) + STRING_NEWLINE;
+        String commandString = "ls ls | echo abc";
+        String expectedOutput = String.format("ls: cannot access 'ls': No such file or directory");
         shell.parseAndEvaluate(commandString, myOut);
         assertEquals(expectedOutput, myOut.toString());
-    }
-
-    @Test
-    void testSemicolon_invalidCommandValidCommand_returnExceptionAndSecondOutput() throws Exception {
-        ShellImpl shell = new ShellImpl();
-        String commandString = "grep; echo \"second output\"";
-        String expectedOutput = String.format("grep: %s", ERR_SYNTAX) + STRING_NEWLINE + "second output" + STRING_NEWLINE;
-        shell.parseAndEvaluate(commandString, myOut);
-        assertEquals(expectedOutput, myOut.toString());
-    }
-
-
-    @Test
-    void testSemicolon_semicolonAtEnd_returnResult() throws Exception {
-        String inputString = "echo first output;";
-        Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
-
-        command.evaluate(System.in, System.out);
-        final String standardOutput = myOut.toString();
-        String expected = "first output" + STRING_NEWLINE;
-        assertEquals(expected, standardOutput);
-    }
-
-
-    @Test
-    void testSemicolon_semicolonAtStart_returnException() {
-        String inputString = ";echo first output";
-
-        assertThrows(Exception.class, () -> CommandBuilder.parseCommand(inputString, new ApplicationRunner()));
     }
 
 }

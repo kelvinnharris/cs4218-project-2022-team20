@@ -17,7 +17,7 @@ import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 public final class RegexArgument {
     private StringBuilder plaintext;
     private StringBuilder regex;
-    private boolean isRegex;
+    private boolean isRegex; //NOPMD
 
     public RegexArgument() {
         this.plaintext = new StringBuilder();
@@ -53,7 +53,7 @@ public final class RegexArgument {
 
     public void appendAsterisk() {
         plaintext.append(CHAR_ASTERISK);
-        regex.append("[^" + StringUtils.fileSeparator() + "]*");
+        regex.append("[^").append(StringUtils.fileSeparator()).append("]*");
         isRegex = true;
     }
 
