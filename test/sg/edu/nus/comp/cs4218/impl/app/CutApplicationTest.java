@@ -49,8 +49,7 @@ class CutApplicationTest {
 
     @AfterAll
     static void tearDown() throws IOException {
-        deleteDir(new File(FILE_SINGLE_LINE));
-        deleteDir(new File(FILE_MULTIPLE_LINES));
+        deleteDir(new File(TEST_PATH));
     }
 
     static void deleteDir(File file) {
