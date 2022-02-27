@@ -32,7 +32,6 @@ public class MvApplicationTest {
         > destFolder
      */
 
-    private static final String TEST_PATH = Environment.currentDirectory + CHAR_FILE_SEP + MV_FOLDER;
     private static final String SRC_FOLDER_NAME = "srcFolder";
     private static final String SRC_FOLDER1_NAME = "srcFolder1";
     private static final String SRC_FOLDER2_NAME = "srcFolder2";

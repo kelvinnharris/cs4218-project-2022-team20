@@ -9,5 +9,5 @@ public class TestConstants {
     public static final String CP_FOLDER = "tmpCpTestFolder";
     public static final String GREP_FOLDER = "tmpGrepTestFolder";
     public static final String TEE_FOLDER = "tmpTeeTestFolder";
-    public static final String MV_FOLDER = "mvTeeTestFolder";
+    public static final String MV_FOLDER = "tmpMvTestFolder";
 }
