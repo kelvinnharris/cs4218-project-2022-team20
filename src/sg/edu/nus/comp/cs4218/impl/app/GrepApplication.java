@@ -6,8 +6,10 @@ import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.GrepException;
 import sg.edu.nus.comp.cs4218.exception.InvalidArgsException;
 import sg.edu.nus.comp.cs4218.impl.parser.GrepArgsParser;
+import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 
 import java.io.*;
+import java.nio.file.Path;
 import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.regex.Matcher;
@@ -76,8 +78,8 @@ public class GrepApplication implements GrepInterface { //NOPMD
 
             BufferedReader reader = null;
             try {
-                String path = convertToAbsolutePath(f);
-                File file = new File(path);
+                Path path = IOUtils.resolveFilePath(f);
+                File file = new File(path.toString());
                 if (!file.exists()) {
                     lineRes.add("grep: " + f + ": " + ERR_FILE_NOT_FOUND); //NOPMD
                     countRes.add("grep: " + f + ": " + ERR_FILE_NOT_FOUND); //NOPMD
@@ -89,7 +91,7 @@ public class GrepApplication implements GrepInterface { //NOPMD
                     countRes.add(f + ": 0");
                     continue;
                 }
-                reader = new BufferedReader(new FileReader(path));
+                reader = new BufferedReader(new FileReader(path.toString()));
                 String line;
                 Pattern compiledPattern;
                 if (isCaseInsen) {
@@ -131,19 +133,19 @@ public class GrepApplication implements GrepInterface { //NOPMD
      * @param fileName supplied by user
      * @return a String of the absolute path of the filename
      */
-    private String convertToAbsolutePath(String fileName) {
-        String home = System.getProperty("user.home").trim();
-        String currentDir = Environment.currentDirectory.trim();
-        String convertedPath = convertPathToSystemPath(fileName);
-
-        String newPath;
-        if (convertedPath.length() >= home.length() && convertedPath.substring(0, home.length()).trim().equals(home)) {
-            newPath = convertedPath;
-        } else {
-            newPath = currentDir + CHAR_FILE_SEP + convertedPath;
-        }
-        return newPath;
-    }
+//    private String convertToAbsolutePath(String fileName) {
+//        String home = System.getProperty("user.home").trim();
+//        String currentDir = Environment.currentDirectory.trim();
+//        String convertedPath = convertPathToSystemPath(fileName);
+//
+//        String newPath;
+//        if (convertedPath.length() >= home.length() && convertedPath.substring(0, home.length()).trim().equals(home)) {
+//            newPath = convertedPath;
+//        } else {
+//            newPath = currentDir + CHAR_FILE_SEP + convertedPath;
+//        }
+//        return newPath;
+//    }
 
     /**
      * Converts path provided by user into path recognised by the system
