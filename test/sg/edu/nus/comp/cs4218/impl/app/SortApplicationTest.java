@@ -59,42 +59,42 @@ class SortApplicationTest {
 
     @Test
     void sortFromFiles_firstWordNumberNotReverseOrderNotCaseIndependent_returnsLines() throws Exception {
-        String output = sortApplication.sortFromFiles(true, false, false, new String[]{path});
+        String output = sortApplication.sortFromFiles(true, false, false, path);
         assertEquals("1" + STRING_NEWLINE + "2" + STRING_NEWLINE + "10", output);
 
     }
 
     @Test
     void sortFromFiles_notFirstWordNumberReverseOrderNotCaseIndependent_returnsLines() throws Exception {
-        String output = sortApplication.sortFromFiles(false, true, false, new String[]{path});
+        String output = sortApplication.sortFromFiles(false, true, false, path);
         assertEquals("2" + STRING_NEWLINE + "10" + STRING_NEWLINE + "1", output);
 
     }
 
     @Test
     void sortFromFiles_notFirstWordNumberNotReverseOrderCaseIndependent_returnsLines() throws Exception {
-        String output = sortApplication.sortFromFiles(false, false, true, new String[]{path});
+        String output = sortApplication.sortFromFiles(false, false, true, path);
         assertEquals("1" + STRING_NEWLINE + "10" + STRING_NEWLINE + "2", output);
 
     }
 
     @Test
     void sortFromFiles_firstWordNumberReverseOrderCaseIndependent_returnsLines() throws Exception {
-        String output = sortApplication.sortFromFiles(true, true, true, new String[]{path});
+        String output = sortApplication.sortFromFiles(true, true, true, path);
         assertEquals("10" + STRING_NEWLINE + "2" + STRING_NEWLINE + "1", output);
 
     }
 
     @Test
     void sortFromFiles_notFirstWordNumberNotReverseOrderNotCaseIndependent_returnsLines() throws Exception {
-        String output = sortApplication.sortFromFiles(false, false, false, new String[]{path});
+        String output = sortApplication.sortFromFiles(false, false, false, path);
         assertEquals("1" + STRING_NEWLINE + "10" + STRING_NEWLINE + "2", output);
 
     }
 
     @Test
     void sortFromFiles_firstWordNumberReverseOrderCaseIndependentMultipleFiles_returnsLines() throws Exception {
-        String output = sortApplication.sortFromFiles(true, true, true, new String[]{path,path2});
+        String output = sortApplication.sortFromFiles(true, true, true, new String[]{path, path2});
         assertEquals("AB" + STRING_NEWLINE + "ab" + STRING_NEWLINE + "A" + STRING_NEWLINE + "a" + STRING_NEWLINE + "10" + STRING_NEWLINE + "2" + STRING_NEWLINE + "1", output);
 
     }
