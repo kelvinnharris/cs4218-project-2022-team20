@@ -62,7 +62,7 @@ class CutApplicationTest {
     void cutFromFiles_byCharSingleIndexSingleLine_returnsLines() throws Exception {
         InputStream input = new ByteArrayInputStream("".getBytes());
         cutApplication.stdin = input;
-        String output = cutApplication.cutFromFiles(true, false, false, 0, 1, new String[]{FILE_SINGLE_LINE});
+        String output = cutApplication.cutFromFiles(true, false, false, 0, 1, FILE_SINGLE_LINE);
         assertEquals("a" + STRING_NEWLINE, output);
     }
 
@@ -70,7 +70,7 @@ class CutApplicationTest {
     void cutFromFiles_byByteSingleIndexSingleLine_returnsLines() throws Exception {
         InputStream input = new ByteArrayInputStream("".getBytes());
         cutApplication.stdin = input;
-        String output = cutApplication.cutFromFiles(false, true, false, 0, 1, new String[]{FILE_SINGLE_LINE});
+        String output = cutApplication.cutFromFiles(false, true, false, 0, 1, FILE_SINGLE_LINE);
         assertEquals("a" + STRING_NEWLINE, output);
     }
 
@@ -78,7 +78,7 @@ class CutApplicationTest {
     void cutFromFiles_byCharRangeIndexSingleLine_returnsLines() throws Exception {
         InputStream input = new ByteArrayInputStream("".getBytes());
         cutApplication.stdin = input;
-        String output = cutApplication.cutFromFiles(true, false, true, 0, 2, new String[]{FILE_SINGLE_LINE});
+        String output = cutApplication.cutFromFiles(true, false, true, 0, 2, FILE_SINGLE_LINE);
         assertEquals(ABC + STRING_NEWLINE, output);
     }
 
@@ -86,7 +86,7 @@ class CutApplicationTest {
     void cutFromFiles_byByteRangeIndexSingleLine_returnsLines() throws Exception {
         InputStream input = new ByteArrayInputStream("".getBytes());
         cutApplication.stdin = input;
-        String output = cutApplication.cutFromFiles(false, true, true, 0, 2, new String[]{FILE_SINGLE_LINE});
+        String output = cutApplication.cutFromFiles(false, true, true, 0, 2, FILE_SINGLE_LINE);
         assertEquals(ABC + STRING_NEWLINE, output);
     }
 
@@ -94,7 +94,7 @@ class CutApplicationTest {
     void cutFromFiles_byCharSingleIndexMultipleLines_returnsLines() throws Exception {
         InputStream input = new ByteArrayInputStream("".getBytes());
         cutApplication.stdin = input;
-        String output = cutApplication.cutFromFiles(true, false, false, 0, 1, new String[]{FILE_MULTIPLE_LINES});
+        String output = cutApplication.cutFromFiles(true, false, false, 0, 1, FILE_MULTIPLE_LINES);
         assertEquals("a" + STRING_NEWLINE + "e" + STRING_NEWLINE, output);
     }
 
@@ -102,7 +102,7 @@ class CutApplicationTest {
     void cutFromFiles_byByteSingleIndexMultipleLines_returnsLines() throws Exception {
         InputStream input = new ByteArrayInputStream("".getBytes());
         cutApplication.stdin = input;
-        String output = cutApplication.cutFromFiles(false, true, false, 0, 1, new String[]{FILE_MULTIPLE_LINES});
+        String output = cutApplication.cutFromFiles(false, true, false, 0, 1, FILE_MULTIPLE_LINES);
         assertEquals("a" + STRING_NEWLINE + "e" + STRING_NEWLINE, output);
     }
 
@@ -110,7 +110,7 @@ class CutApplicationTest {
     void cutFromFiles_byCharRangeIndexMultipleLines_returnsLines() throws Exception {
         InputStream input = new ByteArrayInputStream("".getBytes());
         cutApplication.stdin = input;
-        String output = cutApplication.cutFromFiles(true, false, true, 0, 2, new String[]{FILE_MULTIPLE_LINES});
+        String output = cutApplication.cutFromFiles(true, false, true, 0, 2, FILE_MULTIPLE_LINES);
         assertEquals(ABC + STRING_NEWLINE + EFG + STRING_NEWLINE, output);
     }
 
@@ -118,7 +118,7 @@ class CutApplicationTest {
     void cutFromFiles_byByteRangeIndexMultipleLines_returnsLines() throws Exception {
         InputStream input = new ByteArrayInputStream("".getBytes());
         cutApplication.stdin = input;
-        String output = cutApplication.cutFromFiles(false, true, true, 0, 2, new String[]{FILE_MULTIPLE_LINES});
+        String output = cutApplication.cutFromFiles(false, true, true, 0, 2, FILE_MULTIPLE_LINES);
         assertEquals(ABC + STRING_NEWLINE + EFG + STRING_NEWLINE, output);
     }
 

@@ -45,35 +45,35 @@ class SortApplicationTest {
 
     @Test
     void sortFromFiles_firstWordNumberNotReverseOrderNotCaseIndependent_returnsLines() throws Exception {
-        String output = sortApplication.sortFromFiles(true, false, false, new String[]{file});
+        String output = sortApplication.sortFromFiles(true, false, false, file);
         assertEquals("1" + STRING_NEWLINE + "2" + STRING_NEWLINE + "10", output);
 
     }
 
     @Test
     void sortFromFiles_notFirstWordNumberReverseOrderNotCaseIndependent_returnsLines() throws Exception {
-        String output = sortApplication.sortFromFiles(false, true, false, new String[]{file});
+        String output = sortApplication.sortFromFiles(false, true, false, file);
         assertEquals("2" + STRING_NEWLINE + "10" + STRING_NEWLINE + "1", output);
 
     }
 
     @Test
     void sortFromFiles_notFirstWordNumberNotReverseOrderCaseIndependent_returnsLines() throws Exception {
-        String output = sortApplication.sortFromFiles(false, false, true, new String[]{file});
+        String output = sortApplication.sortFromFiles(false, false, true, file);
         assertEquals("1" + STRING_NEWLINE + "10" + STRING_NEWLINE + "2", output);
 
     }
 
     @Test
     void sortFromFiles_firstWordNumberReverseOrderCaseIndependent_returnsLines() throws Exception {
-        String output = sortApplication.sortFromFiles(true, true, true, new String[]{file});
+        String output = sortApplication.sortFromFiles(true, true, true, file);
         assertEquals("10" + STRING_NEWLINE + "2" + STRING_NEWLINE + "1", output);
 
     }
 
     @Test
     void sortFromFiles_notFirstWordNumberNotReverseOrderNotCaseIndependent_returnsLines() throws Exception {
-        String output = sortApplication.sortFromFiles(false, false, false, new String[]{file});
+        String output = sortApplication.sortFromFiles(false, false, false, file);
         assertEquals("1" + STRING_NEWLINE + "10" + STRING_NEWLINE + "2", output);
 
     }
