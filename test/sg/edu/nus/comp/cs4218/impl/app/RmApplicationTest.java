@@ -27,12 +27,16 @@ class RmApplicationTest {
     private static final String FOLDER_5 = "folder5";
     private static final String FOLDER_6 = "folder6";
     private static final String FOLDER_7 = "folder7";
+    private static final String FOLDER_8 = "folder8";
+    private static final String FOLDER_9 = "folder9";
     private static final String FILE_1 = "file1.txt";
     private static final String FILE_2 = "file2.iml";
     private static final String FILE_3 = "file3.txt";
     private static final String FILE_4 = "file4.xml";
     private static final String FILE_5 = "file5.txt";
     private static final String FILE_6 = "file6.txt";
+    private static final String FILE_7 = "file7.txt";
+    private static final String FILE_8 = "file8.txt";
 
 
     @BeforeAll
@@ -44,13 +48,17 @@ class RmApplicationTest {
         Files.createDirectories(Paths.get(TEST_PATH + FOLDER_3 + CHAR_FILE_SEP + FOLDER_4));
         Files.createDirectories(Paths.get(TEST_PATH + FOLDER_5));
         Files.createDirectories(Paths.get(TEST_PATH + FOLDER_6 + CHAR_FILE_SEP + FOLDER_7));
+        Files.createDirectories(Paths.get(TEST_PATH + FOLDER_8));
+        Files.createDirectories(Paths.get(TEST_PATH + FOLDER_9));
         Files.createFile(Paths.get(TEST_PATH + FOLDER_1 + CHAR_FILE_SEP + FILE_1));
         Files.createFile(Paths.get(TEST_PATH + FOLDER_1 + CHAR_FILE_SEP + FILE_2));
         Files.createFile(Paths.get(TEST_PATH + FILE_4));
         Files.createFile(Paths.get(TEST_PATH + FILE_5));
         Files.createFile(Paths.get(TEST_PATH + FOLDER_3 + CHAR_FILE_SEP + FOLDER_4 + CHAR_FILE_SEP + FILE_3));
         Files.createFile(Paths.get(TEST_PATH + FOLDER_6 + CHAR_FILE_SEP + FOLDER_7 + CHAR_FILE_SEP + FILE_6));
-
+        Files.createFile(Paths.get(TEST_PATH + FOLDER_6 + CHAR_FILE_SEP + FOLDER_7 + CHAR_FILE_SEP + FILE_7));
+        Files.createFile(Paths.get(TEST_PATH + FOLDER_6 + CHAR_FILE_SEP + FOLDER_7 + CHAR_FILE_SEP + FILE_8));
+        Files.createFile(Paths.get(TEST_PATH + FOLDER_9 + CHAR_FILE_SEP + FILE_1));
     }
 
     @BeforeEach
@@ -122,8 +130,30 @@ class RmApplicationTest {
     }
 
     @Test
+    void remove_notEmptyFolderNotRecursiveFolderMultipleFiles_removeFile() throws Exception {
+        String path = TEST_PATH + FOLDER_6 + CHAR_FILE_SEP + FOLDER_7 + CHAR_FILE_SEP + FILE_7;
+        String path2 = TEST_PATH + FOLDER_6 + CHAR_FILE_SEP + FOLDER_7 + CHAR_FILE_SEP + FILE_8;
+        rmApplication.remove(false, false, new String[]{path, path2});
+        File tempFile = new File(path);
+        File tempFile2 = new File(path2);
+        assertFalse(tempFile.exists());
+        assertFalse(tempFile2.exists());
+    }
+
+    @Test
     void remove_notEmptyFolderNotRecursiveFolder_throwsError() throws Exception {
         String path = TEST_PATH + FOLDER_6 + CHAR_FILE_SEP + FOLDER_7;
         assertThrows(Exception.class, () -> rmApplication.remove(false, false, new String[]{path}));
+    }
+
+    @Test
+    void remove_emptyFolderNotRecursiveFolderOneEmptyOneNonEmpty_removeEmptyFolderButThrowsErrorForNonEmpty() throws Exception {
+        String path = TEST_PATH + FOLDER_8;
+        String path2 = TEST_PATH + FOLDER_9;
+        assertThrows(Exception.class, () -> rmApplication.remove(true, false, new String[]{path, path2}));
+        File tempFile = new File(path);
+        File tempFile2 = new File(path2);
+        assertFalse(tempFile.exists());
+        assertTrue(tempFile2.exists());
     }
 }
