@@ -231,7 +231,7 @@ public class GrepApplication implements GrepInterface {
             Boolean isCountOnly = parser.isCountOnly();
             Boolean isPrintFilename = parser.isPrintFilename();
 
-            if (stdin == null && inputFiles.length == 0) {
+            if (stdin == null && (inputFiles == null || inputFiles.length == 0)) {
                 throw new Exception(ERR_NO_INPUT);
             }
             if (pattern == null) {
@@ -241,7 +241,7 @@ public class GrepApplication implements GrepInterface {
             if (pattern.isEmpty()) {
                 throw new Exception(EMPTY_PATTERN);
             } else {
-                if (inputFiles.length == 0) {
+                if (inputFiles == null || inputFiles.length == 0) {
                     result = grepFromStdin(pattern, isCaseInsensitive, isCountOnly, isPrintFilename, stdin);
                 } else {
 
