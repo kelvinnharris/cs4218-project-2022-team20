@@ -20,17 +20,19 @@ import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 public class TeeApplicationTest {
 
-    public static final String INPUT = "hello" + STRING_NEWLINE + "world" + STRING_NEWLINE + "goodbye" + STRING_NEWLINE + "world" + STRING_NEWLINE;
-    public static final String FILE1_NAME = "file1.txt";
-    public static final String FILE2_NAME = "file2.txt";
-    public static final String[] LINES1 = {"The first file", "The second line"};
-    public static final String[] LINES2 = {"The second file", "The second line"};
+    private static final String INPUT = "hello" + STRING_NEWLINE + "world" + STRING_NEWLINE + "goodbye" + STRING_NEWLINE + "world" + STRING_NEWLINE;
+    private static final String FILE1_NAME = "file1.txt";
+    private static final String FILE2_NAME = "file2.txt";
+    private static final String NE_FILE_NAME = "nonExistent.txt";
+    private static final String[] LINES1 = {"The first file", "The second line"};
+    private static final String[] LINES2 = {"The second file", "The second line"};
     private static final String ROOT_PATH = Environment.currentDirectory;
-    public static final String FILE1_PATH = ROOT_PATH + CHAR_FILE_SEP + FILE1_NAME;
-    public static final String FILE2_PATH = ROOT_PATH + CHAR_FILE_SEP + FILE2_NAME;
+    private static final String FILE1_PATH = ROOT_PATH + CHAR_FILE_SEP + FILE1_NAME;
+    private static final String FILE2_PATH = ROOT_PATH + CHAR_FILE_SEP + FILE2_NAME;
+    private static final String NE_FILE_PATH = ROOT_PATH + CHAR_FILE_SEP + NE_FILE_NAME;
     private static TeeApplication teeApplication;
-    public final InputStream inputStream = new ByteArrayInputStream(INPUT.getBytes());
-    public final OutputStream outputStream = new ByteArrayOutputStream();
+    private final InputStream inputStream = new ByteArrayInputStream(INPUT.getBytes());
+    private final OutputStream outputStream = new ByteArrayOutputStream();
 
     @BeforeAll
     static void setUp() {
@@ -41,6 +43,7 @@ public class TeeApplicationTest {
     static void tearDown() throws IOException {
         Files.delete(Paths.get(FILE1_PATH));
         Files.delete(Paths.get(FILE2_PATH));
+        Files.deleteIfExists(Paths.get(NE_FILE_PATH));
     }
 
     static void deleteDir(File file) {

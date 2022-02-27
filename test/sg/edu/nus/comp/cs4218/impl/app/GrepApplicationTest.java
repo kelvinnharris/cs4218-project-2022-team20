@@ -25,19 +25,20 @@ import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 public class GrepApplicationTest {
 
-    public static final String INPUT = "The first file" + STRING_NEWLINE + "The second line" + STRING_NEWLINE + "1000" + STRING_NEWLINE;
-    public static final String FILE1_NAME = "file1.txt";
-    public static final String FILE2_NAME = "file2.txt";
-    public static final String NE_FILE_NAME = "nonExistent.txt";
-    public static final String[] LINES1 = {"The first file", "The second line", "1000"};
-    public static final String[] LINES2 = {"The second file", "The second line", "10"};
-    public static final String PATTERN1 = "The second";
-    public static final String PATTERN1_INSEN = "THE SECoND";
+    private static final String INPUT = "The first file" + STRING_NEWLINE + "The second line" + STRING_NEWLINE + "1000" + STRING_NEWLINE;
+    private static final String FILE1_NAME = "file1.txt";
+    private static final String FILE2_NAME = "file2.txt";
+    private static final String NE_FILE_NAME = "nonExistent.txt";
+    private static final String[] LINES1 = {"The first file", "The second line", "1000"};
+    private static final String[] LINES2 = {"The second file", "The second line", "10"};
+    private static final String PATTERN1 = "The second";
+    private static final String PATTERN1_INSEN = "THE SECoND";
     private static final String ROOT_PATH = Environment.currentDirectory;
-    public static final String FILE1_PATH = ROOT_PATH + CHAR_FILE_SEP + FILE1_NAME;
-    public static final String FILE2_PATH = ROOT_PATH + CHAR_FILE_SEP + FILE2_NAME;
+    private static final String FILE1_PATH = ROOT_PATH + CHAR_FILE_SEP + FILE1_NAME;
+    private static final String FILE2_PATH = ROOT_PATH + CHAR_FILE_SEP + FILE2_NAME;
+    private static final String NE_FILE_PATH = ROOT_PATH + CHAR_FILE_SEP + NE_FILE_NAME;
     private static GrepApplication grepApplication;
-    public final InputStream inputStream = new ByteArrayInputStream(INPUT.getBytes());
+    private final InputStream inputStream = new ByteArrayInputStream(INPUT.getBytes());
 
     @BeforeAll
     static void setUp() {
@@ -48,16 +49,7 @@ public class GrepApplicationTest {
     static void tearDown() throws IOException {
         Files.delete(Paths.get(FILE1_PATH));
         Files.delete(Paths.get(FILE2_PATH));
-    }
-
-    static void deleteDir(File file) {
-        File[] contents = file.listFiles();
-        if (contents != null) {
-            for (File f : contents) {
-                deleteDir(f);
-            }
-        }
-        file.delete();
+        Files.deleteIfExists(Paths.get(NE_FILE_PATH));
     }
 
     static void appendToFile(Path file, String... lines) throws IOException {
