@@ -1,5 +1,6 @@
 package sg.edu.nus.comp.cs4218;
 
+@SuppressWarnings("PMD.ClassWarningConventions")
 public final class Environment {
 
     /**
