@@ -59,7 +59,7 @@ public class ArgsParser {
 
         // construct exception message with the first illegal flag encountered
         for (Character flag : illegalFlags) {
-            String exceptionMessage = ILLEGAL_FLAG_MSG + flag;
+            String exceptionMessage = ILLEGAL_FLAG_MSG + "'" + flag + "'";
             throw new InvalidArgsException(exceptionMessage);
         }
     }
