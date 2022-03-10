@@ -8,7 +8,7 @@ import sg.edu.nus.comp.cs4218.impl.app.*;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
+import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_INVALID_APP;
 
 
 public class ApplicationRunner {
@@ -23,6 +23,7 @@ public class ApplicationRunner {
     public final static String APP_SORT = "sort";
     public final static String APP_TEE = "tee";
     public final static String APP_WC = "wc";
+    public final static String APP_MV = "mv";
 
     // EF2 Not implemented
     public final static String APP_PASTE = "paste";
@@ -78,6 +79,9 @@ public class ApplicationRunner {
                 break;
             case APP_WC:
                 application = new WcApplication();
+                break;
+            case APP_MV:
+                application = new MvApplication();
                 break;
             case APP_PASTE:
                 application = new PasteApplication();

@@ -1,11 +1,9 @@
 package sg.edu.nus.comp.cs4218.impl.app;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.exception.MvException;
+import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,11 +54,6 @@ public class MvApplicationTest {
         mvApplication = new MvApplication();
     }
 
-    @AfterAll
-    static void tearDown() throws IOException {
-        deleteDir(new File(TEST_PATH));
-    }
-
     static void deleteDir(File file) {
         File[] contents = file.listFiles();
         if (contents != null) {
@@ -92,6 +85,11 @@ public class MvApplicationTest {
         Files.write(Paths.get(FILE1_PATH), lines, StandardCharsets.UTF_8);
     }
 
+    @AfterEach
+    void deleteAll() {
+        deleteDir(new File(TEST_PATH));
+    }
+
     @Test
     void testMv_moveSrcFileToDestFileValid_shouldOverwriteDestFileContent() throws MvException {
         try {
@@ -115,6 +113,7 @@ public class MvApplicationTest {
             assertTrue(Files.exists(Paths.get(NE_FILE_PATH)));
             String newFileContent = readString(Paths.get(NE_FILE_PATH));
             assertEquals(file1Content, newFileContent);
+            Files.delete(Paths.get(NE_FILE_PATH));
         } catch (Exception e) {
             throw new MvException(e);
         }
@@ -130,15 +129,18 @@ public class MvApplicationTest {
     @Test
     void testMv_moveSrcFileToDestFolderDoNotOverwrite_shouldNotMoveSrcFile() throws MvException {
         try {
-            Files.createFile(Paths.get(DEST_FOLDER_PATH + FILE1_NAME));
+            Files.createFile(Paths.get(DEST_FOLDER_PATH + CHAR_FILE_SEP + FILE1_NAME));
 
             String fileContentBefore = readString(Paths.get(FILE1_PATH));
-            mvApplication.mvFilesToFolder(false, DEST_FOLDER_PATH + FILE1_NAME, FILE1_PATH);
+            assertTrue(Files.exists(Paths.get(FILE1_PATH)));
+            mvApplication.mvFilesToFolder(false, DEST_FOLDER_PATH, FILE1_PATH);
+            assertTrue(Files.exists(Paths.get(FILE1_PATH)));
             String fileContentAfter = readString(Paths.get(FILE1_PATH));
 
             assertEquals(fileContentBefore, fileContentAfter); // assert not overwritten
-            assertTrue(Files.exists(Paths.get(DEST_FOLDER_PATH + FILE1_NAME))); // still exists, not moved
-            Files.delete(Paths.get(DEST_FOLDER_PATH + FILE1_NAME));
+            assertTrue(Files.exists(Paths.get(DEST_FOLDER_PATH + CHAR_FILE_SEP + FILE1_NAME))); // still exists, not moved
+
+            Files.delete(Paths.get(DEST_FOLDER_PATH + CHAR_FILE_SEP + FILE1_NAME));
         } catch (Exception e) {
             throw new MvException(e);
         }
@@ -150,7 +152,8 @@ public class MvApplicationTest {
         try {
             String file1Content = readString(Paths.get(FILE1_PATH));
             String file2Content = readString(Paths.get(FILE2_PATH));
-            mvApplication.mvFilesToFolder(true, FILE1_PATH, DEST_FOLDER_PATH);
+            String[] files = {FILE1_PATH, FILE2_PATH};
+            mvApplication.mvFilesToFolder(true, DEST_FOLDER_PATH, files);
 
             assertFalse(Files.exists(Paths.get(FILE1_PATH)));
             assertFalse(Files.exists(Paths.get(FILE2_PATH)));
