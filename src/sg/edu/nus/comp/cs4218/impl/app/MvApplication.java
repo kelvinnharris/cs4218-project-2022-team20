@@ -16,12 +16,12 @@ public class MvApplication implements MvInterface {
     }
 
     @Override
-    public void mvSrcFileToDestFile(Boolean isOverwrite, String srcFile, String destFile) throws MvException {
-
+    public String mvSrcFileToDestFile(Boolean isOverwrite, String srcFile, String destFile) throws MvException {
+        return null;
     }
 
     @Override
-    public void mvFilesToFolder(Boolean isOverwrite, String destFolder, String... fileName) throws MvException {
-
+    public String mvFilesToFolder(Boolean isOverwrite, String destFolder, String... fileName) throws MvException {
+        return null;
     }
 }
