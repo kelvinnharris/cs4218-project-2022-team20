@@ -28,7 +28,6 @@ public class PasteApplication implements PasteInterface {
 
     List<List<String>> listResult;
     List<List<String>> tempListResult;
-    int numOfErrors = 0;
     private int maxFileLength = Integer.MIN_VALUE;
 
     private boolean fileNotExist = false;
@@ -182,6 +181,7 @@ public class PasteApplication implements PasteInterface {
                 numOfStdin++;
             }
         }
+        maxFileLength = Math.max(maxFileLength, (int)(stdInData.size()/numOfStdin));
 
         // If serial, the stdIn will all come out in the first "-"
         if (isSerial) {
@@ -225,8 +225,7 @@ public class PasteApplication implements PasteInterface {
     // Produce the correct output to listResult
     public void mergeFileDataInSerial(List<List<String>> tempListResult) {
         for (List<String> lst : tempListResult) {
-            List<String> currLst = new ArrayList<>();
-            currLst.addAll(lst);
+            List<String> currLst = new ArrayList<>(lst);
             this.listResult.add(currLst);
         }
     }
