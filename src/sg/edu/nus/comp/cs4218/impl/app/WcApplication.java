@@ -52,11 +52,7 @@ public class WcApplication implements WcInterface {
         try {
             wcArgs.parse(args);
         } catch (Exception e) {
-            String errorMessage = e.toString();
-            String sBuilder = "invalid option -- '" +
-                    errorMessage.charAt(errorMessage.length() - 1) +
-                    "'";
-            throw new WcException(sBuilder); //NOPMD
+            throw new WcException(e.getMessage()); //NOPMD
         }
 
         String result;
