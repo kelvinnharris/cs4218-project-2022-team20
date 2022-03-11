@@ -11,6 +11,7 @@ public class TestConstants {
     public static final String CAT_TEE_FOLDER = "tmpCatTeeTestFolder";
     public static final String RM_CD_FOLDER = "tmpRmCdTestFolder";
     public static final String WC_CAT_FOLDER = "tmpWcCatTestFolder";
+    public static final String PASTE_WC_FOLDER = "tmpPasteWcTestFolder";
 
     public static final String CP_FOLDER = "tmpCpTestFolder";
     public static final String GREP_FOLDER = "tmpGrepTestFolder";
