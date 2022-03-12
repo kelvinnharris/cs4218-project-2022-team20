@@ -32,7 +32,6 @@ public class PasteWcIntegrationTest {
 
     static final String WC_NUMBER_FORMAT = " %7d";
     static final String STRING_FORMAT = " %s";
-    private static final String CAT_NUMBER_FORMAT = "%6d ";
 
     private static final String FILE_NAME_1 = "file1.txt";
     private static final String FILE_PATH_1 = TEST_FOLDER_NAME + FILE_NAME_1;
