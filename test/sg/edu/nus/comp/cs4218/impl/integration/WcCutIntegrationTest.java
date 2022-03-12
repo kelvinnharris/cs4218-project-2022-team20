@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Command;
 import sg.edu.nus.comp.cs4218.Environment;
+import sg.edu.nus.comp.cs4218.exception.CutException;
 import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 import sg.edu.nus.comp.cs4218.impl.util.ApplicationRunner;
 import sg.edu.nus.comp.cs4218.impl.util.CommandBuilder;
@@ -17,12 +18,12 @@ import java.nio.file.Paths;
 
 import static java.nio.file.StandardOpenOption.APPEND;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.*;
-import static sg.edu.nus.comp.cs4218.impl.util.TestConstants.LS_TEE_FOLDER;
-import static sg.edu.nus.comp.cs4218.impl.util.TestConstants.LS_UNIQ_FOLDER;
+import static sg.edu.nus.comp.cs4218.impl.util.TestConstants.WC_CUT_FOLDER;
 import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
 
-public class LsUniqIntegrationTest {
+public class WcCutIntegrationTest {
 
     public static final String INPUT = "New input" + STRING_NEWLINE + "1000" + STRING_NEWLINE; // NOPMD
     public static final String FILE1_NAME = "file1.txt";
@@ -34,7 +35,7 @@ public class LsUniqIntegrationTest {
     public static final String[] LINES2 = {"123", "123", "", ""};
     public static final String[] LINES3 = {FILE1_NAME, FILE1_NAME, FILE2_NAME, FILE1_NAME, FILE1_NAME};
 
-    private static final String TEST_PATH = Environment.currentDirectory + CHAR_FILE_SEP + LS_UNIQ_FOLDER;
+    private static final String TEST_PATH = Environment.currentDirectory + CHAR_FILE_SEP + WC_CUT_FOLDER;
     public static final String FILE1_PATH = TEST_PATH + CHAR_FILE_SEP + FILE1_NAME;
     public static final String FILE2_PATH = TEST_PATH + CHAR_FILE_SEP + FILE2_NAME;
     public static final String FILE3_PATH = TEST_PATH + CHAR_FILE_SEP + FILE3_NAME;
@@ -81,47 +82,46 @@ public class LsUniqIntegrationTest {
     }
 
     @Test
-    void testLsUniq_uniqFromLsFiles_shouldReturnCorrectUniqLines() throws Exception {
-        String commandString = String.format("uniq `ls %s`", FILE1_NAME);
+    void testWcCut_cutFromWcOutputValid_shouldReturnCorrectOutput() throws Exception {
+        String commandString = String.format("wc %s | cut -b 26-34", FILE1_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         command.evaluate(inputStream, stdOut);
-        String uniqResult1 = "abc" + STRING_NEWLINE + "def" + STRING_NEWLINE + "abc" + STRING_NEWLINE;
-        assertEquals(uniqResult1, stdOut.toString());
-    }
-
-    @Test
-    void testLsUniq_uniqDuplicateFromLsFiles_shouldReturnCorrectDuplicateLines() throws Exception {
-        String commandString = String.format("uniq -d `ls %s", FILE1_NAME);
-        Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
-        command.evaluate(inputStream, stdOut);
-        String uniqResult1 = "abc" + STRING_NEWLINE + "abc" + STRING_NEWLINE;
-        assertEquals(uniqResult1, stdOut.toString());
-    }
-
-    @Test
-    void testLsUniq_uniqDuplicateOutputOfLsAsInput_shouldReturnNoOutput() throws Exception {
-        String commandString = String.format("ls %s | uniq -d", FILE1_NAME);
-        Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
-        command.evaluate(inputStream, stdOut);
-        assertEquals("", stdOut.toString());
-    }
-
-    @Test
-    void testLsUniq_LsFilenamesReturnedByUniq_shouldReturnCorrectOutput() throws Exception {
-        String commandString = String.format("ls `uniq %s`", FILE3_NAME);
-        Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
-        command.evaluate(inputStream, stdOut);
-
-        String expectedOutput = FILE1_NAME + STRING_NEWLINE + FILE1_NAME + STRING_NEWLINE;
+        String expectedOutput = FILE1_NAME + STRING_NEWLINE;
         assertEquals(expectedOutput, stdOut.toString());
     }
 
     @Test
-    void testLsUniq_UniqOutputOfLsFromUniq_shouldReturnCorrectOutput() throws Exception {
-        String commandString = String.format("ls `uniq %s` | uniq -c", FILE3_NAME);
+    void testWcCut_cutFromWcOutputOutOfBoundRange_shouldReturnOutputWithNullsForOutOfBoundValues() throws Exception {
+        String commandString = String.format("wc %s | cut -b 26-35", FILE1_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         command.evaluate(inputStream, stdOut);
-        String expectedOutput = "2" + CHAR_SPACE + FILE1_NAME + STRING_NEWLINE;
+        String expectedOutput = FILE1_NAME + CHAR_NULL + STRING_NEWLINE;
         assertEquals(expectedOutput, stdOut.toString());
+    }
+
+    @Test
+    void testWcCut_cutFromWcOutputMultipleFiles_shouldReturnCorrectOutput() throws Exception {
+        String commandString = String.format("wc %s %s | cut -b 23-24", FILE1_NAME, FILE2_NAME);
+        Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
+        command.evaluate(inputStream, stdOut);
+        String expectedOutput = "30" + STRING_NEWLINE + "14" + STRING_NEWLINE + "44" + STRING_NEWLINE;
+        assertEquals(expectedOutput, stdOut.toString());
+    }
+
+    @Test
+    void testWcCut_cutFromValidWcOutputAsArgument_shouldReturnCorrectOutput() throws Exception {
+        String commandString = String.format("cut -b 1 `wc %s | cut -b 26-34`", FILE1_NAME);
+        Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
+        command.evaluate(inputStream, stdOut);
+        String expectedOutput = "a" + STRING_NEWLINE + "a" + STRING_NEWLINE + "d" + STRING_NEWLINE + "a" + STRING_NEWLINE
+                + "a" + STRING_NEWLINE + "a" + STRING_NEWLINE;
+        assertEquals(expectedOutput, stdOut.toString());
+    }
+
+    @Test
+    void testWcCut_cutFromInvalidWcOutputAsArgument_shouldThrowCutException() throws Exception {
+        String commandString = String.format("cut -c 1-3 `wc %s`", FILE1_NAME);
+        Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
+        assertThrows(CutException.class, () -> command.evaluate(inputStream, stdOut));
     }
 }
