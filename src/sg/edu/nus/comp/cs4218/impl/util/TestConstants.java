@@ -14,4 +14,5 @@ public class TestConstants {
 
 
     public static final String LS_TEE_FOLDER = "tmpLsTeeTestFolder";
+    public static final String LS_UNIQ_FOLDER = "tmpLsUniqTestFolder";
 }

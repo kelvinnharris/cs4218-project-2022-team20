@@ -19,6 +19,7 @@ import static java.nio.file.StandardOpenOption.APPEND;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.*;
 import static sg.edu.nus.comp.cs4218.impl.util.TestConstants.LS_TEE_FOLDER;
+import static sg.edu.nus.comp.cs4218.impl.util.TestConstants.LS_UNIQ_FOLDER;
 import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
 
 public class LsUniqIntegrationTest {
@@ -33,7 +34,7 @@ public class LsUniqIntegrationTest {
     public static final String[] LINES2 = {"123", "123", "", ""};
     public static final String[] LINES3 = {FILE1_NAME, FILE1_NAME, FILE2_NAME, FILE1_NAME, FILE1_NAME};
 
-    private static final String TEST_PATH = Environment.currentDirectory + CHAR_FILE_SEP + LS_TEE_FOLDER;
+    private static final String TEST_PATH = Environment.currentDirectory + CHAR_FILE_SEP + LS_UNIQ_FOLDER;
     public static final String FILE1_PATH = TEST_PATH + CHAR_FILE_SEP + FILE1_NAME;
     public static final String FILE2_PATH = TEST_PATH + CHAR_FILE_SEP + FILE2_NAME;
     public static final String FILE3_PATH = TEST_PATH + CHAR_FILE_SEP + FILE3_NAME;
