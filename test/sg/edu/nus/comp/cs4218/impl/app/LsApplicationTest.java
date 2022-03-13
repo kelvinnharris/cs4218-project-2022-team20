@@ -65,21 +65,21 @@ class LsApplicationTest {
     }
 
     @Test
-    void testLslistFolderContent_emptyPath_shouldReturnFileNotFound() throws LsException {
+    void listFolderContent_emptyPath_shouldReturnFileNotFound() throws LsException {
         String lsOutput = lsApplication.listFolderContent(false, false, "");
         String expectedOutput = "ls: cannot access '': No such file or directory";
         assertEquals(expectedOutput, lsOutput);
     }
 
     @Test
-    void testLslistFolderContent_fullPath_shouldReturnAllFilesAndDirectories() throws LsException {
+    void listFolderContent_fullPath_shouldReturnAllFilesAndDirectories() throws LsException {
         String lsOutput = lsApplication.listFolderContent(false, false, TEST_PATH);
         String expectedOutput = FILE_4 + StringUtils.STRING_NEWLINE + FOLDER_1 + StringUtils.STRING_NEWLINE + FOLDER_3;
         assertEquals(expectedOutput, lsOutput);
     }
 
     @Test
-    void testLslistFolderContent_pathNoArg_shouldReturnAllFilesAndDirectories() throws LsException {
+    void listFolderContent_pathNoArg_shouldReturnAllFilesAndDirectories() throws LsException {
         Environment.currentDirectory = TEST_PATH;
         String lsOutput = lsApplication.listFolderContent(false, false, ".");
         String expectedOutput = FILE_4 + StringUtils.STRING_NEWLINE + FOLDER_1 + StringUtils.STRING_NEWLINE + FOLDER_3;
@@ -87,7 +87,7 @@ class LsApplicationTest {
     }
 
     @Test
-    void testLslistFolderContent_relativePath_shouldReturnAllFilesAndDirectories() throws LsException {
+    void listFolderContent_relativePath_shouldReturnAllFilesAndDirectories() throws LsException {
         String path = "." + CHAR_FILE_SEP + TEST_FOLDER_NAME + FOLDER_3 + CHAR_FILE_SEP + ".." + CHAR_FILE_SEP + FOLDER_1 + CHAR_FILE_SEP + ".";
         String lsOutput = lsApplication.listFolderContent(false, false, path);
         String expectedOutput = FILE_1 + StringUtils.STRING_NEWLINE + FILE_2 + StringUtils.STRING_NEWLINE + FOLDER_2;
@@ -95,7 +95,7 @@ class LsApplicationTest {
     }
 
     @Test
-    void testLslistFolderContent_invalidPath_shouldReturnInvalidPathStringError() throws LsException {
+    void listFolderContent_invalidPath_shouldReturnInvalidPathStringError() throws LsException {
         String path = TEST_FOLDER_NAME + "invalidFile.txt";
         String lsOutput = lsApplication.listFolderContent(false, false, path);
         String expectedOutput = "ls: cannot access '" + TEST_FOLDER_NAME + "invalidFile.txt': No such file or directory";
@@ -103,7 +103,7 @@ class LsApplicationTest {
     }
 
     @Test
-    void testLslistFolderContent_validMultiplePath_shouldReturnValidPathString() throws LsException {
+    void listFolderContent_validMultiplePath_shouldReturnValidPathString() throws LsException {
         String validPath1 = TEST_FOLDER_NAME + FOLDER_1;
         String validPath2 = TEST_FOLDER_NAME + FOLDER_1 + CHAR_FILE_SEP + FILE_1;
         String validPath3 = TEST_FOLDER_NAME + FOLDER_3 + CHAR_FILE_SEP + FOLDER_4;
@@ -115,7 +115,7 @@ class LsApplicationTest {
     }
 
     @Test
-    void testLslistFolderContent_validInvalidMultiplePath_shouldReturnValidInvalidPathString() throws LsException {
+    void listFolderContent_validInvalidMultiplePath_shouldReturnValidInvalidPathString() throws LsException {
         String invalidPath1 = TEST_FOLDER_NAME + "folder5";
         String invalidPath2 = TEST_FOLDER_NAME + FOLDER_1 + CHAR_FILE_SEP + FOLDER_2 + CHAR_FILE_SEP + "hello.txt";
         String validPath3 = TEST_FOLDER_NAME + FOLDER_3 + CHAR_FILE_SEP + FOLDER_4 + CHAR_FILE_SEP + FILE_3;
@@ -127,7 +127,7 @@ class LsApplicationTest {
     }
 
     @Test
-    void testLslistFolderContent_fileWithLongPath_shouldReturnChosenFiles() throws LsException {
+    void listFolderContent_fileWithLongPath_shouldReturnChosenFiles() throws LsException {
         String validPath = TEST_FOLDER_NAME + FOLDER_3 + CHAR_FILE_SEP + FOLDER_4 + CHAR_FILE_SEP + FILE_3;
         String lsOutput = lsApplication.listFolderContent(false, false, validPath);
         String expectedOutput = TEST_FOLDER_NAME + FOLDER_3 + CHAR_FILE_SEP + FOLDER_4 + CHAR_FILE_SEP + FILE_3;
@@ -135,7 +135,7 @@ class LsApplicationTest {
     }
 
     @Test
-    void testLslistFolderContent_fileOnCurrentDirectory_shouldReturnChosenFiles() throws LsException {
+    void listFolderContent_fileOnCurrentDirectory_shouldReturnChosenFiles() throws LsException {
         Environment.currentDirectory = TEST_PATH;
         String lsOutput = lsApplication.listFolderContent(false, false, FILE_4);
         String expectedOutput = FILE_4;
@@ -143,7 +143,7 @@ class LsApplicationTest {
     }
 
     @Test
-    void testLslistFolderContent_recursiveOnly_shouldReturnFilesAndDirectoriesRecursively() throws LsException {
+    void listFolderContent_recursiveOnly_shouldReturnFilesAndDirectoriesRecursively() throws LsException {
         String recurOnlyOutput = lsApplication.listFolderContent(true, false, TEST_PATH);
         String expectedOutput = LS_FOLDER + ":" + NEW_LINE + FILE_4 + NEW_LINE + FOLDER_1 + NEW_LINE + FOLDER_3 + NEW_LINE + NEW_LINE +
                 TEST_FOLDER_NAME + FOLDER_1 + ":" + NEW_LINE + FILE_1 + NEW_LINE + FILE_2 + NEW_LINE + FOLDER_2 + NEW_LINE + NEW_LINE +
@@ -154,19 +154,19 @@ class LsApplicationTest {
     }
 
     @Test
-    void testLslistFolderContent_recursiveOnlyFileNames_shouldReturnFiles() throws LsException {
+    void listFolderContent_recursiveOnlyFileNames_shouldReturnFiles() throws LsException {
         String recurOnlyOutput = lsApplication.listFolderContent(true, false, TEST_FOLDER_NAME + FILE_4);
         String expectedOutput = TEST_FOLDER_NAME + FILE_4;
         assertEquals(expectedOutput, recurOnlyOutput);
     }
 
     @Test
-    void testLslistFolderContent_recursiveOnlyEmptyFolder_shouldNotRecurseInfinitely() throws LsException {
+    void listFolderContent_recursiveOnlyEmptyFolder_shouldNotRecurseInfinitely() throws LsException {
         assertDoesNotThrow(() -> lsApplication.listFolderContent(true, false));
     }
 
     @Test
-    void testLslistFolderContent_recursiveSort_shouldSortAndReturnFilesAndDirectoriesRecursively() throws LsException {
+    void listFolderContent_recursiveSort_shouldSortAndReturnFilesAndDirectoriesRecursively() throws LsException {
         String recurSortOutput = lsApplication.listFolderContent(true, true, TEST_PATH);
         String expectedOutput = "tmpLsTestFolder:" + NEW_LINE + FOLDER_1 + NEW_LINE + FOLDER_3 + NEW_LINE + FILE_4 + NEW_LINE + NEW_LINE +
                 TEST_FOLDER_NAME + FOLDER_1 + ":" + NEW_LINE + FOLDER_2 + NEW_LINE + FILE_2 + NEW_LINE + FILE_1 + NEW_LINE + NEW_LINE +
@@ -177,30 +177,30 @@ class LsApplicationTest {
     }
 
     @Test
-    void testLsRun_passNullStdin_shouldPassed() {
+    void run_passNullStdin_shouldPassed() {
         String[] emptyArgs = new String[]{};
         assertDoesNotThrow(() -> lsApplication.run(emptyArgs, null, System.out));
     }
 
     @Test
-    void testLsRun_passNullArgs_shouldThrowLsException() {
+    void run_passNullArgs_shouldThrowLsException() {
         assertThrows(LsException.class, () -> lsApplication.run(null, System.in, System.out));
     }
 
     @Test
-    void testLsRun_passValidArgs_shouldThrowLsException() {
+    void run_passValidArgs_shouldThrowLsException() {
         String[] emptyArgs = new String[]{TEST_PATH, "-RX"};
         assertDoesNotThrow(() -> lsApplication.run(emptyArgs, System.in, System.out));
     }
 
     @Test
-    void testLsRun_passInvalidArgs_shouldThrowLsException() {
+    void run_passInvalidArgs_shouldThrowLsException() {
         String[] emptyArgs = new String[]{TEST_PATH, "-abc"};
         assertThrows(LsException.class, () -> lsApplication.run(emptyArgs, System.in, System.out));
     }
 
     @Test
-    void testLsRun_passNullStdout_shouldThrowLsException() {
+    void run_passNullStdout_shouldThrowLsException() {
         String[] emptyArgs = new String[]{};
         assertThrows(LsException.class, () -> lsApplication.run(emptyArgs, System.in, null));
     }
