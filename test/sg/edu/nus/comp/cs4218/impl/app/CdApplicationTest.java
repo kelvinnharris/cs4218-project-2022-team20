@@ -92,25 +92,25 @@ class CdApplicationTest {
     }
 
     @Test
-    void testCd_validFile_shouldReturnNotADirectoryError() throws CdException {
+    void testCd_validFile_shouldReturnNotADirectoryError() {
         String path = TEST_PATH + FILE_3;
         assertThrows(CdException.class, () -> cdApplication.changeToDirectory(path));
     }
 
     @Test
-    void testCd_invalidPath_shouldReturnNoSuchDirectoryError() throws CdException {
+    void testCd_invalidPath_shouldReturnNoSuchDirectoryError() {
         String path = TEST_PATH + FOLDER_1 + CHAR_FILE_SEP + "invalidFolder";
         assertThrows(CdException.class, () -> cdApplication.changeToDirectory(path));
     }
 
     @Test
-    void testCd_nullArgs_shouldReturnCdError() throws CdException {
+    void testCd_nullArgs_shouldReturnCdError() {
         String path = TEST_PATH + FILE_3;
         assertThrows(CdException.class, () -> cdApplication.run(null, System.in, System.out));
     }
 
     @Test
-    void testCd_noArgs_shouldReturnCdError() throws CdException {
+    void testCd_noArgs_shouldReturnCdError() {
         String[] emptyArgs = new String[]{""};
         assertThrows(CdException.class, () -> cdApplication.run(emptyArgs, System.in, System.out));
     }
