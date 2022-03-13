@@ -26,10 +26,10 @@ public class LsApplication implements LsInterface { //NOPMD
     private final static String PATH_CURR_DIR = STRING_CURR_DIR + CHAR_FILE_SEP;
 
     @Override
-    public String listFolderContent(Boolean isFoldersOnly, Boolean isRecursive, Boolean isSortByExt,
+    public String listFolderContent(Boolean isRecursive, Boolean isSortByExt,
                                     String... folderName) throws LsException {
         if (folderName.length == 0 && !isRecursive) {
-            return listCwdContent(isFoldersOnly, isSortByExt);
+            return listCwdContent(isSortByExt);
         }
 
         List<Path> paths;
@@ -41,7 +41,7 @@ public class LsApplication implements LsInterface { //NOPMD
             paths = resolvePaths(folderName);
         }
 
-        return buildResult(paths, isFoldersOnly, isRecursive, isSortByExt, false);
+        return buildResult(paths, isRecursive, isSortByExt, false);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class LsApplication implements LsInterface { //NOPMD
         Boolean sortByExt = parser.isSortByExt();
         String[] directories = parser.getDirectories()
                 .toArray(new String[parser.getDirectories().size()]);
-        String result = listFolderContent(foldersOnly, recursive, sortByExt, directories);
+        String result = listFolderContent(recursive, sortByExt, directories);
 
         try {
             stdout.write(result.getBytes());
@@ -81,14 +81,13 @@ public class LsApplication implements LsInterface { //NOPMD
      * Lists only the current directory's content and RETURNS. This does not account for recursive
      * mode in cwd.
      *
-     * @param isFoldersOnly - is folders output only
      * @param isSortByExt   - is sort by extension
      * @return String
      */
-    private String listCwdContent(Boolean isFoldersOnly, Boolean isSortByExt) throws LsException {
+    private String listCwdContent(Boolean isSortByExt) throws LsException {
         String cwd = Environment.currentDirectory;
         try {
-            return formatContents(getContents(Paths.get(cwd), isFoldersOnly), isSortByExt, false);
+            return formatContents(getContents(Paths.get(cwd)), isSortByExt, false);
         } catch (InvalidDirectoryException e) {
             throw new LsException("Unexpected error occurred!"); //NOPMD
         }
@@ -100,12 +99,11 @@ public class LsApplication implements LsInterface { //NOPMD
      * NOTE: This is recursively called if user wants recursive mode.
      *
      * @param paths         - list of java.nio.Path objects to list
-     * @param isFoldersOnly - only list the folder contents
      * @param isRecursive   - recursive mode, repeatedly ls the child directories
      * @param isSortByExt   - sorts folder contents alphabetically by file extension (characters after the last ‘.’ (without quotes)). Files with no extension are sorted first.
      * @return String to be written to output stream.
      */
-    private String buildResult(List<Path> paths, Boolean isFoldersOnly, Boolean isRecursive, Boolean isSortByExt, Boolean hasRecurse) { //NOPMD
+    private String buildResult(List<Path> paths, Boolean isRecursive, Boolean isSortByExt, Boolean hasRecurse) { //NOPMD
         StringBuilder result = new StringBuilder();
         boolean isSinglePath = paths.size() == 1;
 
@@ -118,7 +116,7 @@ public class LsApplication implements LsInterface { //NOPMD
                 }
 
                 if (Files.isDirectory(path) || (isRecursive && !path.getParent().toString().equals(Environment.currentDirectory))) {
-                    contents = getContents(path, isFoldersOnly);
+                    contents = getContents(path);
                 } else if (Files.exists(path)) {
                     contents = new ArrayList<>();
                     contents.add(path);
@@ -150,7 +148,7 @@ public class LsApplication implements LsInterface { //NOPMD
 
                 // RECURSE!
                 if (isRecursive && !contents.isEmpty()) {
-                    String oldResult = buildResult(contents, isFoldersOnly, isRecursive, isSortByExt, true);
+                    String oldResult = buildResult(contents, isRecursive, isSortByExt, true);
                     result.append(oldResult);
                     if (!"".equals(oldResult)) {
                         result.append(StringUtils.STRING_NEWLINE);
@@ -224,7 +222,7 @@ public class LsApplication implements LsInterface { //NOPMD
      * @param directory - directory
      * @return List of files + directories in the passed directory.
      */
-    private List<Path> getContents(Path directory, Boolean isFoldersOnly)
+    private List<Path> getContents(Path directory)
             throws InvalidDirectoryException {
         if (!Files.exists(directory)) {
             throw new InvalidDirectoryException(getRelativeToCwd(directory).toString());
@@ -242,10 +240,6 @@ public class LsApplication implements LsInterface { //NOPMD
         }
 
         for (File f : files) {
-            if (isFoldersOnly && !f.isDirectory()) {
-                continue;
-            }
-
             if (!f.isHidden()) {
                 result.add(f.toPath());
             }
