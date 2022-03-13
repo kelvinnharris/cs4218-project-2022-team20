@@ -1,16 +1,26 @@
 package sg.edu.nus.comp.cs4218.impl.app;
 
-import static java.nio.file.StandardOpenOption.APPEND;
-import static org.junit.jupiter.api.Assertions.*;
-import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
-import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
-
-import org.junit.jupiter.api.*;
+import javafx.util.Pair;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Environment;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.nio.file.StandardOpenOption.APPEND;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
+import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
 
 class CutApplicationTest {
     private CutApplication cutApplication;
@@ -52,21 +62,13 @@ class CutApplicationTest {
         deleteDir(new File(TEST_PATH));
     }
 
-    static void deleteDir(File file) {
-        File[] contents = file.listFiles();
-        if (contents != null) {
-            for (File f : contents) {
-                deleteDir(f);
-            }
-        }
-        file.delete();
-    }
-
     @Test
     void cutFromFiles_byCharSingleIndexSingleLine_returnsLines() throws Exception {
         InputStream input = new ByteArrayInputStream("".getBytes());
         cutApplication.stdin = input;
-        String output = cutApplication.cutFromFiles(true, false, false, 0, 1, FILE_SINGLE_LINE);
+        List<Pair<Integer, Integer>> ranges = new ArrayList<>();
+        ranges.add(new Pair<>(0,0));
+        String output = cutApplication.cutFromFiles(true, false, ranges, FILE_SINGLE_LINE);
         assertEquals("a" + STRING_NEWLINE, output);
     }
 
@@ -74,7 +76,9 @@ class CutApplicationTest {
     void cutFromFiles_byByteSingleIndexSingleLine_returnsLines() throws Exception {
         InputStream input = new ByteArrayInputStream("".getBytes());
         cutApplication.stdin = input;
-        String output = cutApplication.cutFromFiles(false, true, false, 0, 1, FILE_SINGLE_LINE);
+        List<Pair<Integer, Integer>> ranges = new ArrayList<>();
+        ranges.add(new Pair<>(0,0));
+        String output = cutApplication.cutFromFiles(false, true, ranges, FILE_SINGLE_LINE);
         assertEquals("a" + STRING_NEWLINE, output);
     }
 
@@ -82,7 +86,9 @@ class CutApplicationTest {
     void cutFromFiles_byCharRangeIndexSingleLine_returnsLines() throws Exception {
         InputStream input = new ByteArrayInputStream("".getBytes());
         cutApplication.stdin = input;
-        String output = cutApplication.cutFromFiles(true, false, true, 0, 2, FILE_SINGLE_LINE);
+        List<Pair<Integer, Integer>> ranges = new ArrayList<>();
+        ranges.add(new Pair<>(0,2));
+        String output = cutApplication.cutFromFiles(true, false, ranges, FILE_SINGLE_LINE);
         assertEquals(ABC + STRING_NEWLINE, output);
     }
 
@@ -90,7 +96,9 @@ class CutApplicationTest {
     void cutFromFiles_byByteRangeIndexSingleLine_returnsLines() throws Exception {
         InputStream input = new ByteArrayInputStream("".getBytes());
         cutApplication.stdin = input;
-        String output = cutApplication.cutFromFiles(false, true, true, 0, 2, FILE_SINGLE_LINE);
+        List<Pair<Integer, Integer>> ranges = new ArrayList<>();
+        ranges.add(new Pair<>(0,2));
+        String output = cutApplication.cutFromFiles(false, true, ranges, FILE_SINGLE_LINE);
         assertEquals(ABC + STRING_NEWLINE, output);
     }
 
@@ -98,7 +106,9 @@ class CutApplicationTest {
     void cutFromFiles_byCharSingleIndexMultipleLines_returnsLines() throws Exception {
         InputStream input = new ByteArrayInputStream("".getBytes());
         cutApplication.stdin = input;
-        String output = cutApplication.cutFromFiles(true, false, false, 0, 1, FILE_MULTIPLE_LINES);
+        List<Pair<Integer, Integer>> ranges = new ArrayList<>();
+        ranges.add(new Pair<>(0,0));
+        String output = cutApplication.cutFromFiles(true, false, ranges, FILE_MULTIPLE_LINES);
         assertEquals("a" + STRING_NEWLINE + "e" + STRING_NEWLINE, output);
     }
 
@@ -106,7 +116,9 @@ class CutApplicationTest {
     void cutFromFiles_byByteSingleIndexMultipleLines_returnsLines() throws Exception {
         InputStream input = new ByteArrayInputStream("".getBytes());
         cutApplication.stdin = input;
-        String output = cutApplication.cutFromFiles(false, true, false, 0, 1, FILE_MULTIPLE_LINES);
+        List<Pair<Integer, Integer>> ranges = new ArrayList<>();
+        ranges.add(new Pair<>(0,0));
+        String output = cutApplication.cutFromFiles(false, true, ranges, FILE_MULTIPLE_LINES);
         assertEquals("a" + STRING_NEWLINE + "e" + STRING_NEWLINE, output);
     }
 
@@ -114,7 +126,9 @@ class CutApplicationTest {
     void cutFromFiles_byCharRangeIndexMultipleLines_returnsLines() throws Exception {
         InputStream input = new ByteArrayInputStream("".getBytes());
         cutApplication.stdin = input;
-        String output = cutApplication.cutFromFiles(true, false, true, 0, 2, FILE_MULTIPLE_LINES);
+        List<Pair<Integer, Integer>> ranges = new ArrayList<>();
+        ranges.add(new Pair<>(0,2));
+        String output = cutApplication.cutFromFiles(true, false, ranges, FILE_MULTIPLE_LINES);
         assertEquals(ABC + STRING_NEWLINE + EFG + STRING_NEWLINE, output);
     }
 
@@ -122,7 +136,9 @@ class CutApplicationTest {
     void cutFromFiles_byByteRangeIndexMultipleLines_returnsLines() throws Exception {
         InputStream input = new ByteArrayInputStream("".getBytes());
         cutApplication.stdin = input;
-        String output = cutApplication.cutFromFiles(false, true, true, 0, 2, FILE_MULTIPLE_LINES);
+        List<Pair<Integer, Integer>> ranges = new ArrayList<>();
+        ranges.add(new Pair<>(0,2));
+        String output = cutApplication.cutFromFiles(false, true, ranges, FILE_MULTIPLE_LINES);
         assertEquals(ABC + STRING_NEWLINE + EFG + STRING_NEWLINE, output);
     }
 
@@ -130,7 +146,9 @@ class CutApplicationTest {
     void cutFromFiles_byByteRangeIndexMultipleFiles_returnsLines() throws Exception {
         InputStream input = new ByteArrayInputStream("".getBytes());
         cutApplication.stdin = input;
-        String output = cutApplication.cutFromFiles(false, true, true, 0, 2, new String[]{FILE_SINGLE_LINE, FILE_MULTIPLE_LINES});
+        List<Pair<Integer, Integer>> ranges = new ArrayList<>();
+        ranges.add(new Pair<>(0,2));
+        String output = cutApplication.cutFromFiles(false, true, ranges, new String[]{FILE_SINGLE_LINE, FILE_MULTIPLE_LINES});
         assertEquals(output, ABC + STRING_NEWLINE + ABC + STRING_NEWLINE + EFG + STRING_NEWLINE);
     }
 
@@ -139,7 +157,9 @@ class CutApplicationTest {
         String inputString = "z" + STRING_NEWLINE + "yy" + STRING_NEWLINE + "x" + STRING_NEWLINE + "www";
         InputStream input = new ByteArrayInputStream(inputString.getBytes());
         cutApplication.stdin = input;
-        String output = cutApplication.cutFromFiles(false, true, true, 0, 2, new String[]{FILE_SINGLE_LINE, "-", FILE_MULTIPLE_LINES});
+        List<Pair<Integer, Integer>> ranges = new ArrayList<>();
+        ranges.add(new Pair<>(0,2));
+        String output = cutApplication.cutFromFiles(false, true, ranges, new String[]{FILE_SINGLE_LINE, "-", FILE_MULTIPLE_LINES});
         assertEquals(output, ABC + STRING_NEWLINE + "z" + STRING_NEWLINE + "yy" + STRING_NEWLINE + "x" + STRING_NEWLINE + "www" + STRING_NEWLINE + ABC + STRING_NEWLINE + EFG + STRING_NEWLINE);
     }
 
@@ -147,28 +167,36 @@ class CutApplicationTest {
     @Test
     void cutFromStdin_byCharSingleIndexSingleLine_returnsLines() throws Exception {
         InputStream input = new ByteArrayInputStream(ABCD.getBytes());
-        String output = cutApplication.cutFromStdin(true, false, false, 0, 1, input);
+        List<Pair<Integer, Integer>> ranges = new ArrayList<>();
+        ranges.add(new Pair<>(0,0));
+        String output = cutApplication.cutFromStdin(true, false, ranges, input);
         assertEquals("a" + STRING_NEWLINE, output);
     }
 
     @Test
     void cutFromStdin_byByteSingleIndexSingleLine_returnsLines() throws Exception {
         InputStream input = new ByteArrayInputStream(ABCD.getBytes());
-        String output = cutApplication.cutFromStdin(false, true, false, 0, 1, input);
+        List<Pair<Integer, Integer>> ranges = new ArrayList<>();
+        ranges.add(new Pair<>(0,0));
+        String output = cutApplication.cutFromStdin(false, true, ranges, input);
         assertEquals("a" + STRING_NEWLINE, output);
     }
 
     @Test
     void cutFromStdin_byCharRangeIndexSingleLine_returnsLines() throws Exception {
         InputStream input = new ByteArrayInputStream(ABCD.getBytes());
-        String output = cutApplication.cutFromStdin(true, false, true, 0, 2, input);
+        List<Pair<Integer, Integer>> ranges = new ArrayList<>();
+        ranges.add(new Pair<>(0,2));
+        String output = cutApplication.cutFromStdin(true, false, ranges, input);
         assertEquals(ABC + STRING_NEWLINE, output);
     }
 
     @Test
     void cutFromStdin_byByteRangeIndexSingleLine_returnsLines() throws Exception {
         InputStream input = new ByteArrayInputStream(ABCD.getBytes());
-        String output = cutApplication.cutFromStdin(false, true, true, 0, 2, input);
+        List<Pair<Integer, Integer>> ranges = new ArrayList<>();
+        ranges.add(new Pair<>(0,2));
+        String output = cutApplication.cutFromStdin(false, true, ranges, input);
         assertEquals(ABC + STRING_NEWLINE, output);
     }
 
@@ -176,7 +204,9 @@ class CutApplicationTest {
     void cutFromStdin_byCharSingleIndexMultipleLines_returnsLines() throws Exception {
         String inputString = ABCD + STRING_NEWLINE + EFGH;
         InputStream input = new ByteArrayInputStream(inputString.getBytes());
-        String output = cutApplication.cutFromStdin(true, false, false, 0, 1, input);
+        List<Pair<Integer, Integer>> ranges = new ArrayList<>();
+        ranges.add(new Pair<>(0,0));
+        String output = cutApplication.cutFromStdin(true, false, ranges, input);
         assertEquals("a" + STRING_NEWLINE + "e" + STRING_NEWLINE, output);
     }
 
@@ -184,7 +214,9 @@ class CutApplicationTest {
     void cutFromStdin_byByteSingleIndexMultipleLines_returnsLines() throws Exception {
         String inputString = ABCD + STRING_NEWLINE + EFGH;
         InputStream input = new ByteArrayInputStream(inputString.getBytes());
-        String output = cutApplication.cutFromStdin(false, true, false, 0, 1, input);
+        List<Pair<Integer, Integer>> ranges = new ArrayList<>();
+        ranges.add(new Pair<>(0,0));
+        String output = cutApplication.cutFromStdin(false, true, ranges, input);
         assertEquals("a" + STRING_NEWLINE + "e" + STRING_NEWLINE, output);
 
     }
@@ -193,7 +225,9 @@ class CutApplicationTest {
     void cutFromStdin_byCharRangeIndexMultipleLines_returnsLines() throws Exception {
         String inputString = ABCD + STRING_NEWLINE + EFGH;
         InputStream input = new ByteArrayInputStream(inputString.getBytes());
-        String output = cutApplication.cutFromStdin(true, false, true, 0, 2, input);
+        List<Pair<Integer, Integer>> ranges = new ArrayList<>();
+        ranges.add(new Pair<>(0,2));
+        String output = cutApplication.cutFromStdin(true, false, ranges, input);
         assertEquals(ABC + STRING_NEWLINE + EFG + STRING_NEWLINE, output);
     }
 
@@ -201,7 +235,9 @@ class CutApplicationTest {
     void cutFromStdin_byByteRangeIndexMultipleLines_returnsLines() throws Exception {
         String inputString = ABCD + STRING_NEWLINE + EFGH;
         InputStream input = new ByteArrayInputStream(inputString.getBytes());
-        String output = cutApplication.cutFromStdin(false, true, true, 0, 2, input);
+        List<Pair<Integer, Integer>> ranges = new ArrayList<>();
+        ranges.add(new Pair<>(0,2));
+        String output = cutApplication.cutFromStdin(false, true, ranges, input);
         assertEquals(ABC + STRING_NEWLINE + EFG + STRING_NEWLINE, output);
     }
 
@@ -209,7 +245,9 @@ class CutApplicationTest {
     void cutFromStdin_EmptyString_returnsLines() throws Exception {
         String inputString = STRING_NEWLINE;
         InputStream input = new ByteArrayInputStream(inputString.getBytes());
-        String output = cutApplication.cutFromStdin(true, false, false, 0, 1, input);
+        List<Pair<Integer, Integer>> ranges = new ArrayList<>();
+        ranges.add(new Pair<>(0,0));
+        String output = cutApplication.cutFromStdin(true, false, ranges, input);
         assertEquals(STRING_NEWLINE, output);
     }
 
@@ -217,7 +255,9 @@ class CutApplicationTest {
     void cutFromStdin_MultipleEmptyString_returnsLines() throws Exception {
         String inputString = STRING_NEWLINE + STRING_NEWLINE;
         InputStream input = new ByteArrayInputStream(inputString.getBytes());
-        String output = cutApplication.cutFromStdin(true, false, false, 0, 1, input);
+        List<Pair<Integer, Integer>> ranges = new ArrayList<>();
+        ranges.add(new Pair<>(0,0));
+        String output = cutApplication.cutFromStdin(true, false, ranges, input);
         assertEquals(STRING_NEWLINE + STRING_NEWLINE, output);
     }
 
@@ -225,7 +265,9 @@ class CutApplicationTest {
     void cutFromStdin_byCharIndexMoreThanInputSize_returnsNull() throws Exception {
         String inputString = "a";
         InputStream input = new ByteArrayInputStream(inputString.getBytes());
-        String output = cutApplication.cutFromStdin(true, false, false, 1, 2, input);
+        List<Pair<Integer, Integer>> ranges = new ArrayList<>();
+        ranges.add(new Pair<>(1,1));
+        String output = cutApplication.cutFromStdin(true, false, ranges, input);
         char[] charArray = new char[1];
         String expected = new String(charArray) + STRING_NEWLINE;
         assertEquals(expected , output);
@@ -235,7 +277,9 @@ class CutApplicationTest {
     void cutFromStdin_byByteIndexMoreThanInputSize_returnsNull() throws Exception {
         String inputString = "a";
         InputStream input = new ByteArrayInputStream(inputString.getBytes());
-        String output = cutApplication.cutFromStdin(false, true, false, 1, 2, input);
+        List<Pair<Integer, Integer>> ranges = new ArrayList<>();
+        ranges.add(new Pair<>(1,1));
+        String output = cutApplication.cutFromStdin(false, true, ranges, input);
         byte[] byteArray = new byte[1];
         String expected = new String(byteArray) + STRING_NEWLINE;
         assertEquals(expected , output);

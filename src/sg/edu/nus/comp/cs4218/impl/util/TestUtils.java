@@ -4,6 +4,10 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+
+import static java.nio.file.StandardOpenOption.APPEND;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 public class TestUtils { // NOPMD
 
@@ -45,6 +49,13 @@ public class TestUtils { // NOPMD
             boolean result = Files.deleteIfExists(newFile.toPath());
         } catch (IOException e) {
             System.out.println("Failed to delete file");
+        }
+    }
+
+
+    public static void appendToFile(Path file, String... lines) throws IOException {
+        for (String line : lines) {
+            Files.write(file, (line + STRING_NEWLINE).getBytes(), APPEND);
         }
     }
 }

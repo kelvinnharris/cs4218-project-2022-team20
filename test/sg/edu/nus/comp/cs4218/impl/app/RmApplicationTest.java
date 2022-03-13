@@ -13,6 +13,7 @@ import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
+import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
 
 class RmApplicationTest {
     private static RmApplication rmApplication;
@@ -69,16 +70,6 @@ class RmApplicationTest {
     @AfterAll
     static void tearDown() throws IOException {
         deleteDir(new File(TEST_PATH));
-    }
-
-    static void deleteDir(File file) {
-        File[] contents = file.listFiles();
-        if (contents != null) {
-            for (File f : contents) {
-                deleteDir(f);
-            }
-        }
-        file.delete();
     }
 
     @Test

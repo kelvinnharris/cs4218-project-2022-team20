@@ -1,5 +1,6 @@
 package sg.edu.nus.comp.cs4218.impl.parser;
 
+import javafx.util.Pair;
 import sg.edu.nus.comp.cs4218.exception.InvalidArgsException;
 
 import java.util.ArrayList;
@@ -10,17 +11,15 @@ public class CutArgsParser extends ArgsParser {
     private final static char CHAR_BY_CHAR_PO = 'c';
     private final static char CHAR_BY_BYTE_PO = 'b';
 
-
-    private boolean range;
+    List<Pair<Integer, Integer>> ranges;
     private int startIdx, endIdx;
-    private int[] index;
     private String[] indexString;
 
     public CutArgsParser() {
         super();
         legalFlags.add(CHAR_BY_CHAR_PO);
         legalFlags.add(CHAR_BY_BYTE_PO);
-        this.range = false;
+        ranges = new ArrayList<>();
         this.startIdx = 0;
         this.endIdx = 0;
     }
@@ -42,32 +41,47 @@ public class CutArgsParser extends ArgsParser {
     }
 
     public void parseIndex() throws InvalidArgsException {
+        String currString = null;
+        String[] tempIndexString;
         try {
             String arg = nonFlagArgs.get(0);
+
             if (arg.contains(",")) {
-                range = false;
                 indexString = arg.split(",");
-                index = new int[indexString.length];
                 for (int j = 0; j < indexString.length; j++) {
-                    index[j] = Integer.parseInt(indexString[j]) - 1;
+                    Pair<Integer, Integer> pair;
+                    currString = indexString[j];
+                    long count = currString.chars().filter(ch -> ch == '-').count();
+                    if (count == 1) {
+                        tempIndexString = currString.split("-");
+                        startIdx = Integer.parseInt(tempIndexString[0]) - 1;
+                        endIdx = Integer.parseInt(tempIndexString[1]) - 1;
+                    } else if (count == 0){
+                        startIdx = Integer.parseInt(currString) - 1;
+                        endIdx = startIdx;
+                    } else {
+                        // throw cut: [-cf] list: illegal list value
+                    }
+                    pair = new Pair<>(startIdx, endIdx);
+                    ranges.add(pair);
+                    //index[j] = Integer.parseInt(indexString[j]) - 1;
                 }
-                startIdx = index[0];
-                endIdx = index[index.length - 1];
             } else if (arg.contains("-")) {
-                range = true;
                 indexString = arg.split("-");
-                index = new int[indexString.length];
-                for (int j = 0; j < indexString.length; j++) {
-                    index[j] = Integer.parseInt(indexString[j]) - 1;
+                long count = arg.chars().filter(ch -> ch == '-').count();
+                if (count == 1) {
+                    startIdx = Integer.parseInt(indexString[0]) - 1;
+                    endIdx = Integer.parseInt(indexString[1]) - 1;
+                } else {
+                    // throw cut: [-cf] list: illegal list value
                 }
-                startIdx = index[0];
-                endIdx = index[1];
+                Pair<Integer, Integer> pair = new Pair<>(startIdx, endIdx);
+                ranges.add(pair);
             } else {
-                range = false;
-                index = new int[1];
-                index[0] = Integer.parseInt(arg) - 1;
-                startIdx = index[0];
-                endIdx = index[0];
+                startIdx = Integer.parseInt(arg) - 1;
+                endIdx = startIdx;
+                Pair<Integer, Integer> pair = new Pair<>(startIdx, endIdx);
+                ranges.add(pair);
             }
         } catch (IndexOutOfBoundsException e) {
             throw new IndexOutOfBoundsException(e.getMessage());//NOPMD
@@ -76,20 +90,8 @@ public class CutArgsParser extends ArgsParser {
         }
     }
 
-    public boolean isRange() {
-        return range;
-    }
-
-    public int getStartIdx() {
-        return startIdx;
-    }
-
-    public int getEndIdx() {
-        return endIdx;
-    }
-
-    public int[] getIndex() {
-        return index;
+    public List<Pair<Integer, Integer>> getRanges() {
+        return ranges;
     }
 
 }
