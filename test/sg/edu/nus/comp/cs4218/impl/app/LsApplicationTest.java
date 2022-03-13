@@ -41,7 +41,7 @@ class LsApplicationTest {
     private static final String FILE_2 = "file2.iml";
     private static final String FILE_3 = "file3.txt";
     private static final String FILE_4 = "file4.xml";
-    
+
     @BeforeAll
     static void setUp() throws IOException {
         lsApplication = new LsApplication();

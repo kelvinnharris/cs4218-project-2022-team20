@@ -81,7 +81,6 @@ public class ApplicationRunner {
                 break;
             case APP_PASTE:
                 application = new PasteApplication();
-                System.out.println("[PASTE] CALLED");
                 break;
             default:
                 throw new ShellException(app + ": " + ERR_INVALID_APP);

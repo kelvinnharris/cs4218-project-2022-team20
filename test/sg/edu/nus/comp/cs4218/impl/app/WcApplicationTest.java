@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_NULL_FILES;
@@ -88,7 +89,7 @@ public class WcApplicationTest {
 
         StringBuilder sbExpected = new StringBuilder();
         int totalByte = 23;
-        if (System.getProperty("os.name").toLowerCase().contains("win")) { // NOPMD
+        if (System.getProperty("os.name").toLowerCase(Locale.ENGLISH).contains("win")) {
             totalByte = 24;
         }
         sbExpected.append(String.format(NUMBER_FORMAT, 1))

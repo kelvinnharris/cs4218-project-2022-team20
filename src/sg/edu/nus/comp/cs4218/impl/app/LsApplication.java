@@ -16,12 +16,13 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_CURR_DIR;
 
-public class LsApplication implements LsInterface { //NOPMD
+public class LsApplication implements LsInterface { // NOPMD - suppressed GodClass - Some of the methods are private to Ls and make more sense to put it inside the class
 
     private final static String PATH_CURR_DIR = STRING_CURR_DIR + CHAR_FILE_SEP;
 
@@ -59,7 +60,7 @@ public class LsApplication implements LsInterface { //NOPMD
         try {
             parser.parse(args);
         } catch (InvalidArgsException e) {
-            throw new LsException(e.getMessage()); //NOPMD
+            throw new LsException(e.getMessage()); //NOPMD - suppressed PreserveStackTrace - We expect Ls to output custom error message
         }
 
         Boolean recursive = parser.isRecursive();
@@ -72,7 +73,7 @@ public class LsApplication implements LsInterface { //NOPMD
             stdout.write(result.getBytes());
             stdout.write(StringUtils.STRING_NEWLINE.getBytes());
         } catch (Exception e) {
-            throw new LsException(ERR_WRITE_STREAM); //NOPMD
+            throw new LsException(ERR_WRITE_STREAM); // NOPMD - suppressed PreserveStackTrace - We expect Ls to output custom error message
         }
     }
 
@@ -80,7 +81,7 @@ public class LsApplication implements LsInterface { //NOPMD
      * Lists only the current directory's content and RETURNS. This does not account for recursive
      * mode in cwd.
      *
-     * @param isSortByExt   - is sort by extension
+     * @param isSortByExt - is sort by extension
      * @return String
      */
     private String listCwdContent(Boolean isSortByExt) throws LsException {
@@ -88,7 +89,7 @@ public class LsApplication implements LsInterface { //NOPMD
         try {
             return formatContents(getContents(Paths.get(cwd)), isSortByExt, false);
         } catch (InvalidDirectoryException e) {
-            throw new LsException("Unexpected error occurred!"); //NOPMD
+            throw new LsException("Unexpected error occurred!"); // NOPMD - suppressed PreserveStackTrace - We expect Ls to output custom error message
         }
     }
 
@@ -97,12 +98,12 @@ public class LsApplication implements LsInterface { //NOPMD
      * <p>
      * NOTE: This is recursively called if user wants recursive mode.
      *
-     * @param paths         - list of java.nio.Path objects to list
-     * @param isRecursive   - recursive mode, repeatedly ls the child directories
-     * @param isSortByExt   - sorts folder contents alphabetically by file extension (characters after the last ‘.’ (without quotes)). Files with no extension are sorted first.
+     * @param paths       - list of java.nio.Path objects to list
+     * @param isRecursive - recursive mode, repeatedly ls the child directories
+     * @param isSortByExt - sorts folder contents alphabetically by file extension (characters after the last ‘.’ (without quotes)). Files with no extension are sorted first.
      * @return String to be written to output stream.
      */
-    private String buildResult(List<Path> paths, Boolean isRecursive, Boolean isSortByExt, Boolean hasRecurse) { //NOPMD
+    private String buildResult(List<Path> paths, Boolean isRecursive, Boolean isSortByExt, Boolean hasRecurse) { // NOPMD - suppressed ExcessiveMethodLength - Part of functional requirements where Ls needs to handle
         StringBuilder result = new StringBuilder();
         boolean isSinglePath = paths.size() == 1;
 
@@ -272,7 +273,7 @@ public class LsApplication implements LsInterface { //NOPMD
      * @return Path
      */
     private Path resolvePath(String directory) {
-        if (System.getProperty("os.name").toLowerCase().contains("win")) { //NOPMD
+        if (System.getProperty("os.name").toLowerCase(Locale.ENGLISH).contains("win")) {
             if (directory.length() > 2 && directory.charAt(1) == ':' && directory.charAt(2) == '\\') {
                 return Paths.get(directory);
             }
