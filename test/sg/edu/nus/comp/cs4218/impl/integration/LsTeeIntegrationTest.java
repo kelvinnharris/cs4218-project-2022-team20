@@ -11,17 +11,15 @@ import sg.edu.nus.comp.cs4218.impl.util.ApplicationRunner;
 import sg.edu.nus.comp.cs4218.impl.util.CommandBuilder;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
-import static java.nio.file.StandardOpenOption.APPEND;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 import static sg.edu.nus.comp.cs4218.impl.util.TestConstants.LS_TEE_FOLDER;
+import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.appendToFile;
 import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
 
 public class LsTeeIntegrationTest {
@@ -46,16 +44,6 @@ public class LsTeeIntegrationTest {
     @BeforeAll
     static void setUp() {
         shell = new ShellImpl();
-    }
-
-    static void appendToFile(Path file, String... lines) throws IOException {
-        for (String line : lines) {
-            Files.write(file, (line + STRING_NEWLINE).getBytes(), APPEND);
-        }
-    }
-
-    static String readString(Path path) throws IOException {
-        return Files.readString(path, StandardCharsets.UTF_8);
     }
 
     @BeforeEach
@@ -92,7 +80,7 @@ public class LsTeeIntegrationTest {
         Arrays.stream(LINES1).forEach(line -> stringBuilder.append(line).append(STRING_NEWLINE));
         stringBuilder.append(INPUT);
         String expectedContent = stringBuilder.toString();
-        String actualContent = readString(Paths.get(FILE1_PATH));
+        String actualContent = Files.readString(Paths.get(FILE1_PATH));
 
         assertEquals(expectedContent, actualContent);
     }
@@ -108,14 +96,14 @@ public class LsTeeIntegrationTest {
         Arrays.stream(LINES1).forEach(line -> stringBuilder1.append(line).append(STRING_NEWLINE));
         stringBuilder1.append(INPUT);
         String expectedContent1 = stringBuilder1.toString();
-        String actualContent1 = readString(Paths.get(FILE1_PATH));
+        String actualContent1 = Files.readString(Paths.get(FILE1_PATH));
         assertEquals(expectedContent1, actualContent1);
 
         StringBuilder stringBuilder2 = new StringBuilder();
         Arrays.stream(LINES2).forEach(line -> stringBuilder2.append(line).append(STRING_NEWLINE));
         stringBuilder2.append(INPUT);
         String expectedContent2 = stringBuilder2.toString();
-        String actualContent2 = readString(Paths.get(FILE2_PATH));
+        String actualContent2 = Files.readString(Paths.get(FILE2_PATH));
         assertEquals(expectedContent2, actualContent2);
     }
 
@@ -126,7 +114,7 @@ public class LsTeeIntegrationTest {
         command.evaluate(inputStream, stdOut);
         assertEquals(INPUT, stdOut.toString());
 
-        String actualFileContent = readString(Paths.get(FILE1_PATH));
+        String actualFileContent = Files.readString(Paths.get(FILE1_PATH));
         assertEquals(INPUT, actualFileContent);
     }
 
@@ -143,7 +131,7 @@ public class LsTeeIntegrationTest {
         Arrays.stream(LINES1).forEach(line -> stringBuilder.append(line).append(STRING_NEWLINE));
         stringBuilder.append(FILE1_NAME).append(STRING_NEWLINE);
         String expectedContent = stringBuilder.toString();
-        String actualContent = readString(Paths.get(FILE1_PATH));
+        String actualContent = Files.readString(Paths.get(FILE1_PATH));
 
         assertEquals(expectedContent, actualContent);
     }
@@ -158,10 +146,10 @@ public class LsTeeIntegrationTest {
         Arrays.stream(LINES1).forEach(line -> stringBuilder1.append(line).append(STRING_NEWLINE));
         stringBuilder1.append(FILE1_NAME).append(STRING_NEWLINE);
         String expectedContent1 = stringBuilder1.toString();
-        String actualContent1 = readString(Paths.get(FILE1_PATH));
+        String actualContent1 = Files.readString(Paths.get(FILE1_PATH));
         assertEquals(expectedContent1, actualContent1);
 
-        String actualContent2 = readString(Paths.get(FILE2_PATH));
+        String actualContent2 = Files.readString(Paths.get(FILE2_PATH));
         assertEquals(stdOut.toString(), actualContent2);
     }
 }

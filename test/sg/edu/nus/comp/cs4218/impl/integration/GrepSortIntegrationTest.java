@@ -12,14 +12,13 @@ import sg.edu.nus.comp.cs4218.impl.util.CommandBuilder;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static java.nio.file.StandardOpenOption.APPEND;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 import static sg.edu.nus.comp.cs4218.impl.util.TestConstants.GREP_SORT_FOLDER;
+import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.appendToFile;
 import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
 
 public class GrepSortIntegrationTest {
@@ -47,12 +46,6 @@ public class GrepSortIntegrationTest {
     @BeforeAll
     static void setUp() {
         shell = new ShellImpl();
-    }
-
-    static void appendToFile(Path file, String... lines) throws IOException {
-        for (String line : lines) {
-            Files.write(file, (line + STRING_NEWLINE).getBytes(), APPEND);
-        }
     }
 
     @BeforeEach

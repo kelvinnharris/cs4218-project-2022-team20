@@ -13,14 +13,13 @@ import sg.edu.nus.comp.cs4218.impl.util.CommandBuilder;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static java.nio.file.StandardOpenOption.APPEND;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.*;
 import static sg.edu.nus.comp.cs4218.impl.util.TestConstants.WC_CUT_FOLDER;
+import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.appendToFile;
 import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
 
 public class WcCutIntegrationTest {
@@ -48,12 +47,6 @@ public class WcCutIntegrationTest {
     @BeforeAll
     static void setUp() {
         shell = new ShellImpl();
-    }
-
-    static void appendToFile(Path file, String... lines) throws IOException {
-        for (String line : lines) {
-            Files.write(file, (line + STRING_NEWLINE).getBytes(), APPEND);
-        }
     }
 
     @BeforeEach
