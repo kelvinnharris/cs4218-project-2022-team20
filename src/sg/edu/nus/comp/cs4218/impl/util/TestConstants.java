@@ -6,6 +6,8 @@ public class TestConstants {
     public static final String CMD_SUBS_FOLDER = "tmpCmdSubsTestFolder";
     public static final String GLOBBING_FOLDER = "tmpCmdSubsTestFolder";
     public static final String ECHO_PASTE_FOLDER = "tmpEchoPasteTestFolder";
+    public static final String ECHO_GREP_FOLDER = "tmpEchoGrepTestFolder";
+    public static final String RM_CD_FOLDER = "tmpRmCdTestFolder";
 
     public static final String CP_FOLDER = "tmpCpTestFolder";
     public static final String GREP_FOLDER = "tmpGrepTestFolder";

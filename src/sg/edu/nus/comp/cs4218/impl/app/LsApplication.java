@@ -13,10 +13,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
@@ -135,7 +132,7 @@ public class LsApplication implements LsInterface { // NOPMD - suppressed GodCla
                 String formatted = formatContents(contents, isSortByExt, printFullPath);
                 result.append(formatted);
 
-                if (!formatted.isEmpty()) {
+                if (!formatted.isEmpty() && isRecursive) {
                     // Empty directories should not have an additional new line
                     result.append(StringUtils.STRING_NEWLINE);
                 }
