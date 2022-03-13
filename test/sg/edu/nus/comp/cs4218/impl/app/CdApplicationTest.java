@@ -16,6 +16,7 @@ import java.nio.file.Paths;
 import static org.junit.jupiter.api.Assertions.*;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 import static sg.edu.nus.comp.cs4218.impl.util.TestConstants.CD_FOLDER;
+import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
 
 class CdApplicationTest {
     /* before each file path:
@@ -30,17 +31,20 @@ class CdApplicationTest {
     private static final String ROOT_PATH = Environment.currentDirectory;
     private static final String TEST_FOLDER_NAME = CD_FOLDER + CHAR_FILE_SEP;
     private static final String TEST_PATH = ROOT_PATH + CHAR_FILE_SEP + TEST_FOLDER_NAME;
-
+    private static final String FOLDER_1 = "folder1";
+    private static final String FOLDER_2 = "folder2";
+    private static final String FILE_1 = "file1.txt";
+    private static final String FILE_2 = "file2.txt";
+    private static final String FILE_3 = "file3.xml";
 
     @BeforeAll
-    @SuppressWarnings("PMD.AvoidDuplicateLiterals")
     static void setUp() throws IOException {
         cdApplication = new CdApplication();
         deleteDir(new File(TEST_PATH));
-        Files.createDirectories(Paths.get(TEST_PATH + "folder1" + CHAR_FILE_SEP + "folder2"));
-        Files.createFile(Paths.get(TEST_PATH + "folder1" + CHAR_FILE_SEP + "file1.txt"));
-        Files.createFile(Paths.get(TEST_PATH + "folder1" + CHAR_FILE_SEP + "folder2" + CHAR_FILE_SEP + "file2.txt"));
-        Files.createFile(Paths.get(TEST_PATH + "file3.xml"));
+        Files.createDirectories(Paths.get(TEST_PATH + FOLDER_1 + CHAR_FILE_SEP + FOLDER_2));
+        Files.createFile(Paths.get(TEST_PATH + FOLDER_1 + CHAR_FILE_SEP + FILE_1));
+        Files.createFile(Paths.get(TEST_PATH + FOLDER_1 + CHAR_FILE_SEP + FOLDER_2 + CHAR_FILE_SEP + FILE_2));
+        Files.createFile(Paths.get(TEST_PATH + FILE_3));
     }
 
     @BeforeEach
@@ -51,16 +55,6 @@ class CdApplicationTest {
     @AfterAll
     static void tearDown() throws IOException {
         deleteDir(new File(TEST_PATH));
-    }
-
-    static void deleteDir(File file) {
-        File[] contents = file.listFiles();
-        if (contents != null) {
-            for (File f : contents) {
-                deleteDir(f);
-            }
-        }
-        file.delete();
     }
 
     @Test
@@ -90,7 +84,7 @@ class CdApplicationTest {
 
     @Test
     void testCd_relativePath_shouldChangeToValidFolder() throws CdException {
-        String path = TEST_FOLDER_NAME + "folder1" + CHAR_FILE_SEP + "." + CHAR_FILE_SEP + "folder2" + CHAR_FILE_SEP + ".." + CHAR_FILE_SEP + ".." + CHAR_FILE_SEP + ".";
+        String path = TEST_FOLDER_NAME + FOLDER_1 + CHAR_FILE_SEP + "." + CHAR_FILE_SEP + FOLDER_2 + CHAR_FILE_SEP + ".." + CHAR_FILE_SEP + ".." + CHAR_FILE_SEP + ".";
         cdApplication.changeToDirectory(path);
         Path currentPath = Paths.get(Environment.currentDirectory).normalize();
         Path givenPath = Paths.get(TEST_PATH).normalize();
@@ -99,19 +93,19 @@ class CdApplicationTest {
 
     @Test
     void testCd_validFile_shouldReturnNotADirectoryError() throws CdException {
-        String path = TEST_PATH + "file3.xml";
+        String path = TEST_PATH + FILE_3;
         assertThrows(CdException.class, () -> cdApplication.changeToDirectory(path));
     }
 
     @Test
     void testCd_invalidPath_shouldReturnNoSuchDirectoryError() throws CdException {
-        String path = TEST_PATH + "folder1" + CHAR_FILE_SEP + "invalidFolder";
+        String path = TEST_PATH + FOLDER_1 + CHAR_FILE_SEP + "invalidFolder";
         assertThrows(CdException.class, () -> cdApplication.changeToDirectory(path));
     }
 
     @Test
     void testCd_nullArgs_shouldReturnCdError() throws CdException {
-        String path = TEST_PATH + "file3.xml";
+        String path = TEST_PATH + FILE_3;
         assertThrows(CdException.class, () -> cdApplication.run(null, System.in, System.out));
     }
 
@@ -123,10 +117,10 @@ class CdApplicationTest {
 
     @Test
     void testCd_multipleArgs_shouldTakeFirstArgumentOnly() throws CdException {
-        String[] args = new String[]{TEST_PATH + "folder1" + CHAR_FILE_SEP + "folder2", TEST_PATH + "folder1", "."};
+        String[] args = new String[]{TEST_PATH + FOLDER_1 + CHAR_FILE_SEP + FOLDER_2, TEST_PATH + FOLDER_1, "."};
         cdApplication.run(args, System.in, System.out);
         Path currentPath = Paths.get(Environment.currentDirectory).normalize();
-        Path givenPath = Paths.get(TEST_PATH + "folder1" + CHAR_FILE_SEP + "folder2").normalize();
+        Path givenPath = Paths.get(TEST_PATH + FOLDER_1 + CHAR_FILE_SEP + FOLDER_2).normalize();
         assertEquals(currentPath, givenPath);
     }
 }

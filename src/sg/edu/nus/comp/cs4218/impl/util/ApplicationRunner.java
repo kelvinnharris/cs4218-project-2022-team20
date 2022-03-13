@@ -49,6 +49,9 @@ public class ApplicationRunner {
             case APP_CAT:
                 application = new CatApplication();
                 break;
+            case APP_CD:
+                application = new CdApplication();
+                break;
             case APP_CP:
                 application = new CpApplication();
                 break;
