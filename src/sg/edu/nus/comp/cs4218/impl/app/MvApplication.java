@@ -21,8 +21,7 @@ import static java.nio.file.StandardCopyOption.ATOMIC_MOVE;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
 
-@SuppressWarnings("PMD.UncommentedEmptyMethodBody")
-public class MvApplication implements MvInterface {
+public class MvApplication implements MvInterface { //NOPMD - suppressed GodClass - cannot refactor to smaller classes
 
     public static void deleteDir(File file) {
         File[] contents = file.listFiles();
@@ -157,7 +156,7 @@ public class MvApplication implements MvInterface {
                             destFolderArg + "/" + srcFile));
                 }
 
-                isCopiedOnce = true; //NOPMD
+                isCopiedOnce = true; //NOPMD - suppressed AvoidReassigningParameters - parameter needed for recursion check
 
                 // Copy the directory itself
                 if (!Files.exists(destAbsPath)) {

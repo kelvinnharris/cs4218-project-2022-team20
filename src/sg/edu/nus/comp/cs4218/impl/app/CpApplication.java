@@ -154,7 +154,7 @@ public class CpApplication implements CpInterface {
                                 destFolderArg + "/" + srcFile));
                     }
 
-                    isCopiedOnce = true; //NOPMD
+                    isCopiedOnce = true; //NOPMD - suppressed AvoidReassigningParameters - parameter needed for recursion check
 
                     // Copy the directory itself
                     if (!Files.exists(destAbsPath)) {
