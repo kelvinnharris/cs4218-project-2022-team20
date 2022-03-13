@@ -62,7 +62,6 @@ public class LsApplication implements LsInterface { //NOPMD
             throw new LsException(e.getMessage()); //NOPMD
         }
 
-        Boolean foldersOnly = parser.isFoldersOnly();
         Boolean recursive = parser.isRecursive();
         Boolean sortByExt = parser.isSortByExt();
         String[] directories = parser.getDirectories()
@@ -115,9 +114,9 @@ public class LsApplication implements LsInterface { //NOPMD
                     throw new InvalidDirectoryException(path.toString());
                 }
 
-                if (Files.isDirectory(path) || (isRecursive && !path.getParent().toString().equals(Environment.currentDirectory))) {
+                if (Files.isDirectory(path)) {
                     contents = getContents(path);
-                } else if (Files.exists(path)) {
+                } else if (Files.exists(path) && (!isRecursive || !hasRecurse)) {
                     contents = new ArrayList<>();
                     contents.add(path);
                 } else {
@@ -128,12 +127,7 @@ public class LsApplication implements LsInterface { //NOPMD
                 if (Files.isDirectory(path) && (isRecursive || !isSinglePath || hasRecurse)) {
                     String relativePath = getRelativeToCwd(path).toString();
                     result.append(StringUtils.isBlank(relativePath) ? PATH_CURR_DIR : relativePath);
-
-                    if (Files.isRegularFile(Path.of(relativePath))) {
-                        result.append(StringUtils.STRING_NEWLINE);
-                    } else {
-                        result.append(StringUtils.STRING_COLON).append(StringUtils.STRING_NEWLINE);
-                    }
+                    result.append(StringUtils.STRING_COLON).append(StringUtils.STRING_NEWLINE);
                 }
 
                 Boolean printFullPath = !Files.isDirectory(path);
@@ -225,6 +219,7 @@ public class LsApplication implements LsInterface { //NOPMD
     private List<Path> getContents(Path directory)
             throws InvalidDirectoryException {
         if (!Files.exists(directory)) {
+
             throw new InvalidDirectoryException(getRelativeToCwd(directory).toString());
         }
 
@@ -304,11 +299,6 @@ public class LsApplication implements LsInterface { //NOPMD
     private class InvalidDirectoryException extends Exception {
         InvalidDirectoryException(String directory) {
             super(String.format("ls: cannot access '%s': No such file or directory", directory));
-        }
-
-        InvalidDirectoryException(String directory, Throwable cause) {
-            super(String.format("ls: cannot access '%s': No such file or directory", directory),
-                    cause);
         }
     }
 }

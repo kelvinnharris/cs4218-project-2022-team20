@@ -154,16 +154,16 @@ class LsApplicationTest {
     }
 
     @Test
-    void testLslistFolderContent_recursiveOnlyEmptyFolder_shouldReturnFilesAndDirectoriesRecursively() throws LsException {
-        String recurOnlyOutput = lsApplication.listFolderContent(true, false);
-        String expectedOutput = LS_FOLDER + ":" + NEW_LINE + FILE_4 + NEW_LINE + FOLDER_1 + NEW_LINE + FOLDER_3 + NEW_LINE + NEW_LINE +
-                TEST_FOLDER_NAME + FOLDER_1 + ":" + NEW_LINE + FILE_1 + NEW_LINE + FILE_2 + NEW_LINE + FOLDER_2 + NEW_LINE + NEW_LINE +
-                TEST_FOLDER_NAME + FOLDER_1 + CHAR_FILE_SEP + FOLDER_2 + ":" + NEW_LINE + NEW_LINE +
-                TEST_FOLDER_NAME + FOLDER_3 + ":" + NEW_LINE + FOLDER_4 + NEW_LINE + NEW_LINE +
-                TEST_FOLDER_NAME + FOLDER_3 + CHAR_FILE_SEP + FOLDER_4 + ":" + NEW_LINE + FILE_3;
+    void testLslistFolderContent_recursiveOnlyFileNames_shouldReturnFiles() throws LsException {
+        String recurOnlyOutput = lsApplication.listFolderContent(true, false, TEST_FOLDER_NAME + FILE_4);
+        String expectedOutput = TEST_FOLDER_NAME + FILE_4;
         assertEquals(expectedOutput, recurOnlyOutput);
     }
 
+    @Test
+    void testLslistFolderContent_recursiveOnlyEmptyFolder_shouldNotRecurseInfinitely() throws LsException {
+        assertDoesNotThrow(() -> lsApplication.listFolderContent(true, false));
+    }
 
     @Test
     void testLslistFolderContent_recursiveSort_shouldSortAndReturnFilesAndDirectoriesRecursively() throws LsException {
@@ -189,7 +189,7 @@ class LsApplicationTest {
 
     @Test
     void testLsRun_passValidArgs_shouldThrowLsException() {
-        String[] emptyArgs = new String[]{TEST_PATH, "-dRX"};
+        String[] emptyArgs = new String[]{TEST_PATH, "-RX"};
         assertDoesNotThrow(() -> lsApplication.run(emptyArgs, System.in, System.out));
     }
 
