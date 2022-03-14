@@ -154,7 +154,7 @@ public class LsSortIntegrationTest {
     }
 
     @Test
-    void testLsSort_forwardLsWithInvalidOptionToSort_testPassed() throws Exception {
+    void testLsSort_forwardLsWithInvalidOptionToSort_testThrowsException() throws Exception {
         String inputString = "ls -Z | sort";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -162,7 +162,7 @@ public class LsSortIntegrationTest {
     }
 
     @Test
-    void testLsSort_forwardLsToSortWithInvalidOption_testPassed() throws Exception {
+    void testLsSort_forwardLsToSortWithInvalidOption_testThrowsException() throws Exception {
         String inputString = "ls | sort -Z";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
