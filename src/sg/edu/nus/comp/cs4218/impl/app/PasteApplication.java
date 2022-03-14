@@ -66,11 +66,7 @@ public class PasteApplication implements PasteInterface {
         try {
             pasteArgs.parse(args);
         } catch (Exception e) {
-            String errorMessage = e.toString();
-            String sBuilder = "invalid option -- '" +
-                    errorMessage.charAt(errorMessage.length() - 1) +
-                    "'";
-            throw new PasteException(sBuilder); // NOPMD
+            throw new PasteException(STRING_PASTE + e.getMessage()); //NOPMD - suppressed PreserveStackTrace - No reason to preserve stackTrace as this is the only Exception
         }
 
         String result;
@@ -78,7 +74,7 @@ public class PasteApplication implements PasteInterface {
             if (pasteArgs.getFiles().isEmpty()) {
                 currentOperation = STDIN_OP;
                 result = mergeStdin(pasteArgs.isSerial(), stdin);
-            } else if (!pasteArgs.getFiles().contains("-")) { // NOPMD
+            } else if (!pasteArgs.getFiles().contains("-")) { //NOPMD - suppressed ConfusingTernary - This was the initial implementation and changing might cause regression
                 currentOperation = FILE_OP;
                 result = mergeFile(pasteArgs.isSerial(), pasteArgs.getFiles().toArray(new String[0]));
             } else {
@@ -89,14 +85,14 @@ public class PasteApplication implements PasteInterface {
             throw e;
         } catch (Exception e) {
             // Will never happen
-            throw new PasteException(ERR_GENERAL); // NOPMD
+            throw new PasteException(ERR_GENERAL); //NOPMD - suppressed PreserveStackTrace - No reason to preserve stackTrace as this is the only Exception
         }
 
         try {
             stdout.write(result.getBytes());
             stdout.write(STRING_NEWLINE.getBytes());
         } catch (IOException e) {
-            throw new PasteException(ERR_WRITE_STREAM); // NOPMD
+            throw new PasteException(ERR_WRITE_STREAM); // NOPMD - suppressed PreserveStackTrace - No reason to preserve stackTrace as reason is contained in message
         }
     }
 
@@ -119,7 +115,7 @@ public class PasteApplication implements PasteInterface {
         return stringifyListResult(listResult);
     }
 
-    public String mergeFile(Boolean isSerial, String... fileName) throws Exception { // NOPMD
+    public String mergeFile(Boolean isSerial, String... fileName) throws Exception { //NOPMD - suppressed ExcessiveMethodLength - keep to preserve readability of method
         if (fileName == null) {
             throw new PasteException(ERR_GENERAL);
         }
@@ -145,7 +141,7 @@ public class PasteApplication implements PasteInterface {
                 continue;
             }
 
-            InputStream input = IOUtils.openInputStream(file); // NOPMD
+            InputStream input = IOUtils.openInputStream(file); //NOPMD - suppressed CloseResource - Resource has been closed at line 146
             List<String> fileDatas = IOUtils.getLinesFromInputStream(input);
             IOUtils.closeInputStream(input);
             maxFileLength = Math.max(maxFileLength, fileDatas.size());
@@ -171,7 +167,7 @@ public class PasteApplication implements PasteInterface {
         return stringifyListResult(listResult);
     }
 
-    public String mergeFileAndStdin(Boolean isSerial, InputStream stdin, String... fileName) throws Exception { // NOPMD
+    public String mergeFileAndStdin(Boolean isSerial, InputStream stdin, String... fileName) throws Exception { //NOPMD - suppressed ExcessiveMethodLength - keep to preserve readability of method
         if (stdin == null && fileName == null) {
             throw new Exception(ERR_GENERAL);
         }
@@ -184,7 +180,7 @@ public class PasteApplication implements PasteInterface {
                 numOfStdin++;
             }
         }
-        maxFileLength = Math.max(maxFileLength, (int)(stdInData.size()/numOfStdin));
+        maxFileLength = Math.max(maxFileLength, (int) (stdInData.size() / numOfStdin));
 
         // If serial, the stdIn will all come out in the first "-"
         if (isSerial) {
