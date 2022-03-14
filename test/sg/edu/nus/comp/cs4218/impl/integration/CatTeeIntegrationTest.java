@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 import static sg.edu.nus.comp.cs4218.impl.util.TestConstants.CAT_TEE_FOLDER;
+import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.appendToFile;
 import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
 
 public class CatTeeIntegrationTest {
@@ -43,14 +44,7 @@ public class CatTeeIntegrationTest {
     public static final String[] LINES2 = {"THE first file", "THE SECOND liNE", "10"};
     private static ShellImpl shell;
     private static ByteArrayOutputStream stdOut;
-
     private static final String NUMBER_FORMAT = "%6d ";
-
-    static void appendToFile(Path file, String... lines) throws IOException {
-        for (String line : lines) {
-            Files.write(file, (line + STRING_NEWLINE).getBytes(), APPEND);
-        }
-    }
 
 
     @BeforeEach

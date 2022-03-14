@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.*;
 import static sg.edu.nus.comp.cs4218.impl.util.TestConstants.CUT_PASTE_FOLDER;
+import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.appendToFile;
 import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
 
 public class CutPasteIntegrationTest {
@@ -39,13 +40,6 @@ public class CutPasteIntegrationTest {
     public static final String[] LINES1 = {"Hello world", "First line", "!"};
     private static ShellImpl shell;
     private static ByteArrayOutputStream stdOut;
-
-
-    static void appendToFile(Path file, String... lines) throws IOException {
-        for (String line : lines) {
-            Files.write(file, (line + STRING_NEWLINE).getBytes(), APPEND);
-        }
-    }
 
 
     @BeforeEach

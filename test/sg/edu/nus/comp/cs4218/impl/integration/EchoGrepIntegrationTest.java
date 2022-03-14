@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_SYNTAX;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.*;
 import static sg.edu.nus.comp.cs4218.impl.util.TestConstants.ECHO_GREP_FOLDER;
+import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.appendToFile;
 import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
 
 public class EchoGrepIntegrationTest {
@@ -39,13 +40,6 @@ public class EchoGrepIntegrationTest {
     public static final String[] LINES2 = {"The first part", "THE SECOND parts", "10"};
     private static ShellImpl shell;
     private static ByteArrayOutputStream stdOut;
-
-
-    static void appendToFile(Path file, String... lines) throws IOException {
-        for (String line : lines) {
-            Files.write(file, (line + STRING_NEWLINE).getBytes(), APPEND);
-        }
-    }
 
 
     @BeforeEach
