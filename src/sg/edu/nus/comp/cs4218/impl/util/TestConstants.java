@@ -11,4 +11,10 @@ public class TestConstants {
     public static final String GREP_FOLDER = "tmpGrepTestFolder";
     public static final String TEE_FOLDER = "tmpTeeTestFolder";
     public static final String MV_FOLDER = "tmpMvTestFolder";
+
+
+    public static final String LS_TEE_FOLDER = "tmpLsTeeTestFolder";
+    public static final String LS_UNIQ_FOLDER = "tmpLsUniqTestFolder";
+    public static final String WC_CUT_FOLDER = "tmpWcCutTestFolder";
+    public static final String GREP_SORT_FOLDER = "tmpGrepSortTestFolder";
 }

@@ -71,7 +71,7 @@ public class CpApplication implements CpInterface {
      * @param destFile    Name of destination file in cwd
      */
     @Override
-    public void cpSrcFileToDestFile(Boolean isRecursive, String srcFile, String destFile) throws CpException {
+    public String cpSrcFileToDestFile(Boolean isRecursive, String srcFile, String destFile) throws CpException {
         Path srcAbsPath = IOUtils.resolveFilePath(srcFile);
         Path destAbsPath = IOUtils.resolveFilePath(destFile);
 
@@ -94,6 +94,7 @@ public class CpApplication implements CpInterface {
         } catch (Exception e) {
             throw new CpException(e);
         }
+        return null;
     }
 
     /**
@@ -105,7 +106,7 @@ public class CpApplication implements CpInterface {
      * @throws CpException Exception related to cp
      */
     @Override
-    public void cpFilesToFolder(Boolean isRecursive, String destFolder, String... fileName) throws CpException {
+    public String cpFilesToFolder(Boolean isRecursive, String destFolder, String... fileName) throws CpException {
         // Check if all sources exist before copying
         for (String srcFile : fileName) {
             Path srcAbsPath = IOUtils.resolveFilePath(srcFile);
@@ -121,6 +122,8 @@ public class CpApplication implements CpInterface {
             String srcFileName = IOUtils.resolveFilePath(srcFile).toFile().getName();
             cpFilesToFolderImpl(isRecursive, destCwd, srcCwd, destFolderName, srcFileName, destFolder, srcFile, false);
         }
+
+        return null;
     }
 
     /**
@@ -151,7 +154,7 @@ public class CpApplication implements CpInterface {
                                 destFolderArg + "/" + srcFile));
                     }
 
-                    isCopiedOnce = true; //NOPMD
+                    isCopiedOnce = true; //NOPMD - suppressed AvoidReassigningParameters - parameter needed for recursion check
 
                     // Copy the directory itself
                     if (!Files.exists(destAbsPath)) {
