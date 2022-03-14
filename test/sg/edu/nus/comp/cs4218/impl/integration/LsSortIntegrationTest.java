@@ -34,20 +34,20 @@ public class LsSortIntegrationTest {
     private static final String CAT_NUMBER_FORMAT = "%6d ";
 
     private static final String FILE_NAME_1 = "a.txt";
-    private static final String FILE_PATH_1 = TEST_FOLDER_NAME + FILE_NAME_1;
+    private static final String FILE_PATH_1 = TEST_PATH + FILE_NAME_1;
     private static final String FILE_NAME_2 = "b.txt";
-    private static final String FILE_PATH_2 = TEST_FOLDER_NAME + FILE_NAME_2;
+    private static final String FILE_PATH_2 = TEST_PATH + FILE_NAME_2;
     private static final String FILE_NAME_3 = "a";
-    private static final String FILE_PATH_3 = TEST_FOLDER_NAME + FILE_NAME_3;
+    private static final String FILE_PATH_3 = TEST_PATH + FILE_NAME_3;
     private static final String FILE_NAME_4 = "b";
-    private static final String FILE_PATH_4 = TEST_FOLDER_NAME + FILE_NAME_4;
+    private static final String FILE_PATH_4 = TEST_PATH + FILE_NAME_4;
     private static final String FILE_NAME_5 = "AB.txt";
-    private static final String FILE_PATH_5 = TEST_FOLDER_NAME + FILE_NAME_5;
+    private static final String FILE_PATH_5 = TEST_PATH + FILE_NAME_5;
     private static final String FOLDER_NAME_1= "folder1" + CHAR_FILE_SEP;
     private static final String FILE_NAME_6 = "a.txt";
     private static final String FILE_NAME_7 = "b.txt";
-    private static final String FILE_PATH_6 = TEST_FOLDER_NAME + FOLDER_NAME_1 + FILE_NAME_6;
-    private static final String FILE_PATH_7 = TEST_FOLDER_NAME + FOLDER_NAME_1 + FILE_NAME_7;
+    private static final String FILE_PATH_6 = TEST_PATH + FOLDER_NAME_1 + FILE_NAME_6;
+    private static final String FILE_PATH_7 = TEST_PATH + FOLDER_NAME_1 + FILE_NAME_7;
 
     @BeforeAll
     static void setUp() throws IOException {
@@ -78,7 +78,7 @@ public class LsSortIntegrationTest {
     }
 
     @Test
-    void testLsSort_forwardLsToSort_testPassed() throws Exception {
+    void testLsSortParseCommand_forwardLsToSort_testPassed() throws Exception {
         String inputString = "ls | sort";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -91,7 +91,7 @@ public class LsSortIntegrationTest {
     }
 
     @Test
-    void testLsSort_forwardLsToSortInReverse_testPassed() throws Exception {
+    void testLsSortParseCommand_forwardLsToSortInReverse_testPassed() throws Exception {
         String inputString = "ls | sort -r";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -104,7 +104,7 @@ public class LsSortIntegrationTest {
     }
 
     @Test
-    void testLsSort_forwardLsWithTxtFilesToSort_testPassed() throws Exception {
+    void testLsSortParseCommand_forwardLsWithTxtFilesToSort_testPassed() throws Exception {
         String inputString = "ls AB.txt a.txt b.txt | sort -f";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -116,7 +116,7 @@ public class LsSortIntegrationTest {
     }
 
     @Test
-    void testLsSort_forwardLsInRecursiveAndAlphabeticallyByFileExtToSort_testPassed() throws Exception {
+    void testLsSortParseCommand_forwardLsInRecursiveAndAlphabeticallyByFileExtToSort_testPassed() throws Exception {
         String inputString = "ls -R -X | sort";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -130,7 +130,7 @@ public class LsSortIntegrationTest {
     }
 
     @Test
-    void testLsSort_forwardLsWithFoldersToSort_testPassed() throws Exception {
+    void testLsSortParseCommand_forwardLsWithFoldersToSort_testPassed() throws Exception {
         String inputString = "ls folder1 | sort";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -142,7 +142,7 @@ public class LsSortIntegrationTest {
     }
 
     @Test
-    void testLsSort_forwardLsWithNonExistentFileToSort_testPassed() throws Exception {
+    void testLsSortParseCommand_forwardLsWithNonExistentFileToSort_testPassed() throws Exception {
         String inputString = "ls blabla.txt | sort";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -154,7 +154,7 @@ public class LsSortIntegrationTest {
     }
 
     @Test
-    void testLsSort_forwardLsWithInvalidOptionToSort_testThrowsException() throws Exception {
+    void testLsSortParseCommand_forwardLsWithInvalidOptionToSort_testThrowsException() throws Exception {
         String inputString = "ls -Z | sort";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -162,7 +162,7 @@ public class LsSortIntegrationTest {
     }
 
     @Test
-    void testLsSort_forwardLsToSortWithInvalidOption_testThrowsException() throws Exception {
+    void testLsSortParseCommand_forwardLsToSortWithInvalidOption_testThrowsException() throws Exception {
         String inputString = "ls | sort -Z";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 

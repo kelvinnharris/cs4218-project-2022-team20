@@ -37,7 +37,7 @@ public class WcCatIntegrationTest {
     private static final String CAT_NUMBER_FORMAT = "%6d ";
 
     private static final String FILE_NAME_1 = "file1.txt";
-    private static final String FILE_PATH_1 = TEST_FOLDER_NAME + FILE_NAME_1;
+    private static final String FILE_PATH_1 = TEST_PATH + FILE_NAME_1;
 
     @BeforeAll
     static void setUp() throws IOException {
@@ -59,7 +59,7 @@ public class WcCatIntegrationTest {
     }
 
     @Test
-    void testWcCat_forwardCatToWc_testPassed() throws Exception {
+    void testWcCatParseCommand_forwardCatToWc_testPassed() throws Exception {
         String inputString = "cat file1.txt | wc";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -79,7 +79,7 @@ public class WcCatIntegrationTest {
     }
 
     @Test
-    void testWcCat_forwardWcToCat_testPassed() throws Exception {
+    void testWcCatParseCommand_forwardWcToCat_testPassed() throws Exception {
         String inputString = "wc file1.txt | cat";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -95,7 +95,7 @@ public class WcCatIntegrationTest {
     }
 
     @Test
-    void testWcCat_forwardCatWithLineFlagToWc_testPassed() throws Exception {
+    void testWcCatParseCommand_forwardCatWithLineFlagToWc_testPassed() throws Exception {
         String inputString = "cat -n file1.txt | wc";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -115,7 +115,7 @@ public class WcCatIntegrationTest {
     }
 
     @Test
-    void testWcCat_forwardWcWithWordsAndLinesToCat_testPassed() throws Exception {
+    void testWcCatParseCommand_forwardWcWithWordsAndLinesToCat_testPassed() throws Exception {
         String inputString = "wc -wl file1.txt | cat";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -130,7 +130,7 @@ public class WcCatIntegrationTest {
     }
 
     @Test
-    void testWcCat_forwardCatWithInputRedirectionToWc_testPassed() throws Exception {
+    void testWcCatParseCommand_forwardCatWithInputRedirectionToWc_testPassed() throws Exception {
         String inputString = "cat -n < file1.txt | wc";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -150,7 +150,7 @@ public class WcCatIntegrationTest {
     }
 
     @Test
-    void testWcCat_forwardCatWithInputRedirectionToWcWithWordsAndBytes_testPassed() throws Exception {
+    void testWcCatParseCommand_forwardCatWithInputRedirectionToWcWithWordsAndBytes_testPassed() throws Exception {
         String inputString = "cat -n < file1.txt | wc -wc";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -169,7 +169,7 @@ public class WcCatIntegrationTest {
     }
 
     @Test
-    void testWcCat_forwardWcWithInputRedirectionToCat_testPassed() throws Exception {
+    void testWcCatParseCommand_forwardWcWithInputRedirectionToCat_testPassed() throws Exception {
         String inputString = "wc < file1.txt | cat";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -184,7 +184,7 @@ public class WcCatIntegrationTest {
     }
 
     @Test
-    void testWcCat_forwardWcWithInputRedirectionToCatWithNumbers_testPassed() throws Exception {
+    void testWcCatParseCommand_forwardWcWithInputRedirectionToCatWithNumbers_testPassed() throws Exception {
         String inputString = "wc < file1.txt | cat -n";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -199,7 +199,7 @@ public class WcCatIntegrationTest {
     }
 
     @Test
-    void testWcCat_forwardCatToWcWithAnotherFile_testPassed() throws Exception {
+    void testWcCatParseCommand_forwardCatToWcWithAnotherFile_testPassed() throws Exception {
         String inputString = "cat file1.txt | wc - file1.txt";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -228,7 +228,7 @@ public class WcCatIntegrationTest {
     }
 
     @Test
-    void testWcCat_forwardWcToCatWithAnotherFile_testPassed() throws Exception {
+    void testWcCatParseCommand_forwardWcToCatWithAnotherFile_testPassed() throws Exception {
         String inputString = "wc file1.txt | cat - file1.txt";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -245,7 +245,7 @@ public class WcCatIntegrationTest {
     }
 
     @Test
-    void testWcCat_forwardCatWithInvalidOptionToWc_testThrowsException() throws Exception {
+    void testWcCatParseCommand_forwardCatWithInvalidOptionToWc_testThrowsException() throws Exception {
         String inputString = "cat file1.txt -l | wc";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -253,7 +253,7 @@ public class WcCatIntegrationTest {
     }
 
     @Test
-    void testWcCat_forwardWcWithInvalidOptionToCat_testThrowsException() throws Exception {
+    void testWcCatParseCommand_forwardWcWithInvalidOptionToCat_testThrowsException() throws Exception {
         String inputString = "wc file1.txt -z | cat";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -261,7 +261,7 @@ public class WcCatIntegrationTest {
     }
 
     @Test
-    void testWcCat_forwardCatToWcWithInvalidOption_testThrowsException() throws Exception {
+    void testWcCatParseCommand_forwardCatToWcWithInvalidOption_testThrowsException() throws Exception {
         String inputString = "cat file1.txt | wc -z";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -269,7 +269,7 @@ public class WcCatIntegrationTest {
     }
 
     @Test
-    void testWcCat_forwardWcToCatWithInvalidOption_testThrowsException() throws Exception {
+    void testWcCatParseCommand_forwardWcToCatWithInvalidOption_testThrowsException() throws Exception {
         String inputString = "wc file1.txt | cat -z";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -278,23 +278,28 @@ public class WcCatIntegrationTest {
 
     // TODO: Put this behavior in Assumption ??
     @Test
-    void testWcCat_forwardCatWithNonExistentFileToWc_testThrowsException() throws Exception {
+    void testWcCatParseCommand_forwardCatWithNonExistentFileToWc_testThrowsException() throws Exception {
         String inputString = "cat blabla.txt | wc";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
         command.evaluate(System.in, myOut);
         final String standardOutput = myOut.toString();
 
+        int totalByte = 43;
+        if (TestUtils.isWindowsSystem()) {
+            totalByte = 44;
+        }
+
         StringBuilder sbExpected = new StringBuilder();
         sbExpected.append(String.format(WC_NUMBER_FORMAT, 1))
                 .append(String.format(WC_NUMBER_FORMAT, 7))
-                .append(String.format(WC_NUMBER_FORMAT, 43));
+                .append(String.format(WC_NUMBER_FORMAT, totalByte));
 
         assertEquals(sbExpected + STRING_NEWLINE, standardOutput);
     }
 
     @Test
-    void testWcCat_forwardWcWithNonExistentFileToCat_testThrowsException() throws Exception {
+    void testWcCatParseCommand_forwardWcWithNonExistentFileToCat_testThrowsException() throws Exception {
         String inputString = "wc blabla.txt | cat";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 

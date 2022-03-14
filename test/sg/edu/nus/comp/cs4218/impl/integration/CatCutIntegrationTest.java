@@ -30,13 +30,12 @@ public class CatCutIntegrationTest {
     private static final String TEST_FOLDER_NAME = CAT_CUT_FOLDER + CHAR_FILE_SEP;
     private static final String TEST_PATH = ROOT_PATH + CHAR_FILE_SEP + TEST_FOLDER_NAME;
 
-    static final String STRING_FORMAT = " %s";
     private static final String CAT_NUMBER_FORMAT = "%6d ";
 
     private static final String FILE_NAME_1 = "file1.txt";
-    private static final String FILE_PATH_1 = TEST_FOLDER_NAME + FILE_NAME_1;
+    private static final String FILE_PATH_1 = TEST_PATH + FILE_NAME_1;
     private static final String FILE_NAME_2 = "file2.txt";
-    private static final String FILE_PATH_2 = TEST_FOLDER_NAME + FILE_NAME_2;
+    private static final String FILE_PATH_2 = TEST_PATH + FILE_NAME_2;
 
     @BeforeAll
     static void setUp() throws IOException {
@@ -62,7 +61,7 @@ public class CatCutIntegrationTest {
     }
 
     @Test
-    void testCatCut_forwardCatToCut_testPassed() throws Exception {
+    void testCatCutParseCommand_forwardCatToCut_testPassed() throws Exception {
         String inputString = "cat file1.txt | cut -c 1,2";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -74,7 +73,7 @@ public class CatCutIntegrationTest {
     }
 
     @Test
-    void testCutCat_forwardCutTCoCat_testPassed() throws Exception {
+    void testCutCatParseCommand_forwardCutTCoCat_testPassed() throws Exception {
         String inputString = "cut -c 1,2 file1.txt | cat";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -86,7 +85,7 @@ public class CatCutIntegrationTest {
     }
 
     @Test
-    void testCatCut_forwardCatWithNumberOptionToCutWithRange_testPassed() throws Exception {
+    void testCatCutParseCommand_forwardCatWithNumberOptionToCutWithRange_testPassed() throws Exception {
         String inputString = "cat -n file1.txt | cut -c 1-8";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -99,7 +98,7 @@ public class CatCutIntegrationTest {
     }
 
     @Test
-    void testCutCat_forwardCutWithRangeToCat_testPassed() throws Exception {
+    void testCutCatParseCommand_forwardCutWithRangeToCat_testPassed() throws Exception {
         String inputString = "cut -c 1-8 file1.txt | cat";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -111,7 +110,7 @@ public class CatCutIntegrationTest {
     }
 
     @Test
-    void testCattCut_forwardCatWithNumberAndMultipleFilesToCutWithBytes_testPassed() throws Exception {
+    void testCattCutParseCommand_forwardCatWithNumberAndMultipleFilesToCutWithBytes_testPassed() throws Exception {
         String inputString = "cat -n file1.txt file2.txt | cut -b 1-10";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -125,7 +124,7 @@ public class CatCutIntegrationTest {
     }
 
     @Test
-    void testCutCat_forwardCutWithBytesRangeAndMultipleFilesToCatWithNumbers_testPassed() throws Exception {
+    void testCutCatParseCommand_forwardCutWithBytesRangeAndMultipleFilesToCatWithNumbers_testPassed() throws Exception {
         String inputString = "cut -b 1-10 file1.txt file2.txt | cat -n";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -139,7 +138,7 @@ public class CatCutIntegrationTest {
     }
 
     @Test
-    void testCatCut_forwardCatToCutWithAnotherFile_testPassed() throws Exception {
+    void testCatCutParseCommand_forwardCatToCutWithAnotherFile_testPassed() throws Exception {
         String inputString = "cat file1.txt | cut -c 1-4 - file2.txt";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -151,7 +150,7 @@ public class CatCutIntegrationTest {
     }
 
     @Test
-    void testCutCat_forwardCutToCatWithAnotherFile_testPassed() throws Exception {
+    void testCutCatParseCommand_forwardCutToCatWithAnotherFile_testPassed() throws Exception {
         String inputString = "cut -c 1-4 file1.txt | cat -n - file2.txt";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -166,7 +165,7 @@ public class CatCutIntegrationTest {
     }
 
     @Test
-    void testCatCut_forwardCatWithInvalidOptionToCut_testThrowsException() throws Exception {
+    void testCatCutParseCommand_forwardCatWithInvalidOptionToCut_testThrowsException() throws Exception {
         String inputString = "cat file1.txt -l | cut -c 1,2";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -174,7 +173,7 @@ public class CatCutIntegrationTest {
     }
 
     @Test
-    void testCutCat_forwardCutWithMissingFirstOptionToCat_testThrowsException() throws Exception {
+    void testCutCatParseCommand_forwardCutWithMissingFirstOptionToCat_testThrowsException() throws Exception {
         String inputString = "cut 1,2 file1.txt | cat";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -182,7 +181,7 @@ public class CatCutIntegrationTest {
     }
 
     @Test
-    void tesPasteWc_forwardPasteToWcWithInvalidOption_testThrowsException() throws Exception {
+    void tesPasteWcParseCommand_forwardPasteToWcWithInvalidOption_testThrowsException() throws Exception {
         String inputString = "cut -c file1.txt | cat";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -190,7 +189,7 @@ public class CatCutIntegrationTest {
     }
 
     @Test
-    void testCatCut_forwardCatToCutWithFirstMissingOption_testThrowsException() throws Exception {
+    void testCatCutParseCommand_forwardCatToCutWithFirstMissingOption_testThrowsException() throws Exception {
         String inputString = "cat file1.txt | cut 1,2";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -198,7 +197,7 @@ public class CatCutIntegrationTest {
     }
 
     @Test
-    void testCatCut_forwardCatToCutWithSecondMissingOption_testThrowsException() throws Exception {
+    void testCatCutParseCommand_forwardCatToCutWithSecondMissingOption_testThrowsException() throws Exception {
         String inputString = "cat file1.txt | cut -c";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -208,7 +207,7 @@ public class CatCutIntegrationTest {
     // TODO: Put in assumption when file not exist cat will not throw exception but return with error message
     //  to STDOUT
     @Test
-    void testCatCut_forwardCatWithNonExistentFileToCut_testThrowsException() throws Exception {
+    void testCatCutParseCommand_forwardCatWithNonExistentFileToCut_testThrowsException() throws Exception {
         String inputString = "cat blabla.txt | cut -c 1-42";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -221,7 +220,7 @@ public class CatCutIntegrationTest {
     }
 
     @Test
-    void testCutCat_forwardCutWithNonExistentFileToCat_testThrowsException() throws Exception {
+    void testCutCatParseCommand_forwardCutWithNonExistentFileToCat_testThrowsException() throws Exception {
         String inputString = "cut -c 1-10 blabla.txt | cat";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 

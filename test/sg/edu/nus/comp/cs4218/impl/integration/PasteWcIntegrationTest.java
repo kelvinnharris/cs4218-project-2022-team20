@@ -34,9 +34,9 @@ public class PasteWcIntegrationTest {
     static final String STRING_FORMAT = " %s";
 
     private static final String FILE_NAME_1 = "file1.txt";
-    private static final String FILE_PATH_1 = TEST_FOLDER_NAME + FILE_NAME_1;
+    private static final String FILE_PATH_1 = TEST_PATH + FILE_NAME_1;
     private static final String FILE_NAME_2 = "file2.txt";
-    private static final String FILE_PATH_2 = TEST_FOLDER_NAME + FILE_NAME_2;
+    private static final String FILE_PATH_2 = TEST_PATH + FILE_NAME_2;
 
     @BeforeAll
     static void setUp() throws IOException {
@@ -62,7 +62,7 @@ public class PasteWcIntegrationTest {
     }
 
     @Test
-    void testWcPaste_forwardWcToPaste_testPassed() throws Exception {
+    void testWcPasteParseCommand_forwardWcToPaste_testPassed() throws Exception {
         String inputString = "wc file1.txt | paste";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -83,7 +83,7 @@ public class PasteWcIntegrationTest {
     }
 
     @Test
-    void testPasteWc_forwardPasteToWc_testPassed() throws Exception {
+    void testPasteWcParseCommand_forwardPasteToWc_testPassed() throws Exception {
         String inputString = "paste file1.txt | wc";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -103,7 +103,7 @@ public class PasteWcIntegrationTest {
     }
 
     @Test
-    void testWcPaste_forwardWcWithByteAndLineOptionsToPaste_testPassed() throws Exception {
+    void testWcPasteParseCommand_forwardWcWithByteAndLineOptionsToPaste_testPassed() throws Exception {
         String inputString = "wc -wl file1.txt | paste";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -118,7 +118,7 @@ public class PasteWcIntegrationTest {
     }
 
     @Test
-    void testPasteWc_forwardPasteInSerialToWc_testPassed() throws Exception {
+    void testPasteWcParseCommand_forwardPasteInSerialToWc_testPassed() throws Exception {
         String inputString = "paste -s file1.txt | wc";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -138,7 +138,7 @@ public class PasteWcIntegrationTest {
     }
 
     @Test
-    void testWcPaste_forwardWcWithMultipleFilesToPaste_testPassed() throws Exception {
+    void testWcPasteParseCommand_forwardWcWithMultipleFilesToPaste_testPassed() throws Exception {
         String inputString = "wc file1.txt file2.txt | paste";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -167,7 +167,7 @@ public class PasteWcIntegrationTest {
     }
 
     @Test
-    void testPasteWc_forwardPasteWithMultipleFilesToWc_testPassed() throws Exception {
+    void testPasteWcParseCommand_forwardPasteWithMultipleFilesToWc_testPassed() throws Exception {
         String inputString = "paste file1.txt file2.txt | wc";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -187,7 +187,7 @@ public class PasteWcIntegrationTest {
     }
 
     @Test
-    void testWcPaste_forwardWcWithMultipleFilesToPasteInSerial_testPassed() throws Exception {
+    void testWcPasteParseCommand_forwardWcWithMultipleFilesToPasteInSerial_testPassed() throws Exception {
         String inputString = "wc file1.txt file2.txt | paste -s";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -216,7 +216,7 @@ public class PasteWcIntegrationTest {
     }
 
     @Test
-    void testPasteWc_forwardPasteWithMultipleFilesToWcWithWordLineOption_testPassed() throws Exception {
+    void testPasteWcParseCommand_forwardPasteWithMultipleFilesToWcWithWordLineOption_testPassed() throws Exception {
         String inputString = "paste file1.txt file2.txt | wc -wl";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -231,7 +231,7 @@ public class PasteWcIntegrationTest {
     }
 
     @Test
-    void testWcPaste_forwardWcToPasteWithAnotherFileInSerial_testPassed() throws Exception {
+    void testWcPasteParseCommand_forwardWcToPasteWithAnotherFileInSerial_testPassed() throws Exception {
         String inputString = "wc file1.txt | paste -s - file2.txt";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -256,7 +256,7 @@ public class PasteWcIntegrationTest {
     }
 
     @Test
-    void testPasteWc_forwardPasteToWcWithAnotherFile_testPassed() throws Exception {
+    void testPasteWcParseCommand_forwardPasteToWcWithAnotherFile_testPassed() throws Exception {
         String inputString = "paste file1.txt | wc - file2.txt";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -287,7 +287,7 @@ public class PasteWcIntegrationTest {
     }
 
     @Test
-    void testPasteWc_forwardPasteWithInvalidOptionToWc_testThrowsException() throws Exception {
+    void testPasteWcParseCommand_forwardPasteWithInvalidOptionToWc_testThrowsException() throws Exception {
         String inputString = "paste file1.txt -l | wc";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -295,7 +295,7 @@ public class PasteWcIntegrationTest {
     }
 
     @Test
-    void testWcPaste_forwardWcWithInvalidOptionToPaste_testThrowsException() throws Exception {
+    void testWcPasteParseCommand_forwardWcWithInvalidOptionToPaste_testThrowsException() throws Exception {
         String inputString = "wc file1.txt -z | paste";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -303,7 +303,7 @@ public class PasteWcIntegrationTest {
     }
 
     @Test
-    void tesPasteWc_forwardPasteToWcWithInvalidOption_testThrowsException() throws Exception {
+    void tesPasteWcParseCommand_forwardPasteToWcWithInvalidOption_testThrowsException() throws Exception {
         String inputString = "paste file1.txt | wc -z";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -311,7 +311,7 @@ public class PasteWcIntegrationTest {
     }
 
     @Test
-    void testWcPaste_forwardWcToPasteWithInvalidOption_testThrowsException() throws Exception {
+    void testWcPasteParseCommand_forwardWcToPasteWithInvalidOption_testThrowsException() throws Exception {
         String inputString = "wc file1.txt | paste -z";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -320,23 +320,29 @@ public class PasteWcIntegrationTest {
 
     // TODO: Put this behavior in Assumption ??
     @Test
-    void testPasteWc_forwardPasteWithNonExistentFileToWc_testThrowsException() throws Exception {
+    void testPasteWcParseCommand_forwardPasteWithNonExistentFileToWc_testThrowsException() throws Exception {
         String inputString = "paste blabla.txt | wc";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
         command.evaluate(System.in, myOut);
         final String standardOutput = myOut.toString();
 
+        int totalByte = 47;
+        if (TestUtils.isWindowsSystem()) {
+            totalByte = 48;
+        }
+
+
         StringBuilder sbExpected = new StringBuilder();
         sbExpected.append(String.format(WC_NUMBER_FORMAT, 1))
                 .append(String.format(WC_NUMBER_FORMAT, 8))
-                .append(String.format(WC_NUMBER_FORMAT, 48));
+                .append(String.format(WC_NUMBER_FORMAT, totalByte));
 
         assertEquals(sbExpected + STRING_NEWLINE, standardOutput);
     }
 
     @Test
-    void testWcPaste_forwardWcWithNonExistentFileToPaste_testThrowsException() throws Exception {
+    void testWcPasteParseCommand_forwardWcWithNonExistentFileToPaste_testThrowsException() throws Exception {
         String inputString = "wc blabla.txt | paste";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
