@@ -37,15 +37,18 @@ public class CatCutIntegrationTest {
     private static final String FILE_NAME_2 = "file2.txt";
     private static final String FILE_PATH_2 = TEST_PATH + FILE_NAME_2;
 
+    private static final String CAT_EXCEPTION_MSG = "Should throw CutException";
+    private static final String CUT_EXCEPTION_MSG = "Should throw CutException";
+
     @BeforeAll
     static void setUp() throws IOException {
         TestUtils.deleteDir(new File(TEST_PATH));
         Files.createDirectories(Paths.get(TEST_PATH));
 
-        String file_content_1 = "This is the content of the first file";
-        TestUtils.createFile(FILE_PATH_1, file_content_1);
-        String file_content_2 = "Second file";
-        TestUtils.createFile(FILE_PATH_2, file_content_2);
+        String contentOne = "This is the content of the first file";
+        TestUtils.createFile(FILE_PATH_1, contentOne);
+        String contentTwo = "Second file";
+        TestUtils.createFile(FILE_PATH_2, contentTwo);
     }
 
     @BeforeEach
@@ -93,7 +96,7 @@ public class CatCutIntegrationTest {
         final String standardOutput = myOut.toString();
 
         StringBuilder sbExpected = new StringBuilder();
-        sbExpected.append(String.format(CAT_NUMBER_FORMAT, 1)).append("T");
+        sbExpected.append(String.format(CAT_NUMBER_FORMAT, 1)).append('T');
         assertEquals(sbExpected + STRING_NEWLINE, standardOutput);
     }
 
@@ -131,9 +134,8 @@ public class CatCutIntegrationTest {
         command.evaluate(System.in, myOut);
         final String standardOutput = myOut.toString();
 
-        StringBuilder sbExpected = new StringBuilder();
-        sbExpected.append(String.format(CAT_NUMBER_FORMAT, 1)).append("This is th").append(STRING_NEWLINE)
-                .append(String.format(CAT_NUMBER_FORMAT, 2)).append("Second fil");
+        String sbExpected = String.format(CAT_NUMBER_FORMAT, 1) + "This is th" + STRING_NEWLINE +
+                String.format(CAT_NUMBER_FORMAT, 2) + "Second fil";
         assertEquals(sbExpected + STRING_NEWLINE, standardOutput);
     }
 
@@ -159,8 +161,8 @@ public class CatCutIntegrationTest {
 
         StringBuilder sbExpected = new StringBuilder();
         sbExpected.append(String.format(CAT_NUMBER_FORMAT, 1)).append("This").append(STRING_NEWLINE)
-                        .append(String.format(CAT_NUMBER_FORMAT, 2))
-                        .append("Second file");
+                .append(String.format(CAT_NUMBER_FORMAT, 2))
+                .append("Second file");
         assertEquals(sbExpected + STRING_NEWLINE, standardOutput);
     }
 
@@ -169,7 +171,7 @@ public class CatCutIntegrationTest {
         String inputString = "cat file1.txt -l | cut -c 1,2";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
-        assertThrows(CatException.class, () -> command.evaluate(System.in, myOut), "Should throw CatException");
+        assertThrows(CatException.class, () -> command.evaluate(System.in, myOut), CAT_EXCEPTION_MSG);
     }
 
     @Test
@@ -177,7 +179,7 @@ public class CatCutIntegrationTest {
         String inputString = "cut 1,2 file1.txt | cat";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
-        assertThrows(CutException.class, () -> command.evaluate(System.in, myOut), "Should throw CutException");
+        assertThrows(CutException.class, () -> command.evaluate(System.in, myOut), CUT_EXCEPTION_MSG);
     }
 
     @Test
@@ -185,7 +187,7 @@ public class CatCutIntegrationTest {
         String inputString = "cut -c file1.txt | cat";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
-        assertThrows(CutException.class, () -> command.evaluate(System.in, myOut), "Should throw CutException");
+        assertThrows(CutException.class, () -> command.evaluate(System.in, myOut), CUT_EXCEPTION_MSG);
     }
 
     @Test
@@ -193,7 +195,7 @@ public class CatCutIntegrationTest {
         String inputString = "cat file1.txt | cut 1,2";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
-        assertThrows(CutException.class, () -> command.evaluate(System.in, myOut), "Should throw CutException");
+        assertThrows(CutException.class, () -> command.evaluate(System.in, myOut), CUT_EXCEPTION_MSG);
     }
 
     @Test
@@ -201,7 +203,7 @@ public class CatCutIntegrationTest {
         String inputString = "cat file1.txt | cut -c";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
-        assertThrows(CutException.class, () -> command.evaluate(System.in, myOut), "Should throw CutException");
+        assertThrows(CutException.class, () -> command.evaluate(System.in, myOut), CUT_EXCEPTION_MSG);
     }
 
     // TODO: Put in assumption when file not exist cat will not throw exception but return with error message
@@ -216,7 +218,7 @@ public class CatCutIntegrationTest {
 
         String expected = "cat: blabla.txt: No such file or directory";
 
-        assertEquals(expected + STRING_NEWLINE,standardOutput);
+        assertEquals(expected + STRING_NEWLINE, standardOutput);
     }
 
     @Test
@@ -224,6 +226,6 @@ public class CatCutIntegrationTest {
         String inputString = "cut -c 1-10 blabla.txt | cat";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
-        assertThrows(CutException.class, () -> command.evaluate(System.in, myOut), "Should throw CutException");
+        assertThrows(CutException.class, () -> command.evaluate(System.in, myOut), CUT_EXCEPTION_MSG);
     }
 }

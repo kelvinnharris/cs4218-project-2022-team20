@@ -38,15 +38,18 @@ public class PasteWcIntegrationTest {
     private static final String FILE_NAME_2 = "file2.txt";
     private static final String FILE_PATH_2 = TEST_PATH + FILE_NAME_2;
 
+    private static final String WC_EXCEPTION_MSG = "Should throw WcException";
+    private static final String PASTE_EXCPTN_MSG = "Should throw PasteException";
+
     @BeforeAll
     static void setUp() throws IOException {
         TestUtils.deleteDir(new File(TEST_PATH));
         Files.createDirectories(Paths.get(TEST_PATH));
 
-        String file_content_1 = "A" + STRING_NEWLINE + "B" + STRING_NEWLINE + "C" + STRING_NEWLINE + "D";
-        TestUtils.createFile(FILE_PATH_1, file_content_1);
-        String file_content_2 = "1" + STRING_NEWLINE + "2" + STRING_NEWLINE + "3" + STRING_NEWLINE + "4";
-        TestUtils.createFile(FILE_PATH_2, file_content_2);
+        String contentOne = "A" + STRING_NEWLINE + "B" + STRING_NEWLINE + "C" + STRING_NEWLINE + "D";
+        TestUtils.createFile(FILE_PATH_1, contentOne);
+        String contentTwo = "1" + STRING_NEWLINE + "2" + STRING_NEWLINE + "3" + STRING_NEWLINE + "4";
+        TestUtils.createFile(FILE_PATH_2, contentTwo);
     }
 
     @BeforeEach
@@ -74,11 +77,10 @@ public class PasteWcIntegrationTest {
             totalByte = 10;
         }
 
-        StringBuilder sbExpected = new StringBuilder();
-        sbExpected.append(String.format(WC_NUMBER_FORMAT, 3))
-                .append(String.format(WC_NUMBER_FORMAT, 4))
-                .append(String.format(WC_NUMBER_FORMAT, totalByte))
-                .append(String.format(STRING_FORMAT, FILE_NAME_1));
+        String sbExpected = String.format(WC_NUMBER_FORMAT, 3) +
+                String.format(WC_NUMBER_FORMAT, 4) +
+                String.format(WC_NUMBER_FORMAT, totalByte) +
+                String.format(STRING_FORMAT, FILE_NAME_1);
         assertEquals(sbExpected + STRING_NEWLINE, standardOutput);
     }
 
@@ -95,10 +97,9 @@ public class PasteWcIntegrationTest {
             totalByte = 12;
         }
 
-        StringBuilder sbExpected = new StringBuilder();
-        sbExpected.append(String.format(WC_NUMBER_FORMAT, 4))
-                .append(String.format(WC_NUMBER_FORMAT, 4))
-                .append(String.format(WC_NUMBER_FORMAT, totalByte));
+        String sbExpected = String.format(WC_NUMBER_FORMAT, 4) +
+                String.format(WC_NUMBER_FORMAT, 4) +
+                String.format(WC_NUMBER_FORMAT, totalByte);
         assertEquals(sbExpected + STRING_NEWLINE, standardOutput);
     }
 
@@ -110,10 +111,9 @@ public class PasteWcIntegrationTest {
         command.evaluate(System.in, myOut);
         final String standardOutput = myOut.toString();
 
-        StringBuilder sbExpected = new StringBuilder();
-        sbExpected.append(String.format(WC_NUMBER_FORMAT, 3))
-                .append(String.format(WC_NUMBER_FORMAT, 4))
-                .append(String.format(STRING_FORMAT, FILE_NAME_1));
+        String sbExpected = String.format(WC_NUMBER_FORMAT, 3) +
+                String.format(WC_NUMBER_FORMAT, 4) +
+                String.format(STRING_FORMAT, FILE_NAME_1);
         assertEquals(sbExpected + STRING_NEWLINE, standardOutput);
     }
 
@@ -130,10 +130,9 @@ public class PasteWcIntegrationTest {
             totalByte = 9;
         }
 
-        StringBuilder sbExpected = new StringBuilder();
-        sbExpected.append(String.format(WC_NUMBER_FORMAT, 1))
-                .append(String.format(WC_NUMBER_FORMAT, 4))
-                .append(String.format(WC_NUMBER_FORMAT, totalByte));
+        String sbExpected = String.format(WC_NUMBER_FORMAT, 1) +
+                String.format(WC_NUMBER_FORMAT, 4) +
+                String.format(WC_NUMBER_FORMAT, totalByte);
         assertEquals(sbExpected + STRING_NEWLINE, standardOutput);
     }
 
@@ -150,19 +149,18 @@ public class PasteWcIntegrationTest {
             totalByte = 10;
         }
 
-        StringBuilder sbExpected = new StringBuilder();
-        sbExpected.append(String.format(WC_NUMBER_FORMAT, 3))
-                .append(String.format(WC_NUMBER_FORMAT, 4))
-                .append(String.format(WC_NUMBER_FORMAT, totalByte))
-                .append(String.format(STRING_FORMAT, FILE_NAME_1)).append(STRING_NEWLINE)
-                .append(String.format(WC_NUMBER_FORMAT, 3))
-                .append(String.format(WC_NUMBER_FORMAT, 4))
-                .append(String.format(WC_NUMBER_FORMAT, totalByte))
-                .append(String.format(STRING_FORMAT, FILE_NAME_2)).append(STRING_NEWLINE)
-                .append(String.format(WC_NUMBER_FORMAT, 6))
-                .append(String.format(WC_NUMBER_FORMAT, 8))
-                .append(String.format(WC_NUMBER_FORMAT, totalByte + totalByte))
-                .append(String.format(STRING_FORMAT, "total"));
+        String sbExpected = String.format(WC_NUMBER_FORMAT, 3) +
+                String.format(WC_NUMBER_FORMAT, 4) +
+                String.format(WC_NUMBER_FORMAT, totalByte) +
+                String.format(STRING_FORMAT, FILE_NAME_1) + STRING_NEWLINE +
+                String.format(WC_NUMBER_FORMAT, 3) +
+                String.format(WC_NUMBER_FORMAT, 4) +
+                String.format(WC_NUMBER_FORMAT, totalByte) +
+                String.format(STRING_FORMAT, FILE_NAME_2) + STRING_NEWLINE +
+                String.format(WC_NUMBER_FORMAT, 6) +
+                String.format(WC_NUMBER_FORMAT, 8) +
+                String.format(WC_NUMBER_FORMAT, totalByte + totalByte) +
+                String.format(STRING_FORMAT, "total");
         assertEquals(sbExpected + STRING_NEWLINE, standardOutput);
     }
 
@@ -179,10 +177,9 @@ public class PasteWcIntegrationTest {
             totalByte = 20;
         }
 
-        StringBuilder sbExpected = new StringBuilder();
-        sbExpected.append(String.format(WC_NUMBER_FORMAT, 4))
-                .append(String.format(WC_NUMBER_FORMAT, 8))
-                .append(String.format(WC_NUMBER_FORMAT, totalByte));
+        String sbExpected = String.format(WC_NUMBER_FORMAT, 4) +
+                String.format(WC_NUMBER_FORMAT, 8) +
+                String.format(WC_NUMBER_FORMAT, totalByte);
         assertEquals(sbExpected + STRING_NEWLINE, standardOutput);
     }
 
@@ -199,19 +196,18 @@ public class PasteWcIntegrationTest {
             totalByte = 10;
         }
 
-        StringBuilder sbExpected = new StringBuilder();
-        sbExpected.append(String.format(WC_NUMBER_FORMAT, 3))
-                .append(String.format(WC_NUMBER_FORMAT, 4))
-                .append(String.format(WC_NUMBER_FORMAT, totalByte))
-                .append(String.format(STRING_FORMAT, FILE_NAME_1)).append(STRING_TAB)
-                .append(String.format(WC_NUMBER_FORMAT, 3))
-                .append(String.format(WC_NUMBER_FORMAT, 4))
-                .append(String.format(WC_NUMBER_FORMAT, totalByte))
-                .append(String.format(STRING_FORMAT, FILE_NAME_2)).append(STRING_TAB)
-                .append(String.format(WC_NUMBER_FORMAT, 6))
-                .append(String.format(WC_NUMBER_FORMAT, 8))
-                .append(String.format(WC_NUMBER_FORMAT, totalByte + totalByte))
-                .append(String.format(STRING_FORMAT, "total"));
+        String sbExpected = String.format(WC_NUMBER_FORMAT, 3) +
+                String.format(WC_NUMBER_FORMAT, 4) +
+                String.format(WC_NUMBER_FORMAT, totalByte) +
+                String.format(STRING_FORMAT, FILE_NAME_1) + STRING_TAB +
+                String.format(WC_NUMBER_FORMAT, 3) +
+                String.format(WC_NUMBER_FORMAT, 4) +
+                String.format(WC_NUMBER_FORMAT, totalByte) +
+                String.format(STRING_FORMAT, FILE_NAME_2) + STRING_TAB +
+                String.format(WC_NUMBER_FORMAT, 6) +
+                String.format(WC_NUMBER_FORMAT, 8) +
+                String.format(WC_NUMBER_FORMAT, totalByte + totalByte) +
+                String.format(STRING_FORMAT, "total");
         assertEquals(sbExpected + STRING_NEWLINE, standardOutput);
     }
 
@@ -224,9 +220,8 @@ public class PasteWcIntegrationTest {
         final String standardOutput = myOut.toString();
 
 
-        StringBuilder sbExpected = new StringBuilder();
-        sbExpected.append(String.format(WC_NUMBER_FORMAT, 4))
-                .append(String.format(WC_NUMBER_FORMAT, 8));
+        String sbExpected = String.format(WC_NUMBER_FORMAT, 4) +
+                String.format(WC_NUMBER_FORMAT, 8);
         assertEquals(sbExpected + STRING_NEWLINE, standardOutput);
     }
 
@@ -243,15 +238,14 @@ public class PasteWcIntegrationTest {
             totalByte = 10;
         }
 
-        StringBuilder sbExpected = new StringBuilder();
-        sbExpected.append(String.format(WC_NUMBER_FORMAT, 3))
-                .append(String.format(WC_NUMBER_FORMAT, 4))
-                .append(String.format(WC_NUMBER_FORMAT, totalByte))
-                .append(String.format(STRING_FORMAT, "file1.txt")).append(STRING_NEWLINE)
-                .append("1").append(STRING_TAB)
-                .append("2").append(STRING_TAB)
-                .append("3").append(STRING_TAB)
-                .append("4");
+        String sbExpected = String.format(WC_NUMBER_FORMAT, 3) +
+                String.format(WC_NUMBER_FORMAT, 4) +
+                String.format(WC_NUMBER_FORMAT, totalByte) +
+                String.format(STRING_FORMAT, "file1.txt") + STRING_NEWLINE +
+                "1" + STRING_TAB +
+                "2" + STRING_TAB +
+                "3" + STRING_TAB +
+                "4";
         assertEquals(sbExpected + STRING_NEWLINE, standardOutput);
     }
 
@@ -270,19 +264,18 @@ public class PasteWcIntegrationTest {
             totalByte2 = 12;
         }
 
-        StringBuilder sbExpected = new StringBuilder();
-        sbExpected.append(String.format(WC_NUMBER_FORMAT, 4))
-                .append(String.format(WC_NUMBER_FORMAT, 4))
-                .append(String.format(WC_NUMBER_FORMAT, totalByte2))
-                .append(String.format(STRING_FORMAT, "-")).append(STRING_NEWLINE)
-                .append(String.format(WC_NUMBER_FORMAT, 3))
-                .append(String.format(WC_NUMBER_FORMAT, 4))
-                .append(String.format(WC_NUMBER_FORMAT, totalByte1))
-                .append(String.format(STRING_FORMAT, "file2.txt")).append(STRING_NEWLINE)
-                .append(String.format(WC_NUMBER_FORMAT, 7))
-                .append(String.format(WC_NUMBER_FORMAT, 8))
-                .append(String.format(WC_NUMBER_FORMAT, totalByte1 + totalByte2))
-                .append(String.format(STRING_FORMAT, "total"));
+        String sbExpected = String.format(WC_NUMBER_FORMAT, 4) +
+                String.format(WC_NUMBER_FORMAT, 4) +
+                String.format(WC_NUMBER_FORMAT, totalByte2) +
+                String.format(STRING_FORMAT, "-") + STRING_NEWLINE +
+                String.format(WC_NUMBER_FORMAT, 3) +
+                String.format(WC_NUMBER_FORMAT, 4) +
+                String.format(WC_NUMBER_FORMAT, totalByte1) +
+                String.format(STRING_FORMAT, "file2.txt") + STRING_NEWLINE +
+                String.format(WC_NUMBER_FORMAT, 7) +
+                String.format(WC_NUMBER_FORMAT, 8) +
+                String.format(WC_NUMBER_FORMAT, totalByte1 + totalByte2) +
+                String.format(STRING_FORMAT, "total");
         assertEquals(sbExpected + STRING_NEWLINE, standardOutput); //8 7 15
     }
 
@@ -291,7 +284,7 @@ public class PasteWcIntegrationTest {
         String inputString = "paste file1.txt -l | wc";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
-        assertThrows(PasteException.class, () -> command.evaluate(System.in, myOut), "Should throw PasteException");
+        assertThrows(PasteException.class, () -> command.evaluate(System.in, myOut), PASTE_EXCPTN_MSG);
     }
 
     @Test
@@ -299,7 +292,7 @@ public class PasteWcIntegrationTest {
         String inputString = "wc file1.txt -z | paste";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
-        assertThrows(WcException.class, () -> command.evaluate(System.in, myOut), "Should throw WcException");
+        assertThrows(WcException.class, () -> command.evaluate(System.in, myOut), WC_EXCEPTION_MSG);
     }
 
     @Test
@@ -307,7 +300,7 @@ public class PasteWcIntegrationTest {
         String inputString = "paste file1.txt | wc -z";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
-        assertThrows(WcException.class, () -> command.evaluate(System.in, myOut), "Should throw WcException");
+        assertThrows(WcException.class, () -> command.evaluate(System.in, myOut), WC_EXCEPTION_MSG);
     }
 
     @Test
@@ -315,7 +308,7 @@ public class PasteWcIntegrationTest {
         String inputString = "wc file1.txt | paste -z";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
-        assertThrows(PasteException.class, () -> command.evaluate(System.in, myOut), "Should throw PasteException");
+        assertThrows(PasteException.class, () -> command.evaluate(System.in, myOut), PASTE_EXCPTN_MSG);
     }
 
     // TODO: Put this behavior in Assumption ??
@@ -333,10 +326,9 @@ public class PasteWcIntegrationTest {
         }
 
 
-        StringBuilder sbExpected = new StringBuilder();
-        sbExpected.append(String.format(WC_NUMBER_FORMAT, 1))
-                .append(String.format(WC_NUMBER_FORMAT, 8))
-                .append(String.format(WC_NUMBER_FORMAT, totalByte));
+        String sbExpected = String.format(WC_NUMBER_FORMAT, 1) +
+                String.format(WC_NUMBER_FORMAT, 8) +
+                String.format(WC_NUMBER_FORMAT, totalByte);
 
         assertEquals(sbExpected + STRING_NEWLINE, standardOutput);
     }
@@ -351,6 +343,6 @@ public class PasteWcIntegrationTest {
 
         String expected = "wc: blabla.txt: No such file or directory";
 
-        assertEquals(expected + STRING_NEWLINE,standardOutput);
+        assertEquals(expected + STRING_NEWLINE, standardOutput);
     }
 }

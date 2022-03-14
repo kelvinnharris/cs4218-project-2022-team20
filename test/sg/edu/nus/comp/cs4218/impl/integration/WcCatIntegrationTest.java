@@ -39,6 +39,9 @@ public class WcCatIntegrationTest {
     private static final String FILE_NAME_1 = "file1.txt";
     private static final String FILE_PATH_1 = TEST_PATH + FILE_NAME_1;
 
+    private static final String CAT_EXCEPTION_MSG = "Should throw CatException";
+    private static final String WC_EXCEPTION_MSG = "Should throw WcException";
+
     @BeforeAll
     static void setUp() throws IOException {
         TestUtils.deleteDir(new File(TEST_PATH));
@@ -71,10 +74,9 @@ public class WcCatIntegrationTest {
             totalByte = 42;
         }
 
-        StringBuilder sbExpected = new StringBuilder();
-        sbExpected.append(String.format(WC_NUMBER_FORMAT, 1))
-                .append(String.format(WC_NUMBER_FORMAT, 9))
-                .append(String.format(WC_NUMBER_FORMAT, totalByte));
+        String sbExpected = String.format(WC_NUMBER_FORMAT, 1) +
+                String.format(WC_NUMBER_FORMAT, 9) +
+                String.format(WC_NUMBER_FORMAT, totalByte);
         assertEquals(sbExpected + STRING_NEWLINE, standardOutput);
     }
 
@@ -86,11 +88,10 @@ public class WcCatIntegrationTest {
         command.evaluate(System.in, myOut);
         final String standardOutput = myOut.toString();
 
-        StringBuilder sbExpected = new StringBuilder();
-        sbExpected.append(String.format(WC_NUMBER_FORMAT, 0))
-                .append(String.format(WC_NUMBER_FORMAT, 9))
-                .append(String.format(WC_NUMBER_FORMAT, 40))
-                .append(String.format(STRING_FORMAT, FILE_NAME_1));
+        String sbExpected = String.format(WC_NUMBER_FORMAT, 0) +
+                String.format(WC_NUMBER_FORMAT, 9) +
+                String.format(WC_NUMBER_FORMAT, 40) +
+                String.format(STRING_FORMAT, FILE_NAME_1);
         assertEquals(sbExpected + STRING_NEWLINE, standardOutput);
     }
 
@@ -107,10 +108,9 @@ public class WcCatIntegrationTest {
             totalByte = 49;
         }
 
-        StringBuilder sbExpected = new StringBuilder();
-        sbExpected.append(String.format(WC_NUMBER_FORMAT, 1))
-                .append(String.format(WC_NUMBER_FORMAT, 10))
-                .append(String.format(WC_NUMBER_FORMAT, totalByte));
+        String sbExpected = String.format(WC_NUMBER_FORMAT, 1) +
+                String.format(WC_NUMBER_FORMAT, 10) +
+                String.format(WC_NUMBER_FORMAT, totalByte);
         assertEquals(sbExpected + STRING_NEWLINE, standardOutput);
     }
 
@@ -122,10 +122,9 @@ public class WcCatIntegrationTest {
         command.evaluate(System.in, myOut);
         final String standardOutput = myOut.toString();
 
-        StringBuilder sbExpected = new StringBuilder();
-        sbExpected.append(String.format(WC_NUMBER_FORMAT, 0))
-                .append(String.format(WC_NUMBER_FORMAT, 9))
-                .append(String.format(STRING_FORMAT, FILE_NAME_1));
+        String sbExpected = String.format(WC_NUMBER_FORMAT, 0) +
+                String.format(WC_NUMBER_FORMAT, 9) +
+                String.format(STRING_FORMAT, FILE_NAME_1);
         assertEquals(sbExpected + STRING_NEWLINE, standardOutput);
     }
 
@@ -142,10 +141,9 @@ public class WcCatIntegrationTest {
             totalByte = 49;
         }
 
-        StringBuilder sbExpected = new StringBuilder();
-        sbExpected.append(String.format(WC_NUMBER_FORMAT, 1))
-                .append(String.format(WC_NUMBER_FORMAT, 10))
-                .append(String.format(WC_NUMBER_FORMAT, totalByte));
+        String sbExpected = String.format(WC_NUMBER_FORMAT, 1) +
+                String.format(WC_NUMBER_FORMAT, 10) +
+                String.format(WC_NUMBER_FORMAT, totalByte);
         assertEquals(sbExpected + STRING_NEWLINE, standardOutput);
     }
 
@@ -162,9 +160,8 @@ public class WcCatIntegrationTest {
             totalByte = 49;
         }
 
-        StringBuilder sbExpected = new StringBuilder();
-        sbExpected.append(String.format(WC_NUMBER_FORMAT, 10))
-                .append(String.format(WC_NUMBER_FORMAT, totalByte));
+        String sbExpected = String.format(WC_NUMBER_FORMAT, 10) +
+                String.format(WC_NUMBER_FORMAT, totalByte);
         assertEquals(sbExpected + STRING_NEWLINE, standardOutput);
     }
 
@@ -176,10 +173,9 @@ public class WcCatIntegrationTest {
         command.evaluate(System.in, myOut);
         final String standardOutput = myOut.toString();
 
-        StringBuilder sbExpected = new StringBuilder();
-        sbExpected.append(String.format(WC_NUMBER_FORMAT, 0))
-                .append(String.format(WC_NUMBER_FORMAT, 9))
-                .append(String.format(WC_NUMBER_FORMAT, 40));
+        String sbExpected = String.format(WC_NUMBER_FORMAT, 0) +
+                String.format(WC_NUMBER_FORMAT, 9) +
+                String.format(WC_NUMBER_FORMAT, 40);
         assertEquals(sbExpected + STRING_NEWLINE, standardOutput);
     }
 
@@ -191,10 +187,9 @@ public class WcCatIntegrationTest {
         command.evaluate(System.in, myOut);
         final String standardOutput = myOut.toString();
 
-        StringBuilder sbExpected = new StringBuilder();
-        sbExpected.append(String.format(WC_NUMBER_FORMAT, 0))
-                .append(String.format(WC_NUMBER_FORMAT, 9))
-                .append(String.format(WC_NUMBER_FORMAT, 40));
+        String sbExpected = String.format(WC_NUMBER_FORMAT, 0) +
+                String.format(WC_NUMBER_FORMAT, 9) +
+                String.format(WC_NUMBER_FORMAT, 40);
         assertEquals(String.format(CAT_NUMBER_FORMAT, 1) + sbExpected + StringUtils.STRING_NEWLINE, standardOutput);
     }
 
@@ -211,19 +206,18 @@ public class WcCatIntegrationTest {
             totalByte = 42;
         }
 
-        StringBuilder sbExpected = new StringBuilder();
-        sbExpected.append(String.format(WC_NUMBER_FORMAT, 1))
-                .append(String.format(WC_NUMBER_FORMAT, 9))
-                .append(String.format(WC_NUMBER_FORMAT, totalByte))
-                .append(String.format(STRING_FORMAT, "-")).append(STRING_NEWLINE)
-                .append(String.format(WC_NUMBER_FORMAT, 0))
-                .append(String.format(WC_NUMBER_FORMAT, 9))
-                .append(String.format(WC_NUMBER_FORMAT, 40))
-                .append(String.format(STRING_FORMAT, FILE_NAME_1)).append(STRING_NEWLINE)
-                .append(String.format(WC_NUMBER_FORMAT, 1))
-                .append(String.format(WC_NUMBER_FORMAT, 18))
-                .append(String.format(WC_NUMBER_FORMAT, 40 + totalByte))
-                .append(String.format(STRING_FORMAT, "total"));
+        String sbExpected = String.format(WC_NUMBER_FORMAT, 1) +
+                String.format(WC_NUMBER_FORMAT, 9) +
+                String.format(WC_NUMBER_FORMAT, totalByte) +
+                String.format(STRING_FORMAT, "-") + STRING_NEWLINE +
+                String.format(WC_NUMBER_FORMAT, 0) +
+                String.format(WC_NUMBER_FORMAT, 9) +
+                String.format(WC_NUMBER_FORMAT, 40) +
+                String.format(STRING_FORMAT, FILE_NAME_1) + STRING_NEWLINE +
+                String.format(WC_NUMBER_FORMAT, 1) +
+                String.format(WC_NUMBER_FORMAT, 18) +
+                String.format(WC_NUMBER_FORMAT, 40 + totalByte) +
+                String.format(STRING_FORMAT, "total");
         assertEquals(sbExpected + STRING_NEWLINE, standardOutput);
     }
 
@@ -235,12 +229,11 @@ public class WcCatIntegrationTest {
         command.evaluate(System.in, myOut);
         final String standardOutput = myOut.toString();
 
-        StringBuilder sbExpected = new StringBuilder();
-        sbExpected.append(String.format(WC_NUMBER_FORMAT, 0))
-                .append(String.format(WC_NUMBER_FORMAT, 9))
-                .append(String.format(WC_NUMBER_FORMAT, 40))
-                .append(String.format(STRING_FORMAT, FILE_NAME_1)).append(STRING_NEWLINE)
-                .append("This is text file 1 without any new line");
+        String sbExpected = String.format(WC_NUMBER_FORMAT, 0) +
+                String.format(WC_NUMBER_FORMAT, 9) +
+                String.format(WC_NUMBER_FORMAT, 40) +
+                String.format(STRING_FORMAT, FILE_NAME_1) + STRING_NEWLINE +
+                "This is text file 1 without any new line";
         assertEquals(sbExpected + STRING_NEWLINE, standardOutput);
     }
 
@@ -249,7 +242,7 @@ public class WcCatIntegrationTest {
         String inputString = "cat file1.txt -l | wc";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
-        assertThrows(CatException.class, () -> command.evaluate(System.in, myOut), "Should throw CatException");
+        assertThrows(CatException.class, () -> command.evaluate(System.in, myOut), CAT_EXCEPTION_MSG);
     }
 
     @Test
@@ -257,7 +250,7 @@ public class WcCatIntegrationTest {
         String inputString = "wc file1.txt -z | cat";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
-        assertThrows(WcException.class, () -> command.evaluate(System.in, myOut), "Should throw WcException");
+        assertThrows(WcException.class, () -> command.evaluate(System.in, myOut), WC_EXCEPTION_MSG);
     }
 
     @Test
@@ -265,7 +258,7 @@ public class WcCatIntegrationTest {
         String inputString = "cat file1.txt | wc -z";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
-        assertThrows(WcException.class, () -> command.evaluate(System.in, myOut), "Should throw WcException");
+        assertThrows(WcException.class, () -> command.evaluate(System.in, myOut), WC_EXCEPTION_MSG);
     }
 
     @Test
@@ -273,7 +266,7 @@ public class WcCatIntegrationTest {
         String inputString = "wc file1.txt | cat -z";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
-        assertThrows(CatException.class, () -> command.evaluate(System.in, myOut), "Should throw CatException");
+        assertThrows(CatException.class, () -> command.evaluate(System.in, myOut), CAT_EXCEPTION_MSG);
     }
 
     // TODO: Put this behavior in Assumption ??
@@ -290,10 +283,9 @@ public class WcCatIntegrationTest {
             totalByte = 44;
         }
 
-        StringBuilder sbExpected = new StringBuilder();
-        sbExpected.append(String.format(WC_NUMBER_FORMAT, 1))
-                .append(String.format(WC_NUMBER_FORMAT, 7))
-                .append(String.format(WC_NUMBER_FORMAT, totalByte));
+        String sbExpected = String.format(WC_NUMBER_FORMAT, 1) +
+                String.format(WC_NUMBER_FORMAT, 7) +
+                String.format(WC_NUMBER_FORMAT, totalByte);
 
         assertEquals(sbExpected + STRING_NEWLINE, standardOutput);
     }

@@ -30,24 +30,23 @@ public class LsSortIntegrationTest {
     private static final String TEST_FOLDER_NAME = LS_SORT_FOLDER + CHAR_FILE_SEP;
     private static final String TEST_PATH = ROOT_PATH + CHAR_FILE_SEP + TEST_FOLDER_NAME;
 
-    static final String STRING_FORMAT = " %s";
-    private static final String CAT_NUMBER_FORMAT = "%6d ";
-
-    private static final String FILE_NAME_1 = "a.txt";
+    private static final String FILE_NAME_1 = "a.txt"; // NOPMD - AvoidDuplicateLiterals - there are no duplicate literals
     private static final String FILE_PATH_1 = TEST_PATH + FILE_NAME_1;
-    private static final String FILE_NAME_2 = "b.txt";
+    private static final String FILE_NAME_2 = "b.txt"; // NOPMD - AvoidDuplicateLiterals - there are no duplicate literals
     private static final String FILE_PATH_2 = TEST_PATH + FILE_NAME_2;
     private static final String FILE_NAME_3 = "a";
     private static final String FILE_PATH_3 = TEST_PATH + FILE_NAME_3;
     private static final String FILE_NAME_4 = "b";
     private static final String FILE_PATH_4 = TEST_PATH + FILE_NAME_4;
-    private static final String FILE_NAME_5 = "AB.txt";
+    private static final String FILE_NAME_5 = "AB.txt"; // NOPMD - AvoidDuplicateLiterals - there are no duplicate literals
     private static final String FILE_PATH_5 = TEST_PATH + FILE_NAME_5;
-    private static final String FOLDER_NAME_1= "folder1" + CHAR_FILE_SEP;
-    private static final String FILE_NAME_6 = "a.txt";
-    private static final String FILE_NAME_7 = "b.txt";
+    private static final String FOLDER_NAME_1 = "folder1" + CHAR_FILE_SEP; // NOPMD - AvoidDuplicateLiterals - there are no duplicate literals
+    private static final String FILE_NAME_6 = FILE_NAME_1;
+    private static final String FILE_NAME_7 = FILE_NAME_2;
     private static final String FILE_PATH_6 = TEST_PATH + FOLDER_NAME_1 + FILE_NAME_6;
     private static final String FILE_PATH_7 = TEST_PATH + FOLDER_NAME_1 + FILE_NAME_7;
+
+    private static final String LS_EXCEPTION_MSG = "Should throw LsException";
 
     @BeforeAll
     static void setUp() throws IOException {
@@ -55,14 +54,14 @@ public class LsSortIntegrationTest {
         Files.createDirectories(Paths.get(TEST_PATH));
         Files.createDirectories(Paths.get(TEST_PATH + FOLDER_NAME_1));
 
-        String file_content = "file content can be anything";
-        TestUtils.createFile(FILE_PATH_1, file_content);
-        TestUtils.createFile(FILE_PATH_2, file_content);
-        TestUtils.createFile(FILE_PATH_3, file_content);
-        TestUtils.createFile(FILE_PATH_4, file_content);
-        TestUtils.createFile(FILE_PATH_5, file_content);
-        TestUtils.createFile(FILE_PATH_6, file_content);
-        TestUtils.createFile(FILE_PATH_7, file_content);
+        String content = "file content can be anything";
+        TestUtils.createFile(FILE_PATH_1, content);
+        TestUtils.createFile(FILE_PATH_2, content);
+        TestUtils.createFile(FILE_PATH_3, content);
+        TestUtils.createFile(FILE_PATH_4, content);
+        TestUtils.createFile(FILE_PATH_5, content);
+        TestUtils.createFile(FILE_PATH_6, content);
+        TestUtils.createFile(FILE_PATH_7, content);
     }
 
     @BeforeEach
@@ -123,7 +122,7 @@ public class LsSortIntegrationTest {
         command.evaluate(System.in, myOut);
         final String standardOutput = myOut.toString();
 
-        String expected =  STRING_NEWLINE + "." + CHAR_FILE_SEP + ":" + STRING_NEWLINE + "AB.txt" + STRING_NEWLINE + "a" + STRING_NEWLINE +
+        String expected = STRING_NEWLINE + "." + CHAR_FILE_SEP + ":" + STRING_NEWLINE + "AB.txt" + STRING_NEWLINE + "a" + STRING_NEWLINE +
                 "a.txt" + STRING_NEWLINE + "a.txt" + STRING_NEWLINE + "b" + STRING_NEWLINE + "b.txt" + STRING_NEWLINE +
                 "b.txt" + STRING_NEWLINE + "folder1" + STRING_NEWLINE + "folder1:";
         assertEquals(expected + STRING_NEWLINE, standardOutput);
@@ -158,7 +157,7 @@ public class LsSortIntegrationTest {
         String inputString = "ls -Z | sort";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
-        assertThrows(LsException.class, () -> command.evaluate(System.in, myOut), "Should throw LsException");
+        assertThrows(LsException.class, () -> command.evaluate(System.in, myOut), LS_EXCEPTION_MSG);
     }
 
     @Test
@@ -166,6 +165,6 @@ public class LsSortIntegrationTest {
         String inputString = "ls | sort -Z";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
-        assertThrows(SortException.class, () -> command.evaluate(System.in, myOut), "Should throw SortException");
+        assertThrows(SortException.class, () -> command.evaluate(System.in, myOut), LS_EXCEPTION_MSG);
     }
 }
