@@ -69,7 +69,7 @@ public class PasteWcIntegrationTest {
         command.evaluate(System.in, myOut);
         final String standardOutput = myOut.toString();
 
-        int totalByte = 8;
+        int totalByte = 7;
         if (TestUtils.isWindowsSystem()) {
             totalByte = 10;
         }
@@ -90,7 +90,7 @@ public class PasteWcIntegrationTest {
         command.evaluate(System.in, myOut);
         final String standardOutput = myOut.toString();
 
-        int totalByte = 10;
+        int totalByte = 8;
         if (TestUtils.isWindowsSystem()) {
             totalByte = 12;
         }
@@ -145,7 +145,7 @@ public class PasteWcIntegrationTest {
         command.evaluate(System.in, myOut);
         final String standardOutput = myOut.toString();
 
-        int totalByte = 8;
+        int totalByte = 7;
         if (TestUtils.isWindowsSystem()) {
             totalByte = 10;
         }
@@ -194,7 +194,7 @@ public class PasteWcIntegrationTest {
         command.evaluate(System.in, myOut);
         final String standardOutput = myOut.toString();
 
-        int totalByte = 8;
+        int totalByte = 7;
         if (TestUtils.isWindowsSystem()) {
             totalByte = 10;
         }
@@ -238,7 +238,7 @@ public class PasteWcIntegrationTest {
         command.evaluate(System.in, myOut);
         final String standardOutput = myOut.toString();
 
-        int totalByte = 8;
+        int totalByte = 7;
         if (TestUtils.isWindowsSystem()) {
             totalByte = 10;
         }
@@ -254,7 +254,6 @@ public class PasteWcIntegrationTest {
                 .append("4");
         assertEquals(sbExpected + STRING_NEWLINE, standardOutput);
     }
-    ///////////////////////
 
     @Test
     void testPasteWc_forwardPasteToWcWithAnotherFile_testPassed() throws Exception {
@@ -264,8 +263,8 @@ public class PasteWcIntegrationTest {
         command.evaluate(System.in, myOut);
         final String standardOutput = myOut.toString();
 
-        int totalByte1 = 8;
-        int totalByte2 = 10;
+        int totalByte1 = 7;
+        int totalByte2 = 8;
         if (TestUtils.isWindowsSystem()) {
             totalByte1 = 10;
             totalByte2 = 12;
@@ -284,7 +283,7 @@ public class PasteWcIntegrationTest {
                 .append(String.format(WC_NUMBER_FORMAT, 8))
                 .append(String.format(WC_NUMBER_FORMAT, totalByte1 + totalByte2))
                 .append(String.format(STRING_FORMAT, "total"));
-        assertEquals(sbExpected + STRING_NEWLINE, standardOutput);
+        assertEquals(sbExpected + STRING_NEWLINE, standardOutput); //8 7 15
     }
 
     @Test

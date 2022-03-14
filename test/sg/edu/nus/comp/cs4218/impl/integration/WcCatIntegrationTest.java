@@ -288,7 +288,7 @@ public class WcCatIntegrationTest {
         StringBuilder sbExpected = new StringBuilder();
         sbExpected.append(String.format(WC_NUMBER_FORMAT, 1))
                 .append(String.format(WC_NUMBER_FORMAT, 7))
-                .append(String.format(WC_NUMBER_FORMAT, 44));
+                .append(String.format(WC_NUMBER_FORMAT, 43));
 
         assertEquals(sbExpected + STRING_NEWLINE, standardOutput);
     }

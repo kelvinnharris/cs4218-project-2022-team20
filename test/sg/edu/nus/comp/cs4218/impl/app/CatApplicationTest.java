@@ -38,11 +38,11 @@ public class CatApplicationTest {
     private static final String NON_EXISTENT_FILE = "cat";
 
     private static final String FILE_NAME_1 = "test1.txt";
-    private static final String FILE_PATH_1 = TEST_FOLDER_NAME + FILE_NAME_1;
+    private static final String FILE_PATH_1 = TEST_PATH + FILE_NAME_1;
     private static final String FILE_NAME_2 = "test2.txt";
-    private static final String FILE_PATH_2 = TEST_FOLDER_NAME + FILE_NAME_2;
+    private static final String FILE_PATH_2 = TEST_PATH + FILE_NAME_2;
     private static final String STD_IN_TXT = "stdIn.txt";
-    private static final String FILE_PATH_STDIN = TEST_FOLDER_NAME + STD_IN_TXT;
+    private static final String FILE_PATH_STDIN = TEST_PATH + STD_IN_TXT;
 
     @BeforeAll
     static void setUp() throws IOException {
@@ -77,7 +77,7 @@ public class CatApplicationTest {
 
     @Test
         // command: cat tmpCatTestFolder/test1.txt
-    void testCat_fileInputWithoutFlag_shouldShowContentsInFile() throws Exception {
+    void testCatFiles_fileInputWithoutFlag_shouldShowContentsInFile() throws Exception {
         String result = catApplication.catFiles(false, FILE_PATH_1);
 
         assertEquals("This is WC Test file 1", result);
@@ -85,7 +85,7 @@ public class CatApplicationTest {
 
     @Test
         // command: cat tmpCatTestFolder/test1.txt tmpCatTestFolder/test2.txt
-    void testCat_multipleFilesInputWithoutFlag_shouldShowContentsInAllFiles() throws Exception {
+    void testCatFiles_multipleFilesInputWithoutFlag_shouldShowContentsInAllFiles() throws Exception {
         String result = catApplication.catFiles(false, FILE_PATH_1, FILE_PATH_2);
 
         String sbExpected = "This is WC Test file 1" + StringUtils.STRING_NEWLINE +
@@ -99,7 +99,7 @@ public class CatApplicationTest {
 
     @Test
         // command: cat
-    void testCat_noFileArgumentsWithoutFlag_shouldShowContentsInAllFiles() throws Exception {
+    void testCatStdin_noFileArgumentsWithoutFlag_shouldShowContentsInAllFiles() throws Exception {
         InputStream inputStream = IOUtils.openInputStream(FILE_PATH_1); // NOPMD
         String result = catApplication.catStdin(false, inputStream);
         IOUtils.closeInputStream(inputStream);
@@ -109,7 +109,7 @@ public class CatApplicationTest {
 
     @Test
         // command: cat -
-    void testCat_stdInWithoutFlag_shouldShowContentsInAllFiles() throws Exception {
+    void testCatFileAndStdin_stdInWithoutFlag_shouldShowContentsInAllFiles() throws Exception {
         InputStream inputStream = IOUtils.openInputStream(FILE_PATH_1); // NOPMD
         String result = catApplication.catFileAndStdin(false, inputStream, STDIN);
         IOUtils.closeInputStream(inputStream);
@@ -119,7 +119,7 @@ public class CatApplicationTest {
 
     @Test
     // command: cat -n tmpCatTestFolder/test1.txt tmpCatTestFolder/test2.txt
-    void testCat_multipleFilesInputWithFlag_shouldShowContentsInAllFilesWithNumbers() throws Exception {
+    void testCatFiles_multipleFilesInputWithFlag_shouldShowContentsInAllFilesWithNumbers() throws Exception {
         String result = catApplication.catFiles(true, FILE_PATH_1, FILE_PATH_2);
 
         String sbExpected = String.format(NUMBER_FORMAT, 1) +
@@ -141,7 +141,7 @@ public class CatApplicationTest {
 
     @Test
         // command: cat -n tmpCatTestFolder/test1.txt - tmpCatTestFolder/test2.txt
-    void testCat_multipleFilesInputAndStdInWithFlag_shouldShowContentsInAllFilesWithNumbers() throws Exception {
+    void testCatFileAndStdin_multipleFilesInputAndStdInWithFlag_shouldShowContentsInAllFilesWithNumbers() throws Exception {
         InputStream inputStream = IOUtils.openInputStream(FILE_PATH_STDIN); // NOPMD
         String result = catApplication.catFileAndStdin(true, inputStream, FILE_PATH_1, STDIN, FILE_PATH_2);
         IOUtils.closeInputStream(inputStream);
@@ -169,7 +169,7 @@ public class CatApplicationTest {
 
     @Test
         // command: cat -n cat tmpCatTestFolder/test2.txt
-    void testCat_multipleFilesWithNonExistentFileWithFlag_shouldShowContentsInAllFilesWithNumbers() throws Exception {
+    void testCatFiles_multipleFilesWithNonExistentFileWithFlag_shouldShowContentsInAllFilesWithNumbers() throws Exception {
         String result = catApplication.catFiles(true, NON_EXISTENT_FILE, FILE_PATH_1);
 
         String sbExpected = "cat: " + NON_EXISTENT_FILE + ERR_NOT_FOUND + StringUtils.STRING_NEWLINE +
@@ -181,7 +181,7 @@ public class CatApplicationTest {
 
     @Test
         // command: cat -n cat tmpCatTestFolder/test2.txt
-    void testCat_multipleFilesWithDirectoryFileWithFlag_shouldShowContentsInAllFilesWithNumbers() throws Exception {
+    void testCatFiles_multipleFilesWithDirectoryFileWithFlag_shouldShowContentsInAllFilesWithNumbers() throws Exception {
         String result = catApplication.catFiles(true, FILE_PATH_1, TEST_FOLDER_NAME);
 
         String sbExpected = String.format(NUMBER_FORMAT, 1) +
@@ -192,17 +192,17 @@ public class CatApplicationTest {
     }
 
     @Test
-    void testWc_nullInputStream_shouldThrowException(){
+    void testCatStdin_nullInputStream_shouldThrowException(){
         assertThrows(CatException.class, () -> catApplication.catStdin( true, null), ERR_NULL_STREAMS);
     }
 
     @Test
-    void testWc_nullFileNames_shouldThrowException(){
+    void testCatFiles_nullFileNames_shouldThrowException(){
         assertThrows(CatException.class, () -> catApplication.catFiles(true, null), ERR_NULL_FILES);
     }
 
     @Test
-    void testWc_nullFileNamesAndInputStream_shouldThrowException() throws ShellException {
+    void testCatFileAndStdin_nullFileNamesAndInputStream_shouldThrowException() throws ShellException {
         assertThrows(CatException.class, () -> catApplication.catFileAndStdin(true, null, new String[]{}), ERR_NULL_STREAMS);
         InputStream input = IOUtils.openInputStream(FILE_PATH_1); // NOPMD
         assertThrows(CatException.class, () -> catApplication.catFileAndStdin(true, input, null), ERR_NULL_FILES);

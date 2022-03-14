@@ -35,9 +35,9 @@ public class PasteApplicationTest {
     private static final String NONEXISTENTFILE = "paste";
 
     private static final String FILE_NAME_1 = "test1.txt";
-    private static final String FILE_PATH_1 = TEST_FOLDER_NAME + FILE_NAME_1;
+    private static final String FILE_PATH_1 = TEST_PATH + FILE_NAME_1;
     private static final String FILE_NAME_2 = "test2.txt";
-    private static final String FILE_PATH_2 = TEST_FOLDER_NAME + FILE_NAME_2;
+    private static final String FILE_PATH_2 = TEST_PATH + FILE_NAME_2;
     private static final String FILE_STD_IN = "stdIn.txt";
     private static final String FILE_PATH_STDIN = TEST_FOLDER_NAME + FILE_STD_IN;
 
@@ -79,7 +79,7 @@ public class PasteApplicationTest {
 
     @Test
         // command: paste tmpPasteTestFolder/test1.txt tmpPasteTestFolder/test2.txt
-    void testPaste_fileInputWithoutFlag_shouldShowMergedContentsInParallel() throws Exception {
+    void testPasteMergeFile_fileInputWithoutFlag_shouldShowMergedContentsInParallel() throws Exception {
         pasteApplication.setCurrentOperation(pasteApplication.getFileOperation());
         String result = pasteApplication.mergeFile(false, FILE_PATH_1, FILE_PATH_2);
 
@@ -94,7 +94,7 @@ public class PasteApplicationTest {
 
     @Test
         // command: paste -s tmpPasteTestFolder/test1.txt tmpPasteTestFolder/test2.txt
-    void testPaste_fileInputWithFlag_shouldShowMergedContentsSerially() throws Exception {
+    void testPasteMergeFile_fileInputWithFlag_shouldShowMergedContentsSerially() throws Exception {
         pasteApplication.setCurrentOperation(pasteApplication.getFileOperation());
         String result = pasteApplication.mergeFile(true, FILE_PATH_1, FILE_PATH_2);
 
