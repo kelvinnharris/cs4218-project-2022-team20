@@ -82,7 +82,7 @@ public class GrepApplicationTest {
     }
 
     @Test
-    void testGrep_grepFromFile_shouldReturnCorrectLines() throws GrepException {
+    void grepFromFiles_grepFromFile_shouldReturnCorrectLines() throws GrepException {
         try {
             String actualOutput = grepApplication.grepFromFiles(PATTERN1, false, false, false, FILE1_PATH);
             String fileContent = readString(Paths.get(FILE1_PATH));
@@ -100,7 +100,7 @@ public class GrepApplicationTest {
     }
 
     @Test
-    void testGrep_grepFromMultipleFilesExistentAndNonExistent_shouldReturnCorrectLinesAndDisplayErrorMessage() throws GrepException {
+    void grepFromFiles_grepFromMultipleFilesExistentAndNonExistent_shouldReturnCorrectLinesAndDisplayErrorMessage() throws GrepException {
         try {
             String[] files = {FILE1_PATH, FILE2_PATH, NE_FILE_PATH};
             String actualOutput = grepApplication.grepFromFiles(PATTERN1, false, false, false, files);
@@ -128,7 +128,7 @@ public class GrepApplicationTest {
     }
 
     @Test
-    void testGrep_grepFromFileCountLines_shouldReturnCorrectCount() throws GrepException {
+    void grepFromFiles_grepFromFileCountLines_shouldReturnCorrectCount() throws GrepException {
         try {
             String actualOutput = grepApplication.grepFromFiles(PATTERN1, false, true, false, FILE1_PATH);
             String fileContent = readString(Paths.get(FILE1_PATH));
@@ -142,7 +142,7 @@ public class GrepApplicationTest {
     }
 
     @Test
-    void testGrep_grepFromFileCaseInsensitive_shouldReturnCorrectLines() throws GrepException {
+    void grepFromFiles_grepFromFileCaseInsensitive_shouldReturnCorrectLines() throws GrepException {
         try {
             String actualOutput = grepApplication.grepFromFiles(PATTERN1, true, true, false, FILE1_PATH);
             String fileContent = readString(Paths.get(FILE1_PATH));
@@ -159,7 +159,7 @@ public class GrepApplicationTest {
     }
 
     @Test
-    void testGrep_grepFromFilePrintFileNames_shouldReturnCorrectLines() throws GrepException {
+    void grepFromFiles_grepFromFilePrintFileNames_shouldReturnCorrectLines() throws GrepException {
         try {
             String actualOutput = grepApplication.grepFromFiles(PATTERN1, false, false, true, FILE1_PATH);
             String fileContent = readString(Paths.get(FILE1_PATH));
@@ -177,7 +177,7 @@ public class GrepApplicationTest {
     }
 
     @Test
-    void testGrep_grepFromNonExistentFile_shouldDisplayErrorMessage() throws GrepException {
+    void grepFromFiles_grepFromNonExistentFile_shouldDisplayErrorMessage() throws GrepException {
         try {
             String actualOutput = grepApplication.grepFromFiles(PATTERN1, false, false, false, "nonExistent.txt");
             String errorMsg = String.format("grep: %s: No such file or directory" + STRING_NEWLINE, "nonExistent.txt");
@@ -188,7 +188,7 @@ public class GrepApplicationTest {
     }
 
     @Test
-    void testGrep_grepFromStdin_shouldReturnCorrectLines() throws GrepException {
+    void grepFromStdin_grepFromStdin_shouldReturnCorrectLines() throws GrepException {
         try {
             String actualOutput = grepApplication.grepFromStdin(PATTERN1, false, false, false, inputStream);
             StringBuilder stringBuilder = new StringBuilder();
@@ -206,7 +206,7 @@ public class GrepApplicationTest {
 
 
     @Test
-    void testGrep_grepFromFileAndStdin_shouldReturnCorrectLines() throws GrepException {
+    void grepFromFileAndStdin_grepFromFileAndStdin_shouldReturnCorrectLines() throws GrepException {
         try {
             String actualOutput = grepApplication.grepFromFileAndStdin(PATTERN1, false, false, false, inputStream, FILE1_PATH);
             StringBuilder stringBuilder = new StringBuilder();
