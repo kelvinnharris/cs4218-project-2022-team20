@@ -23,6 +23,7 @@ public final class StringUtils {
     public static final char CHAR_COLON = ':';
     public static final char CHAR_ASTERISK = '*';
     public static final char CHAR_FLAG_PREFIX = '-';
+    public static final char CHAR_NULL = Character.MIN_VALUE;
 
     private StringUtils() {
     }
