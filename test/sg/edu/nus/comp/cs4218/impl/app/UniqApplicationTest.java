@@ -1,9 +1,6 @@
 package sg.edu.nus.comp.cs4218.impl.app;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.impl.util.TestUtils;
 
@@ -15,6 +12,7 @@ import java.nio.file.Paths;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
+import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
 
 public class UniqApplicationTest {
     private UniqApplication uniqApplication;
@@ -30,6 +28,8 @@ public class UniqApplicationTest {
 
     @BeforeAll
     public static void setUp() throws IOException {
+        deleteDir(new File(TEST_PATH));
+        Files.createDirectories(Paths.get(TEST_PATH));
         Files.write(Path.of(FILE_NAME), (HELLO_WORLD + STRING_NEWLINE +
                 HELLO_WORLD + STRING_NEWLINE +
                 ALICE + STRING_NEWLINE +
@@ -51,6 +51,11 @@ public class UniqApplicationTest {
         if (file.exists()) {
             TestUtils.deleteDir(file);
         }
+    }
+
+    @AfterAll
+    static void tearDown() {
+        deleteDir(new File(TEST_PATH));
     }
 
     @Test
