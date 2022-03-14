@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Command;
 import sg.edu.nus.comp.cs4218.Environment;
+import sg.edu.nus.comp.cs4218.exception.LsException;
 import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 import sg.edu.nus.comp.cs4218.impl.util.ApplicationRunner;
 import sg.edu.nus.comp.cs4218.impl.util.CommandBuilder;
@@ -15,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.*;
 import static sg.edu.nus.comp.cs4218.impl.util.TestConstants.LS_UNIQ_FOLDER;
 import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.appendToFile;
@@ -115,5 +117,12 @@ public class LsUniqIntegrationTest {
         command.evaluate(inputStream, stdOut);
         String expectedOutput = "2" + CHAR_SPACE + FILE1_NAME + STRING_NEWLINE;
         assertEquals(expectedOutput, stdOut.toString());
+    }
+
+    @Test
+    void testLsUniq_UniqOutputOfLsNoSuchFile_shouldThrowLsException() throws Exception {
+        String commandString = String.format("ls `uniq %s`", FILE2_NAME);
+        Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
+        assertThrows(LsException.class, () -> command.evaluate(inputStream, stdOut));
     }
 }
