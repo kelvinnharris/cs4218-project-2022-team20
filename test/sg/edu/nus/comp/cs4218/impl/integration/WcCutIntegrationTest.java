@@ -19,8 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.*;
 import static sg.edu.nus.comp.cs4218.impl.util.TestConstants.WC_CUT_FOLDER;
-import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.appendToFile;
-import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
+import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.*;
 
 public class WcCutIntegrationTest {
 
@@ -97,7 +96,12 @@ public class WcCutIntegrationTest {
         String commandString = String.format("wc %s %s | cut -b 23-24", FILE1_NAME, FILE2_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         command.evaluate(inputStream, stdOut);
-        String expectedOutput = "30" + STRING_NEWLINE + "14" + STRING_NEWLINE + "44" + STRING_NEWLINE;
+        String expectedOutput;
+        if (isWindowsSystem()) {
+            expectedOutput = "30" + STRING_NEWLINE + "14" + STRING_NEWLINE + "44" + STRING_NEWLINE;
+        } else {
+            expectedOutput = "24" + STRING_NEWLINE + "10" + STRING_NEWLINE + "34" + STRING_NEWLINE;
+        }
         assertEquals(expectedOutput, stdOut.toString());
     }
 
