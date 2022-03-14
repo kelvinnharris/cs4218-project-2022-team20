@@ -8,6 +8,7 @@ import sg.edu.nus.comp.cs4218.impl.parser.CpArgsParser;
 import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.*;
@@ -53,8 +54,30 @@ public class CpApplication implements CpInterface {
             throw new CpException(String.format("missing destination file operand after '%s'", destFile));
         }
 
-        if (Files.isDirectory(destAbsPath)) {
+        if (!Files.exists(destAbsPath)) {
+            if (srcFiles.length > 1) {
+                throw new CpException(ERR_TOO_MANY_ARGS);
+            }
+
+            // create new file/dir and copy
+            if (Files.isRegularFile(Paths.get(srcFiles[0]))) {
+                try {
+                    Files.createFile(destAbsPath);
+                    cpSrcFileToDestFile(isRecursive, srcFiles[0], destFile);
+                } catch (IOException ioe) {
+                    throw new CpException(ioe.getMessage());
+                }
+            } else if (Files.isDirectory(Paths.get(srcFiles[0]))) {
+                try {
+                    Files.createDirectories(destAbsPath);
+                    cpFilesToFolder(isRecursive, destFile, srcFiles);
+                } catch (IOException ioe) {
+                    throw new CpException(ioe.getMessage());
+                }
+            }
+        } else if (Files.isDirectory(destAbsPath)) {
             cpFilesToFolder(isRecursive, destFile, srcFiles);
+
         } else {
             if (srcFiles.length > 1) {
                 throw new CpException(ERR_TOO_MANY_ARGS);
