@@ -20,19 +20,17 @@ import java.util.stream.Collectors;
 import static java.nio.file.StandardCopyOption.ATOMIC_MOVE;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
+import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
 
 public class MvApplication implements MvInterface { //NOPMD - suppressed GodClass - cannot refactor to smaller classes
 
-    public static void deleteDir(File file) {
-        File[] contents = file.listFiles();
-        if (contents != null) {
-            for (File f : contents) {
-                deleteDir(f);
-            }
-        }
-        file.delete();
-    }
-
+    /**
+     * Run application with specified input data and specified output stream.
+     *
+     * @param args   The arguments representing the files/folders
+     * @param stdin  Standard input
+     * @param stdout Standard output
+     */
     @Override
     public void run(String[] args, InputStream stdin, OutputStream stdout) throws AbstractApplicationException {
         if (args == null) {
@@ -69,6 +67,15 @@ public class MvApplication implements MvInterface { //NOPMD - suppressed GodClas
         }
     }
 
+    /**
+     * Move or rename source file as destination file.
+     *
+     * @param isOverwrite Boolean option to perform overwriting
+     * @param srcFile  of path to source file
+     * @param destFile of path to destination file
+     * @return null
+     * @throws MvException Exception related to mv
+     */
     @Override
     public String mvSrcFileToDestFile(Boolean isOverwrite, String srcFile, String destFile) throws MvException {
         Path srcAbsPath = IOUtils.resolveFilePath(srcFile);
@@ -96,6 +103,15 @@ public class MvApplication implements MvInterface { //NOPMD - suppressed GodClas
         return null;
     }
 
+    /**
+     * Wrapper function for moving files to destination folder.
+     *
+     * @param isOverwrite Boolean option to perform overwriting
+     * @param destFolder of path to destination folder
+     * @param fileName   Array of String of file names
+     * @return null
+     * @throws MvException Exception related to mv
+     */
     @Override
     public String mvFilesToFolder(Boolean isOverwrite, String destFolder, String... fileName) throws MvException {
         for (String srcFile : fileName) {
@@ -112,8 +128,6 @@ public class MvApplication implements MvInterface { //NOPMD - suppressed GodClas
             String srcFileName = IOUtils.resolveFilePath(srcFile).toFile().getName();
 
             Path destAbsPath = IOUtils.resolveFilePath(Paths.get(destCwd, destFolder, srcFile).toString());
-//            if (!isOverwrite && destAbsPath.toFile().exists()) {
-//                continue;
             if (isOverwrite || destAbsPath.toFile().exists()) {
                 // copy and delete original files
                 cpFilesToFolderImpl(isOverwrite, destCwd, srcCwd, destFolderName, srcFileName, destFolder, srcFile, false);

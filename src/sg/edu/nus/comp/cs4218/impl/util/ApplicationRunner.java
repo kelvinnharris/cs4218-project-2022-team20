@@ -68,6 +68,9 @@ public class ApplicationRunner {
             case APP_LS:
                 application = new LsApplication();
                 break;
+            case APP_MV:
+                application = new MvApplication();
+                break;
             case APP_RM:
                 application = new RmApplication();
                 break;
@@ -79,9 +82,6 @@ public class ApplicationRunner {
                 break;
             case APP_WC:
                 application = new WcApplication();
-                break;
-            case APP_MV:
-                application = new MvApplication();
                 break;
             case APP_PASTE:
                 application = new PasteApplication();
