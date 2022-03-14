@@ -16,7 +16,7 @@ public interface UniqInterface extends Application {
      * @param outputFileName of path to output file (if any)
      * @throws Exception
      */
-    void uniqFromFile(Boolean isCount, Boolean isRepeated, Boolean isAllRepeated, String inputFileName, String outputFileName) throws Exception;
+    String uniqFromFile(Boolean isCount, Boolean isRepeated, Boolean isAllRepeated, String inputFileName, String outputFileName) throws Exception;
 
 
     /**
@@ -29,5 +29,5 @@ public interface UniqInterface extends Application {
      * @param outputFileName of path to output file (if any)
      * @throws Exception
      */
-    void uniqFromStdin(Boolean isCount, Boolean isRepeated, Boolean isAllRepeated, InputStream stdin, String outputFileName) throws Exception;
+    String uniqFromStdin(Boolean isCount, Boolean isRepeated, Boolean isAllRepeated, InputStream stdin, String outputFileName) throws Exception;
 }

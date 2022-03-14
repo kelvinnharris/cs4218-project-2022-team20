@@ -7,31 +7,37 @@ import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static java.nio.file.StandardOpenOption.APPEND;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
+import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.appendToFile;
+import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
 
 public class CutSortIntegrationTest {
 
     private static ShellImpl shell;
     private static ByteArrayOutputStream stdOut;
     private static final String ROOT_PATH = Environment.currentDirectory;
+    private static final String TEST_FOLDER_NAME = "tmpCutSortTestFolder" + CHAR_FILE_SEP + "";
+    private static final String TEST_PATH = ROOT_PATH + CHAR_FILE_SEP + TEST_FOLDER_NAME;
 
     public static final String FILE1_NAME = "file1.txt";
-    public static final String FILE1_PATH = ROOT_PATH + CHAR_FILE_SEP + FILE1_NAME;
+    public static final String FILE1_PATH = TEST_PATH + FILE1_NAME;
 
 
     public static final String[] LINES1 = {"1", "2", "10", "a", "ab", "AB", "A"};
 
     @BeforeAll
-    static void setUp() {
+    static void setUp() throws IOException {
         shell = new ShellImpl();
+        deleteDir(new File(TEST_PATH));
+        Files.createDirectories(Paths.get(TEST_PATH));
     }
 
 
@@ -46,15 +52,10 @@ public class CutSortIntegrationTest {
     }
 
     @AfterAll
-    static void tearDown() throws IOException {
-        Files.delete(Paths.get(FILE1_PATH));
+    static void tearDown() {
+        deleteDir(new File(TEST_PATH));
     }
 
-    static void appendToFile(Path file, String... lines) throws IOException {
-        for (String line : lines) {
-            Files.write(file, (line + STRING_NEWLINE).getBytes(), APPEND);
-        }
-    }
 
     @Test
     void testCutSort_cutThenSort_shouldReturnCorrectOutput() throws Exception {

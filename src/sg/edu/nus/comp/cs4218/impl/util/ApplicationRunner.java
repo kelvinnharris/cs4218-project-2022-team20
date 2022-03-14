@@ -27,6 +27,7 @@ public class ApplicationRunner {
 
     // EF2 Not implemented
     public final static String APP_PASTE = "paste";
+    public final static String APP_UNIQ = "uniq";
     public final static String APP_CD = "cd";
 
     /**
@@ -86,6 +87,10 @@ public class ApplicationRunner {
             case APP_PASTE:
                 application = new PasteApplication();
                 System.out.println("[PASTE] CALLED");
+                break;
+            case APP_UNIQ:
+                application = new UniqApplication();
+                System.out.println("[UNIQ] CALLED");
                 break;
             default:
                 throw new ShellException(app + ": " + ERR_INVALID_APP);
