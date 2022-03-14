@@ -44,6 +44,7 @@ public class CatTeeIntegrationTest {
     private static ShellImpl shell;
     private static ByteArrayOutputStream stdOut;
 
+    private static final String NUMBER_FORMAT = "%6d ";
 
     static void appendToFile(Path file, String... lines) throws IOException {
         for (String line : lines) {
@@ -74,7 +75,7 @@ public class CatTeeIntegrationTest {
 
     @AfterAll
     static void tearDown() {
-//        deleteDir(new File(TEST_PATH));
+        deleteDir(new File(TEST_PATH));
     }
 
     // TODO - Investigate semicolon
@@ -102,6 +103,17 @@ public class CatTeeIntegrationTest {
         String commandString = String.format("tee %s < %s; cat %s", FILE2_PATH, FILE1_PATH, FILE2_PATH);
         String expectedOutput = LINES1_TEXT1 + STRING_NEWLINE + LINES1_TEXT2 + STRING_NEWLINE + LINES1_TEXT3 + STRING_NEWLINE +
                 LINES1_TEXT1 + STRING_NEWLINE + LINES1_TEXT2 + STRING_NEWLINE + LINES1_TEXT3 + STRING_NEWLINE;
+
+        shell.parseAndEvaluate(commandString, stdOut);
+        assertEquals(expectedOutput, stdOut.toString());
+    }
+
+    @Test
+    void testCatTeeParseAndEvaluate_teeInputWithoutAppendFlagAndCatFlag_shouldReturnCorrectOutput() throws Exception {
+        String commandString = String.format("tee %s < %s; cat -n %s", FILE2_PATH, FILE1_PATH, FILE2_PATH);
+        String expectedOutput = LINES1_TEXT1 + STRING_NEWLINE + LINES1_TEXT2 + STRING_NEWLINE + LINES1_TEXT3 + STRING_NEWLINE +
+                String.format(NUMBER_FORMAT, 1) + LINES1_TEXT1 + STRING_NEWLINE + String.format(NUMBER_FORMAT, 2) + LINES1_TEXT2 + STRING_NEWLINE +
+                String.format(NUMBER_FORMAT, 3) + LINES1_TEXT3 + STRING_NEWLINE;
 
         shell.parseAndEvaluate(commandString, stdOut);
         assertEquals(expectedOutput, stdOut.toString());

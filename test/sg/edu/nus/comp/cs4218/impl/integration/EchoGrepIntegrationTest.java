@@ -5,7 +5,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Environment;
-import sg.edu.nus.comp.cs4218.exception.ShellException;
+import sg.edu.nus.comp.cs4218.exception.GrepException;
 import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 
 import java.io.*;
@@ -149,7 +149,7 @@ public class EchoGrepIntegrationTest {
     @Test
     void testEchoGrepParseAndEvaluate_grepParamFromInputRedirectionEcho_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("grep -icH \"tH*\" %s < echo %s", FILE1_PATH, FILE2_PATH);
-        String expectedOutput = FILE1_PATH + CHAR_COLON + " 2" + STRING_NEWLINE + FILE2_PATH + CHAR_COLON + " 2";
+        String expectedOutput = FILE1_PATH + CHAR_COLON + " 2" + STRING_NEWLINE + FILE2_PATH + CHAR_COLON + " 2" + STRING_NEWLINE;
         shell.parseAndEvaluate(commandString, stdOut);
         assertEquals(expectedOutput, stdOut.toString());
     }
@@ -171,9 +171,9 @@ public class EchoGrepIntegrationTest {
     }
 
     @Test
-    void testEchoGrepParseAndEvaluate_grepOnInvalidInputFromEcho_shouldReturnError() throws Exception {
+    void testEchoGrepParseAndEvaluate_grepOnInvalidInputFromEcho_shouldReturnError() {
         String commandString = "grep `echo \"\n\"`;";
-        assertThrows(ShellException.class, () -> shell.parseAndEvaluate(commandString, stdOut));
+        assertThrows(GrepException.class, () -> shell.parseAndEvaluate(commandString, stdOut));
     }
 }
 
