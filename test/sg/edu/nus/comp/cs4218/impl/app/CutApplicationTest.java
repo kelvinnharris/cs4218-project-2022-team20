@@ -269,7 +269,7 @@ class CutApplicationTest {
         ranges.add(new Pair<>(1,1));
         String output = cutApplication.cutFromStdin(true, false, ranges, input);
         char[] charArray = new char[1];
-        String expected = new String(charArray) + STRING_NEWLINE;
+        String expected = "" + STRING_NEWLINE;
         assertEquals(expected , output);
     }
 
@@ -281,7 +281,7 @@ class CutApplicationTest {
         ranges.add(new Pair<>(1,1));
         String output = cutApplication.cutFromStdin(false, true, ranges, input);
         byte[] byteArray = new byte[1];
-        String expected = new String(byteArray) + STRING_NEWLINE;
+        String expected = "" + STRING_NEWLINE;
         assertEquals(expected , output);
     }
 

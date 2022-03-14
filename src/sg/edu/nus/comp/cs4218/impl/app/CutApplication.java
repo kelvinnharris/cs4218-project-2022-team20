@@ -164,30 +164,40 @@ public class CutApplication implements CutInterface { //NOPMD
         if (isCharPo) {
             char[] charArray;
             char[] currArray;
+            List<Character> arr;
 
             for (String line : input) {
-                currArray = new char[Math.min(size, line.length())];
+                arr = new ArrayList<>();
                 charArray = line.toCharArray();
                 for (int i = 0; i < size; i++) {
                     if (index.get(i) >= charArray.length) {
                         break;
                     }
-                    currArray[i] = charArray[index.get(i)];
+                    arr.add(charArray[index.get(i)]);
+                }
+                currArray = new char[arr.size()];
+                for (int i = 0; i < arr.size(); i++) {
+                    currArray[i] = arr.get(i);
                 }
                 output += new String(currArray) + STRING_NEWLINE;
             }
         } else if (isBytePo) {
             byte[] byteArray;
             byte[] currArray;
+            List<Byte> arr;
 
             for (String line : input) {
-                currArray = new byte[Math.min(size, line.length())];
+                arr = new ArrayList<>();
                 byteArray = line.getBytes();
                 for (int i = 0; i < size; i++) {
                     if (index.get(i) >= byteArray.length) {
                         break;
                     }
-                    currArray[i] = byteArray[index.get(i)];
+                    arr.add(byteArray[index.get(i)]);
+                }
+                currArray = new byte[arr.size()];
+                for (int i = 0; i < arr.size(); i++) {
+                    currArray[i] = arr.get(i);
                 }
                 output += new String(currArray) + STRING_NEWLINE;
             }
