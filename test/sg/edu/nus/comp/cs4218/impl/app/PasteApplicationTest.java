@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Environment;
+import sg.edu.nus.comp.cs4218.exception.PasteException;
 import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 import sg.edu.nus.comp.cs4218.impl.util.StringUtils;
 import sg.edu.nus.comp.cs4218.impl.util.TestUtils;
@@ -16,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
@@ -192,9 +194,7 @@ public class PasteApplicationTest {
         // command: paste - tmpPasteTestFolder/test1.txt paste
     void testPaste_fileInputAndStdInAndNonExistentFileWithoutFlag_shouldShowMergedContentsInParallel() throws Exception {
         InputStream inputStream = IOUtils.openInputStream(FILE_PATH_2); // NOPMD
-        String result = pasteApplication.mergeFileAndStdin(false, inputStream, STD_IN, FILE_PATH_1, NONEXISTENTFILE);
+        assertThrows(PasteException.class, () -> pasteApplication.mergeFileAndStdin(false, inputStream, STD_IN, FILE_PATH_1, NONEXISTENTFILE), "Should throw pasteException");
         IOUtils.closeInputStream(inputStream);
-
-        assertEquals("paste: " + NONEXISTENTFILE + ": " + ERR_NOT_FOUND, result);
     }
 }

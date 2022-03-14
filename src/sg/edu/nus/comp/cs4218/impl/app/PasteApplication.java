@@ -3,6 +3,7 @@ package sg.edu.nus.comp.cs4218.impl.app;
 import sg.edu.nus.comp.cs4218.app.PasteInterface;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.PasteException;
+import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.impl.parser.PasteArgsParser;
 import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 
@@ -84,6 +85,8 @@ public class PasteApplication implements PasteInterface {
                 currentOperation = STDIN_FILE_OP;
                 result = mergeFileAndStdin(pasteArgs.isSerial(), stdin, pasteArgs.getFiles().toArray(new String[0]));
             }
+        } catch (PasteException e) {
+            throw e;
         } catch (Exception e) {
             // Will never happen
             throw new PasteException(ERR_GENERAL); // NOPMD
@@ -118,7 +121,7 @@ public class PasteApplication implements PasteInterface {
 
     public String mergeFile(Boolean isSerial, String... fileName) throws Exception { // NOPMD
         if (fileName == null) {
-            throw new Exception(ERR_GENERAL);
+            throw new PasteException(ERR_GENERAL);
         }
 
         for (String file : fileName) {
@@ -126,7 +129,7 @@ public class PasteApplication implements PasteInterface {
             if (!node.exists()) {
                 fileNotExist = true;
                 fileNotExistName = file;
-                break;
+                throw new PasteException("paste: " + file + ERR_NOT_FOUND);
             }
             if (node.isDirectory()) {
                 String error = STRING_PASTE + file + ERR_IS_DIRECTORY + STRING_NEWLINE;
