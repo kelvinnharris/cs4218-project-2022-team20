@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Command;
 import sg.edu.nus.comp.cs4218.Environment;
+import sg.edu.nus.comp.cs4218.exception.SortException;
 import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 import sg.edu.nus.comp.cs4218.impl.util.ApplicationRunner;
 import sg.edu.nus.comp.cs4218.impl.util.CommandBuilder;
@@ -15,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 import static sg.edu.nus.comp.cs4218.impl.util.TestConstants.GREP_SORT_FOLDER;
@@ -116,5 +118,12 @@ public class GrepSortIntegrationTest {
         String expectedOutput = "(standard input): 1000" + STRING_NEWLINE + "file1.txt: 123" + STRING_NEWLINE
                 + "file2.txt: 123" + STRING_NEWLINE;
         assertEquals(expectedOutput, stdOut.toString());
+    }
+
+    @Test
+    void testGrepSort_sortErrorOutputThenGrepPattern_shouldReturnCorrectLines() throws Exception {
+        String commandString = String.format("sort -z %s | grep \"f\"", FILE3_NAME);
+        Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
+        assertThrows(SortException.class, () -> command.evaluate(inputStream, stdOut));
     }
 }
