@@ -51,6 +51,9 @@ public class ApplicationRunner {
             case APP_CAT:
                 application = new CatApplication();
                 break;
+            case APP_CD:
+                application = new CdApplication();
+                break;
             case APP_CP:
                 application = new CpApplication();
                 break;
@@ -86,7 +89,6 @@ public class ApplicationRunner {
                 break;
             case APP_PASTE:
                 application = new PasteApplication();
-                System.out.println("[PASTE] CALLED");
                 break;
             case APP_UNIQ:
                 application = new UniqApplication();

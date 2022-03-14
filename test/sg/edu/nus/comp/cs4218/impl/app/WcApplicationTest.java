@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_NULL_FILES;
@@ -39,13 +40,11 @@ public class WcApplicationTest {
     private static final String NON_EXISTENT_FILE = "wc";
 
     private static final String FILE_NAME_1 = "test1.txt";
-    private static final String FILE_PATH_1 = TEST_FOLDER_NAME + FILE_NAME_1;
+    private static final String FILE_PATH_1 = TEST_PATH + FILE_NAME_1;
     private static final String FILE_NAME_2 = "test2.txt";
-    private static final String FILE_PATH_2 = TEST_FOLDER_NAME + FILE_NAME_2;
+    private static final String FILE_PATH_2 = TEST_PATH + FILE_NAME_2;
     private static final String FILE_NAME_3 = "test3.txt";
-    private static final String FILE_PATH_3 = TEST_FOLDER_NAME + FILE_NAME_3;
-    private static final String FILE_NAME_STAR1 = "testStar1.txt";
-    private static final String FILE_NAME_STAR2 = "testStar2.txt";
+    private static final String FILE_PATH_3 = TEST_PATH + FILE_NAME_3;
 
     private static final String ERR_IS_DIRECTORY = ": Is a directory";
     private static final String ERR_NOT_FOUND = ": No such file or directory";
@@ -61,10 +60,6 @@ public class WcApplicationTest {
         TestUtils.createFile(FILE_PATH_3, "This is WC Test file 3" + STRING_NEWLINE
                 + " Test for second line" + STRING_NEWLINE
                 + " Test for third line" + STRING_NEWLINE);
-
-        TestUtils.createFile(FILE_NAME_STAR1, "This is test star 1" + STRING_NEWLINE);
-        TestUtils.createFile(FILE_NAME_STAR2, "This is test star 2" + STRING_NEWLINE
-                + "line 2" + STRING_NEWLINE);
     }
 
     @BeforeEach
@@ -77,8 +72,6 @@ public class WcApplicationTest {
     @AfterAll
     static void tearDown() {
         TestUtils.deleteDir(new File(TEST_PATH));
-        TestUtils.deleteDir(new File(FILE_NAME_STAR1));
-        TestUtils.deleteDir(new File(FILE_NAME_STAR2));
     }
 
     @Test
@@ -88,7 +81,7 @@ public class WcApplicationTest {
 
         StringBuilder sbExpected = new StringBuilder();
         int totalByte = 23;
-        if (System.getProperty("os.name").toLowerCase().contains("win")) { // NOPMD
+        if (System.getProperty("os.name").toLowerCase(Locale.ENGLISH).contains("win")) {
             totalByte = 24;
         }
         sbExpected.append(String.format(NUMBER_FORMAT, 1))

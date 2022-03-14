@@ -37,6 +37,11 @@ public class CdApplication implements CdInterface {
         if (args == null) {
             throw new CdException(ERR_NULL_ARGS);
         }
+
+        if (args.length > 1) {
+            throw new CdException(ERR_TOO_MANY_ARGS);
+        }
+
         changeToDirectory(args[0]);
     }
 
@@ -51,11 +56,11 @@ public class CdApplication implements CdInterface {
         }
 
         if (!Files.exists(path)) {
-            throw new CdException(String.format(ERR_FILE_NOT_FOUND, pathStr));
+            throw new CdException(String.format("%s: " + ERR_FILE_NOT_FOUND, pathStr));
         }
 
         if (!Files.isDirectory(path)) {
-            throw new CdException(String.format(ERR_IS_NOT_DIR, pathStr));
+            throw new CdException(String.format("%s: " + ERR_IS_NOT_DIR, pathStr));
         }
 
         return path.normalize().toString();

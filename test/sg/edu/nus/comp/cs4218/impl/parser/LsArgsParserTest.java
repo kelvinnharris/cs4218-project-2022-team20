@@ -19,23 +19,11 @@ class LsArgsParserTest {
     }
 
     @Test
-    void testLsArgsParserTest_isFoldersOnly_testPassed() {
-        Set map = mock(HashSet.class);
-        when(map.contains('d')).thenReturn(true);
-        lsArgsParser.flags = map;
-
-        assertTrue(lsArgsParser.isFoldersOnly());
-        assertFalse(lsArgsParser.isRecursive());
-        assertFalse(lsArgsParser.isSortByExt());
-    }
-
-    @Test
     void testLsArgsParserTest_isRecursiveOnly_testPassed() {
         Set map = mock(HashSet.class);
         when(map.contains('R')).thenReturn(true);
         lsArgsParser.flags = map;
 
-        assertFalse(lsArgsParser.isFoldersOnly());
         assertTrue(lsArgsParser.isRecursive());
         assertFalse(lsArgsParser.isSortByExt());
     }
@@ -46,7 +34,6 @@ class LsArgsParserTest {
         when(map.contains('X')).thenReturn(true);
         lsArgsParser.flags = map;
 
-        assertFalse(lsArgsParser.isFoldersOnly());
         assertFalse(lsArgsParser.isRecursive());
         assertTrue(lsArgsParser.isSortByExt());
     }
@@ -54,12 +41,10 @@ class LsArgsParserTest {
     @Test
     void testLsArgsParserTest_isFolderRecursiveSortByExt_testPassed() {
         Set map = mock(HashSet.class);
-        when(map.contains('d')).thenReturn(true);
         when(map.contains('R')).thenReturn(true);
         when(map.contains('X')).thenReturn(true);
         lsArgsParser.flags = map;
 
-        assertTrue(lsArgsParser.isFoldersOnly());
         assertTrue(lsArgsParser.isRecursive());
         assertTrue(lsArgsParser.isSortByExt());
     }
