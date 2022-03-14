@@ -16,8 +16,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
-import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.*;
 import static sg.edu.nus.comp.cs4218.impl.util.TestConstants.RM_CD_FOLDER;
 import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
 
@@ -69,7 +68,7 @@ public class RmCdIntegrationTest {
 
     @Test
     void testRmCdParseAndEvaluate_removeUnrelatedFileAndCdFolder_shouldChangeDirectorySuccessfully() {
-        String commandString = "rm " + FILE_3 + "; cd " + FOLDER_1;
+        String commandString = "rm" + CHAR_SPACE + FILE_3 + CHAR_SEMICOLON + " cd " + FOLDER_1;
         assertDoesNotThrow(() -> shell.parseAndEvaluate(commandString, stdOut));
 
         Path currentPath = Paths.get(Environment.currentDirectory).normalize();
@@ -127,8 +126,6 @@ public class RmCdIntegrationTest {
 
     @Test
     void testRmCdParseAndEvaluate_removeNonEmptyFolderWithDirectoryFlagPipeCdFolder_shouldThrowRmError() throws Exception {
-
-        Environment.currentDirectory = ROOT_PATH;
         String commandString = "rm " + FOLDER_1 + "| cd " + FOLDER_1;
         assertThrows(RmException.class, () -> shell.parseAndEvaluate(commandString, stdOut));
 

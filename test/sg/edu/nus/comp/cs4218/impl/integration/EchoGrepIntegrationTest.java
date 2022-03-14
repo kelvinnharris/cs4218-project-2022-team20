@@ -32,8 +32,11 @@ public class EchoGrepIntegrationTest {
     public static final String FILE2_PATH = TEST_PATH + FILE2_NAME;
 
     public static final String NE_FILE_NAME = "nonExistent.txt";
-    public static final String[] LINES1 = {"The first file", "Thee second line", "1000"};
-    public static final String[] LINES2 = {"The first file", "THE SECOND liNE", "10"};
+    public static final String LINES1_TEXT1 = "The first file";
+    public static final String LINES1_TEXT2 = "Thee second line";
+    public static final String LINES1_TEXT3 = "1000";
+    public static final String[] LINES1 = {LINES1_TEXT1, LINES1_TEXT2, LINES1_TEXT3};
+    public static final String[] LINES2 = {"The first part", "THE SECOND parts", "10"};
     private static ShellImpl shell;
     private static ByteArrayOutputStream stdOut;
 
@@ -81,7 +84,7 @@ public class EchoGrepIntegrationTest {
     @Test
     void testEchoGrepParseAndEvaluate_echoOutputOfGrepSensitive_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("echo \"`grep \"The\" %s`\"", FILE2_PATH);
-        String expectedOutput = "The first file" + STRING_NEWLINE;
+        String expectedOutput = "The first part" + STRING_NEWLINE;
         shell.parseAndEvaluate(commandString, stdOut);
         assertEquals(expectedOutput, stdOut.toString());
     }
@@ -105,7 +108,7 @@ public class EchoGrepIntegrationTest {
     @Test
     void testEchoGrepParseAndEvaluate_echoOutputOfGrepRegex_shouldReturnNewline() throws Exception {
         String commandString = "echo \"`grep \"^[0-9]*$\" " + FILE1_PATH + "`\"";
-        String expectedOutput = "1000" + STRING_NEWLINE;
+        String expectedOutput = LINES1_TEXT3 + STRING_NEWLINE;
         shell.parseAndEvaluate(commandString, stdOut);
         assertEquals(expectedOutput, stdOut.toString());
     }
@@ -113,7 +116,7 @@ public class EchoGrepIntegrationTest {
     @Test
     void testEchoGrepParseAndEvaluate_grepFromEchoAsStdinMatch_shouldReturnCorrectOutput() throws Exception {
         String commandString = "echo \"The first file\" | grep \"The\"";
-        String expectedOutput = "The first file" + STRING_NEWLINE;
+        String expectedOutput = LINES1_TEXT1 + STRING_NEWLINE;
         shell.parseAndEvaluate(commandString, stdOut);
         assertEquals(expectedOutput, stdOut.toString());
     }
@@ -129,7 +132,7 @@ public class EchoGrepIntegrationTest {
     @Test
     void testEchoGrepParseAndEvaluate_echoAndGrepSeparately_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("echo \"Hello world\"; grep \"The\" %s", FILE1_PATH);
-        String expectedOutput = "Hello world" + STRING_NEWLINE + "The first file" + STRING_NEWLINE + "Thee second line" + STRING_NEWLINE;
+        String expectedOutput = "Hello world" + STRING_NEWLINE + LINES1_TEXT1 + STRING_NEWLINE + LINES1_TEXT2 + STRING_NEWLINE;
         shell.parseAndEvaluate(commandString, stdOut);
         assertEquals(expectedOutput, stdOut.toString());
     }
@@ -154,7 +157,7 @@ public class EchoGrepIntegrationTest {
     @Test
     void testEchoGrepParseAndEvaluate_grepParamFromValidInput_shouldReturnPartialCorrectOutput() throws Exception {
         String commandString = "grep `echo \"The\"` `echo \"file1.txt\"`;";
-        String expectedOutput = "The first file" + STRING_NEWLINE + "Thee second line" + STRING_NEWLINE;
+        String expectedOutput = LINES1_TEXT1 + STRING_NEWLINE + LINES1_TEXT2 + STRING_NEWLINE;
         shell.parseAndEvaluate(commandString, stdOut);
         assertEquals(expectedOutput, stdOut.toString());
     }

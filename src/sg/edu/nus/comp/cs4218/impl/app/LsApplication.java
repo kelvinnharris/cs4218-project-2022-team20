@@ -132,7 +132,7 @@ public class LsApplication implements LsInterface { // NOPMD - suppressed GodCla
                 String formatted = formatContents(contents, isSortByExt, printFullPath);
                 result.append(formatted);
 
-                if (!formatted.isEmpty() && isRecursive) {
+                if (Files.isDirectory(path) && !formatted.isEmpty()) {
                     // Empty directories should not have an additional new line
                     result.append(StringUtils.STRING_NEWLINE);
                 }

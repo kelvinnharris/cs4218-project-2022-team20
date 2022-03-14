@@ -109,7 +109,7 @@ class LsApplicationTest {
         String validPath3 = TEST_FOLDER_NAME + FOLDER_3 + CHAR_FILE_SEP + FOLDER_4;
         String lsOutput = lsApplication.listFolderContent(false, false, validPath1, validPath2, validPath3);
         String expectedOutput = TEST_FOLDER_NAME + FOLDER_1 + ":" + NEW_LINE + FILE_1 + NEW_LINE + FILE_2 + NEW_LINE + FOLDER_2 + NEW_LINE + NEW_LINE +
-                TEST_FOLDER_NAME + FOLDER_1 + CHAR_FILE_SEP + FILE_1 + NEW_LINE + NEW_LINE +
+                TEST_FOLDER_NAME + FOLDER_1 + CHAR_FILE_SEP + FILE_1 + NEW_LINE +
                 TEST_FOLDER_NAME + FOLDER_3 + CHAR_FILE_SEP + FOLDER_4 + ":" + NEW_LINE + FILE_3;
         assertEquals(expectedOutput, lsOutput);
     }
