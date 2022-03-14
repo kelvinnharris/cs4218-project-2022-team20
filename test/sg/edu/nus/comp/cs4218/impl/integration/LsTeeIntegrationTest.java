@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Command;
 import sg.edu.nus.comp.cs4218.Environment;
+import sg.edu.nus.comp.cs4218.exception.TeeException;
 import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 import sg.edu.nus.comp.cs4218.impl.util.ApplicationRunner;
 import sg.edu.nus.comp.cs4218.impl.util.CommandBuilder;
@@ -16,6 +17,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 import static sg.edu.nus.comp.cs4218.impl.util.TestConstants.LS_TEE_FOLDER;
@@ -151,5 +153,12 @@ public class LsTeeIntegrationTest {
 
         String actualContent2 = Files.readString(Paths.get(FILE2_PATH));
         assertEquals(stdOut.toString(), actualContent2);
+    }
+
+    @Test
+    void testLsTee_lsTeeOutputInvalidArgs_shouldThrowTeeException() throws Exception {
+        String commandString = String.format("tee `ls %s` -d", FILE1_NAME);
+        Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
+        assertThrows(TeeException.class, () -> command.evaluate(inputStream, stdOut));
     }
 }
