@@ -23,6 +23,7 @@ public class LsApplication implements LsInterface { // NOPMD - suppressed GodCla
 
     private final static String PATH_CURR_DIR = STRING_CURR_DIR + CHAR_FILE_SEP;
 
+
     @Override
     public String listFolderContent(Boolean isRecursive, Boolean isSortByExt,
                                     String... folderName) throws LsException {

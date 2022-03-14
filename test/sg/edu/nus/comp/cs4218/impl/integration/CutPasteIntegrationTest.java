@@ -64,12 +64,11 @@ public class CutPasteIntegrationTest {
         deleteDir(new File(TEST_PATH));
     }
 
-    // TODO - Observe Cut NULL output
     @Test
     void testCutPasteParseAndEvaluate_cutPasteWithoutSerialFlag_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("cut -c 1 %s > %s; cut -c 2 %s > %s; paste %s %s > %s; cut -c 1-3 %s;",
                 FILE1_PATH, TMP_INPUT1_FILE, FILE1_PATH, TMP_INPUT2_FILE, TMP_INPUT1_FILE, TMP_INPUT2_FILE, TMP_OUTPUT_FILE, TMP_OUTPUT_FILE);
-        String expectedOutput = "H" + STRING_TAB + "e" + STRING_NEWLINE + "F" + STRING_TAB + "i" + STRING_NEWLINE + "!" + STRING_TAB;
+        String expectedOutput = "H" + STRING_TAB + "e" + STRING_NEWLINE + "F" + STRING_TAB + "i" + STRING_NEWLINE + "!" + STRING_TAB + STRING_NEWLINE;
         shell.parseAndEvaluate(commandString, stdOut);
         assertEquals(expectedOutput, stdOut.toString());
     }
@@ -79,7 +78,7 @@ public class CutPasteIntegrationTest {
     void testCutPasteParseAndEvaluate_cutPasteWithSerialFlag_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("cut -c 1 %s > %s; cut -c 2 %s > %s; paste -s %s %s > %s; cut -c 1-3 %s;",
                 FILE1_PATH, TMP_INPUT1_FILE, FILE1_PATH, TMP_INPUT2_FILE, TMP_INPUT1_FILE, TMP_INPUT2_FILE, TMP_OUTPUT_FILE, TMP_OUTPUT_FILE);
-        String expectedOutput = "H" + STRING_TAB + "F" + STRING_TAB + "!" + STRING_NEWLINE + "e" + STRING_TAB + "i" + STRING_TAB;
+        String expectedOutput = "H" + STRING_TAB + "F" + STRING_TAB + "!" + STRING_NEWLINE + "e" + STRING_TAB + "i" + STRING_TAB + STRING_NEWLINE;
         shell.parseAndEvaluate(commandString, stdOut);
         assertEquals(expectedOutput, stdOut.toString());
     }

@@ -72,11 +72,11 @@ public class CatTeeIntegrationTest {
         deleteDir(new File(TEST_PATH));
     }
 
-    // TODO - Investigate semicolon
     @Test
     void testCatTeeParseAndEvaluate_catOneFileAndTee_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("cat %s | tee %s; cat %s", FILE1_PATH, TMP_OUTPUT_FILE, TMP_OUTPUT_FILE);
-        String expectedOutput = LINES1_TEXT1 + STRING_NEWLINE + LINES1_TEXT2 + STRING_NEWLINE + LINES1_TEXT3 + STRING_NEWLINE;
+        String expectedOutput = LINES1_TEXT1 + STRING_NEWLINE + LINES1_TEXT2 + STRING_NEWLINE + LINES1_TEXT3 + STRING_NEWLINE +
+                LINES1_TEXT1 + STRING_NEWLINE + LINES1_TEXT2 + STRING_NEWLINE + LINES1_TEXT3 + STRING_NEWLINE;
         shell.parseAndEvaluate(commandString, stdOut);
         assertEquals(expectedOutput, stdOut.toString());
     }
@@ -85,9 +85,10 @@ public class CatTeeIntegrationTest {
     @Test
     void testCatTeeParseAndEvaluate_catMultipleFilesAndTee_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("cat %s %s | tee %s; cat %s", FILE1_PATH, FILE2_PATH, TMP_OUTPUT_FILE, TMP_OUTPUT_FILE);
-        String expectedOutput = LINES1_TEXT1 + STRING_NEWLINE + LINES1_TEXT2 + STRING_NEWLINE + LINES1_TEXT3 + STRING_NEWLINE +
+        String partialOutput = LINES1_TEXT1 + STRING_NEWLINE + LINES1_TEXT2 + STRING_NEWLINE + LINES1_TEXT3 + STRING_NEWLINE +
                 "THE first file" + STRING_NEWLINE + "THE SECOND liNE" + STRING_NEWLINE + "10" + STRING_NEWLINE;
 
+        String expectedOutput = partialOutput + partialOutput;
         shell.parseAndEvaluate(commandString, stdOut);
         assertEquals(expectedOutput, stdOut.toString());
     }
@@ -128,7 +129,8 @@ public class CatTeeIntegrationTest {
     @Test
     void testCatTeeParseAndEvaluate_catInvalidFilePathAndTee_shouldReturnEmptyTeeFile() throws Exception {
         String commandString = String.format("cat %s | tee %s; cat %s", NE_FILE_NAME, TMP_OUTPUT_FILE, TMP_OUTPUT_FILE);
-        String expectedOutput = "" + STRING_NEWLINE;
+        String partialOutput = "cat: " + NE_FILE_NAME + ": No such file or directory" + STRING_NEWLINE;
+        String expectedOutput = partialOutput + partialOutput;
         shell.parseAndEvaluate(commandString, stdOut);
         assertEquals(expectedOutput, stdOut.toString());
     }
@@ -137,7 +139,8 @@ public class CatTeeIntegrationTest {
     @Test
     void testCatTeeParseAndEvaluate_catFolderAndTee_shouldReturnEmptyTeeFile() throws Exception {
         String commandString = String.format("cat %s | tee %s; cat %s", TEST_PATH + FOLDER_1, TMP_OUTPUT_FILE, TMP_OUTPUT_FILE);
-        String expectedOutput = "" + STRING_NEWLINE;
+        String partialOutput = "cat: " + TEST_PATH + FOLDER_1 + ": Is a directory" + STRING_NEWLINE;
+        String expectedOutput = partialOutput + partialOutput;
         shell.parseAndEvaluate(commandString, stdOut);
         assertEquals(expectedOutput, stdOut.toString());
     }

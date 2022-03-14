@@ -166,7 +166,7 @@ public class EchoGrepIntegrationTest {
 
     @Test
     void testEchoGrepParseAndEvaluate_grepOnInvalidInputFromEcho_shouldReturnError() {
-        String commandString = "grep `echo \"\n\"`;";
+        String commandString = "grep `echo \"\"`;";
         assertThrows(GrepException.class, () -> shell.parseAndEvaluate(commandString, stdOut));
     }
 }
