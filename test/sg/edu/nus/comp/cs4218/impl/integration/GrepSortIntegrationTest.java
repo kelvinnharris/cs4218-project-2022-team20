@@ -23,7 +23,7 @@ import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
 
 public class GrepSortIntegrationTest {
 
-    public static final String INPUT = "25600" + STRING_NEWLINE + "1000" + STRING_NEWLINE; // NOPMD
+    public static final String INPUT = "25600" + STRING_NEWLINE + "1000" + STRING_NEWLINE;
     public static final String FILE1_NAME = "file1.txt";
     public static final String FILE2_NAME = "file2.txt";
     public static final String FILE3_NAME = "file3.txt";
