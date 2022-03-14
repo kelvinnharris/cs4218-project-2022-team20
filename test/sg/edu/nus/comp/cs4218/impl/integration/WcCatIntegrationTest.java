@@ -300,6 +300,6 @@ public class WcCatIntegrationTest {
 
         String expected = "wc: blabla.txt: No such file or directory";
 
-        assertEquals(expected + STRING_NEWLINE,standardOutput);
+        assertEquals(expected + STRING_NEWLINE, standardOutput);
     }
 }
