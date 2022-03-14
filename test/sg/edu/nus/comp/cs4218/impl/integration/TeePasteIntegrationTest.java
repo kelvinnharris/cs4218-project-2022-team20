@@ -74,20 +74,6 @@ public class TeePasteIntegrationTest {
         Files.deleteIfExists(Paths.get(FILE2_PATH));
         Files.createFile(Paths.get(FILE2_PATH));
         appendToFile(Paths.get(FILE2_PATH), LINES);
-        Files.deleteIfExists(Paths.get(OUTPUT1_PATH));
-        Files.createFile(Paths.get(OUTPUT1_PATH));
-        Files.deleteIfExists(Paths.get(OUTPUT2_PATH));
-        Files.createFile(Paths.get(OUTPUT2_PATH));
-        Files.deleteIfExists(Paths.get(OUTPUT3_PATH));
-        Files.createFile(Paths.get(OUTPUT3_PATH));
-        Files.deleteIfExists(Paths.get(OUTPUT4_PATH));
-        Files.createFile(Paths.get(OUTPUT4_PATH));
-        Files.deleteIfExists(Paths.get(OUTPUT5_PATH));
-        Files.createFile(Paths.get(OUTPUT5_PATH));
-        Files.deleteIfExists(Paths.get(OUTPUT6_PATH));
-        Files.createFile(Paths.get(OUTPUT6_PATH));
-        Files.deleteIfExists(Paths.get(OUTPUT7_PATH));
-        Files.createFile(Paths.get(OUTPUT7_PATH));
     }
 
     @AfterAll
