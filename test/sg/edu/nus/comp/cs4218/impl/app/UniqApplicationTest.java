@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
@@ -223,6 +224,32 @@ public class UniqApplicationTest {
         uniqApplication.run(args, stdin, outputStream);
         String actual = Files.readString(Paths.get(FILE_NAME2));
         assertEquals(expected, actual);
+    }
+
+    @Test
+    void testUniqFromFileDash_NotCountNotRepeatedNotAllRepeated_returnsOutputStdOut() throws Exception {
+        String stdinInput = HELLO_WORLD + STRING_NEWLINE +
+                HELLO_WORLD + STRING_NEWLINE +
+                ALICE + STRING_NEWLINE +
+                ALICE + STRING_NEWLINE +
+                BOB + STRING_NEWLINE +
+                ALICE + STRING_NEWLINE +
+                BOB;
+        InputStream stdin = new ByteArrayInputStream(stdinInput.getBytes());
+        String expected = HELLO_WORLD + STRING_NEWLINE +
+                ALICE + STRING_NEWLINE +
+                BOB + STRING_NEWLINE +
+                ALICE + STRING_NEWLINE +
+                BOB + STRING_NEWLINE;
+        String[] args = {"-"};
+        uniqApplication.run(args, stdin, outputStream);
+        assertEquals(expected, outputStream.toString());
+    }
+
+
+    @Test
+    void uniqFromFiles_IsDir_throwsException() {
+        assertThrows(Exception.class, () -> uniqApplication.uniqFromFile(false, false, false, TEST_PATH, null));
     }
 
 }

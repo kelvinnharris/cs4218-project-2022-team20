@@ -28,7 +28,7 @@ public class UniqApplication implements UniqInterface {
         if (stdout == null) {
             throw new UniqException(ERR_NULL_STREAMS);
         }
-
+        this.stdin = stdin;
         UniqArgsParser parser = new UniqArgsParser();
         try {
             parser.parse(args);
