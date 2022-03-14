@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.CutException;
+import sg.edu.nus.comp.cs4218.exception.GrepException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 
@@ -140,5 +141,11 @@ public class GrepCutIntegrationTest {
                 LINE + STRING_NEWLINE +
                 LINES + STRING_NEWLINE;
         assertEquals(expected, stdOut.toString());
+    }
+
+    @Test
+    void testGrepCut_grepErrorThenCut_shouldThrowExceptionAndTerminate() throws Exception {
+        String commandString = String.format("grep -z line %s | cut -b 1-15", FILE1_PATH);
+        assertThrows(GrepException.class, () -> shell.parseAndEvaluate(commandString, stdOut));
     }
 }

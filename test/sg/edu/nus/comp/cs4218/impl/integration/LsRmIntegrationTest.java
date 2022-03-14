@@ -72,7 +72,7 @@ public class LsRmIntegrationTest {
     @Test
     void testLsRm_lsAndRm_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("ls %s; rm %s", FILE1_PATH, FILE1_PATH);
-        String expected = "tmpLsRmTestFolder/file1.txt" + STRING_NEWLINE;
+        String expected = TEST_FOLDER_NAME + FILE1_NAME + STRING_NEWLINE;
         shell.parseAndEvaluate(commandString, stdOut);
         assertEquals(expected, stdOut.toString());
     }

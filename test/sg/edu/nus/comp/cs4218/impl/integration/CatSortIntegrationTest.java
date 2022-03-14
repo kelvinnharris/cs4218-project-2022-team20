@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Environment;
+import sg.edu.nus.comp.cs4218.exception.SortException;
 import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 
 import java.io.ByteArrayOutputStream;
@@ -14,6 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.*;
 import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.appendToFile;
 import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
@@ -173,4 +175,11 @@ public class CatSortIntegrationTest {
         shell.parseAndEvaluate(commandString, stdOut);
         assertEquals(expected, stdOut.toString());
     }
+
+    @Test
+    void testCatSort_sortErrorThenCat_shouldThrowException() {
+        String commandString = String.format("sort -z %s %s | cat", FILE1_PATH, FILE2_PATH);
+        assertThrows(SortException.class, () -> shell.parseAndEvaluate(commandString, stdOut));
+    }
+
 }
