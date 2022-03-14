@@ -57,8 +57,9 @@ public class TestUtils { // NOPMD
             Files.write(file, (line + STRING_NEWLINE).getBytes(), APPEND);
         }
     }
-
+  
     public static boolean isWindowsSystem() {
         return System.getProperty("os.name").toLowerCase().contains("win"); // NOPMD
     }
+  
 }

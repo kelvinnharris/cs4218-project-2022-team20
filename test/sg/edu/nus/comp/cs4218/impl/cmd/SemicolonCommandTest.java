@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_SYNTAX;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
+import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
 
 class SemicolonCommandTest {
     ByteArrayOutputStream myOut;
@@ -36,16 +37,6 @@ class SemicolonCommandTest {
     @AfterAll
     static void tearDown() {
         deleteDir(new File(TEST_PATH));
-    }
-
-    static void deleteDir(File file) {
-        File[] contents = file.listFiles();
-        if (contents != null) {
-            for (File f : contents) {
-                deleteDir(f);
-            }
-        }
-        file.delete();
     }
 
     @BeforeEach

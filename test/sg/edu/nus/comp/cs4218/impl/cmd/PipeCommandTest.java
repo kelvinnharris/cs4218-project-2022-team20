@@ -18,8 +18,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
+import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
 
 public class PipeCommandTest {
 
@@ -38,16 +40,6 @@ public class PipeCommandTest {
     @AfterAll
     static void tearDown() {
         deleteDir(new File(TEST_PATH));
-    }
-
-    static void deleteDir(File file) {
-        File[] contents = file.listFiles();
-        if (contents != null) {
-            for (File f : contents) {
-                deleteDir(f);
-            }
-        }
-        file.delete();
     }
 
     @BeforeEach
@@ -103,10 +95,13 @@ public class PipeCommandTest {
     @Test
     void testPipe_oneInvalidCommand_throwsErrorAndTerminates() throws Exception {
         ShellImpl shell = new ShellImpl();
-        String commandString = "ls ls | echo abc";
-        String expectedOutput = String.format("ls: cannot access 'ls': No such file or directory");
-        shell.parseAndEvaluate(commandString, myOut);
-        assertEquals(expectedOutput, myOut.toString());
+        String commandString = "lsa | echo abc";
+        String expectedOutput = String.format("shell: lsa: Invalid app");
+        Exception exception = assertThrows(
+                Exception.class,
+                () -> { shell.parseAndEvaluate(commandString, myOut); }
+        );
+        assertEquals(expectedOutput, exception.getMessage());
     }
 
 }
