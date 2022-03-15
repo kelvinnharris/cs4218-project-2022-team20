@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Environment;
+import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.TeeException;
 
 import java.io.*;
@@ -29,6 +30,7 @@ public class TeeApplicationTest {
     private static final String FILE2_NAME = "file2.txt";
     private static final String FOLDER1_NAME = "folder1";
     private static final String NE_FILE_NAME = "nonExistent.txt";
+    private static final String UNWR_FILE_NAME = "unwritable.txt";
     private static final String[] LINES1 = {"The first file", "The second line"};
     private static final String[] LINES2 = {"The second file", "The second line"};
     private static final String TEST_PATH = Environment.currentDirectory + CHAR_FILE_SEP + TEE_FOLDER;
@@ -36,6 +38,7 @@ public class TeeApplicationTest {
     private static final String FILE2_PATH = TEE_FOLDER + CHAR_FILE_SEP + FILE2_NAME;
     private static final String FOLDER1_PATH = TEE_FOLDER + CHAR_FILE_SEP + FOLDER1_NAME;
     private static final String NE_FILE_PATH = TEE_FOLDER + CHAR_FILE_SEP + NE_FILE_NAME;
+    private static final String UNWR_FILE_PATH = TEE_FOLDER + CHAR_FILE_SEP + UNWR_FILE_NAME;
     private static TeeApplication teeApplication;
     private static OutputStream outputStream;
     private final InputStream inputStream = new ByteArrayInputStream(INPUT.getBytes());
@@ -58,9 +61,12 @@ public class TeeApplicationTest {
         Files.createDirectory(Paths.get(FOLDER1_PATH));
         Files.createFile(Paths.get(FILE1_PATH));
         Files.createFile(Paths.get(FILE2_PATH));
+        Files.createFile(Paths.get(UNWR_FILE_PATH));
+        Paths.get(UNWR_FILE_PATH).toFile().setReadOnly();
 
         appendToFile(Paths.get(FILE1_PATH), LINES1);
         appendToFile(Paths.get(FILE2_PATH), LINES2);
+
     }
 
     @Test
@@ -158,5 +164,13 @@ public class TeeApplicationTest {
     void run_teeWithNullStdout_shouldThrowException() {
         String[] args = {FILE1_NAME};
         assertThrows(TeeException.class, () -> teeApplication.run(args, inputStream, null));
+    }
+
+    @Test
+    void run_teeWithUnwritableFile_shouldThrowException() throws AbstractApplicationException {
+        String[] args = {UNWR_FILE_NAME};
+        teeApplication.run(args, inputStream, outputStream);
+        assertFalse(Files.isWritable(Paths.get(UNWR_FILE_PATH)));
+        assertEquals(String.format("%s: Permission denied", UNWR_FILE_NAME) + STRING_NEWLINE + INPUT, outputStream.toString());
     }
 }
