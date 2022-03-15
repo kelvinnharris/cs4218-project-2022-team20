@@ -33,7 +33,7 @@ public class UniqApplication implements UniqInterface {
         try {
             parser.parse(args);
         } catch (InvalidArgsException e) {
-            throw new UniqException(e.getMessage());//NOPMD
+            throw new UniqException(e.getMessage());//NOPMD - suppressed PreserveStackTrace - No reason to preserve stackTrace as reason is contained in message
         }
         StringBuilder output = new StringBuilder();
         try {
@@ -43,7 +43,7 @@ public class UniqApplication implements UniqInterface {
                 output.append(uniqFromFile(parser.isCount(), parser.isRepeated(), parser.isAllRepeated(), parser.getInputFile(), parser.getOutputFile()));
             }
         } catch (Exception e) {
-            throw new UniqException(e.getMessage());//NOPMD
+            throw new UniqException(e.getMessage());//NOPMD - suppressed PreserveStackTrace - No reason to preserve stackTrace as reason is contained in message
         }
         try {
             if (!output.toString().isEmpty()) {
@@ -55,7 +55,7 @@ public class UniqApplication implements UniqInterface {
                 }
             }
         } catch (IOException e) {
-            throw new UniqException(ERR_WRITE_STREAM);//NOPMD
+            throw new UniqException(ERR_WRITE_STREAM);//NOPMD - suppressed PreserveStackTrace - No reason to preserve stackTrace as reason is contained in message
         }
     }
 
@@ -84,7 +84,7 @@ public class UniqApplication implements UniqInterface {
             String errorMessage = inputFileName + "': " + ERR_NO_PERM;
             throw new Exception(errorMessage);
         }
-        InputStream input = IOUtils.openInputStream(inputFileName);//NOPMD
+        InputStream input = IOUtils.openInputStream(inputFileName);//NOPMD - suppressed CloseResource - Resource has been closed at line 91
         try {
             lines.addAll(IOUtils.getLinesFromInputStream(input));
         } finally {
@@ -104,7 +104,7 @@ public class UniqApplication implements UniqInterface {
         return uniqInputString(isCount, isRepeated, isAllRepeated, lines, outputFileName);
     }
 
-    public String uniqInputString(Boolean isCount, Boolean isRepeated, Boolean isAllRepeated, List<String> input, String outputFileName) throws Exception { //NOPMD
+    public String uniqInputString(Boolean isCount, Boolean isRepeated, Boolean isAllRepeated, List<String> input, String outputFileName) throws Exception { //NOPMD - suppressed ExcessiveMethodLength - from interface
         String output = "";
         List<String> lines = new ArrayList<>();
         List<Integer> count = new ArrayList<>();

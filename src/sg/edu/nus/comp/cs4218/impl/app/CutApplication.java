@@ -19,7 +19,7 @@ import java.util.List;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
-public class CutApplication implements CutInterface { //NOPMD
+public class CutApplication implements CutInterface { //NOPMD - suppressed GodClass - not a god class
     InputStream stdin;
 
     /**
@@ -49,7 +49,7 @@ public class CutApplication implements CutInterface { //NOPMD
             parser.parseIndex();
 
         } catch (InvalidArgsException e) {
-            throw new CutException(e.getMessage());//NOPMD
+            throw new CutException(e.getMessage());//NOPMD - suppressed PreserveStackTrace - No reason to preserve stackTrace as reason is contained in message
         } catch (IndexOutOfBoundsException e) {
             String errorMessage = "option requires an argument -- '";
             if (parser.isCharPo()) {
@@ -57,7 +57,7 @@ public class CutApplication implements CutInterface { //NOPMD
             } else if (parser.isBytePo()) {
                 errorMessage += "b'";
             }
-            throw new CutException(errorMessage);//NOPMD
+            throw new CutException(errorMessage);//NOPMD - suppressed PreserveStackTrace - No reason to preserve stackTrace as reason is contained in message
         }
 
         StringBuilder output = new StringBuilder();
@@ -65,18 +65,18 @@ public class CutApplication implements CutInterface { //NOPMD
             if (parser.getFiles().isEmpty()) {
                 output.append(cutFromStdin(parser.isCharPo(), parser.isBytePo(), parser.getRanges(), stdin));
             } else {
-                output.append(cutFromFiles(parser.isCharPo(), parser.isBytePo(), parser.getRanges(),parser.getFiles().toArray(new String[0])));
+                output.append(cutFromFiles(parser.isCharPo(), parser.isBytePo(), parser.getRanges(), parser.getFiles().toArray(new String[0])));
 
             }
         } catch (Exception e) {
-            throw new CutException(e.getMessage());//NOPMD
+            throw new CutException(e.getMessage());//NOPMD - suppressed PreserveStackTrace - No reason to preserve stackTrace as reason is contained in message
         }
         try {
             if (!output.toString().isEmpty()) {
                 stdout.write(output.toString().getBytes());
             }
         } catch (IOException e) {
-            throw new CutException(ERR_WRITE_STREAM);//NOPMD
+            throw new CutException(ERR_WRITE_STREAM);//NOPMD - suppressed PreserveStackTrace - No reason to preserve stackTrace as reason is contained in message
         }
     }
 
@@ -116,7 +116,7 @@ public class CutApplication implements CutInterface { //NOPMD
                 String errorMessage = file + "': " + ERR_NO_PERM;
                 throw new Exception(errorMessage);
             }
-            InputStream input = IOUtils.openInputStream(file);//NOPMD
+            InputStream input = IOUtils.openInputStream(file);//NOPMD - suppressed CloseResource - Resource has been closed at line 123
             try {
                 lines.addAll(IOUtils.getLinesFromInputStream(input));
             } finally {
@@ -147,7 +147,7 @@ public class CutApplication implements CutInterface { //NOPMD
     }
 
 
-    public String cutInputString(Boolean isCharPo, Boolean isBytePo, List<Pair<Integer, Integer>> ranges, List<String> input) {//NOPMD
+    public String cutInputString(Boolean isCharPo, Boolean isBytePo, List<Pair<Integer, Integer>> ranges, List<String> input) {//NOPMD - suppressed ExcessiveMethodLength - from interface
         String output = "";
         ArrayList<Integer> index = new ArrayList<>();
 
@@ -207,13 +207,11 @@ public class CutApplication implements CutInterface { //NOPMD
 
     public ArrayList<Integer> removeDuplicates(ArrayList<Integer> index) {
         ArrayList<Integer> newIndex = new ArrayList<>();
-
         for (Integer i : index) {
             if (!newIndex.contains(i)) {
                 newIndex.add(i);
             }
         }
-
         return newIndex;
     }
 }

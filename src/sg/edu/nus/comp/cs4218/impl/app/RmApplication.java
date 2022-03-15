@@ -36,14 +36,14 @@ public class RmApplication implements RmInterface {
                 throw new InvalidArgsException("missing operand");
             }
         } catch (InvalidArgsException e) {
-            throw new RmException(e.getMessage());//NOPMD
+            throw new RmException(e.getMessage());//NOPMD - suppressed PreserveStackTrace - No reason to preserve stackTrace as reason is contained in message
         }
 
 
         try {
             remove(parser.isEmptyDir(), parser.isRecursive(), parser.getFiles().toArray(new String[0]));
         } catch (Exception e) {
-            throw new RmException(e.getMessage());//NOPMD
+            throw new RmException(e.getMessage());//NOPMD - suppressed PreserveStackTrace - No reason to preserve stackTrace as reason is contained in message
         }
     }
 
@@ -83,7 +83,7 @@ public class RmApplication implements RmInterface {
             } else if (node.isDirectory()) {
                 errorMessage += ERR_IS_DIR;
                 throw new Exception(errorMessage);
-            } else if (!node.canRead()) { //NOPMD
+            } else if (!node.canRead()) { //NOPMD - suppressed ConfusingTernary - Changing might cause regression and this order is more logical
                 errorMessage += ERR_NO_PERM;
                 throw new Exception(errorMessage);
             } else {
