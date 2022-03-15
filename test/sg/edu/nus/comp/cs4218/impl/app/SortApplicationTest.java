@@ -154,7 +154,7 @@ class SortApplicationTest {
     }
 
     @Test
-    void testRun_emptyArgs_shouldPassed() {
+    void run_emptyArgs_shouldPassed() {
         String inputString = "ab" + STRING_NEWLINE + "A" + STRING_NEWLINE + "a" + STRING_NEWLINE + "AB";
         InputStream input = new ByteArrayInputStream(inputString.getBytes());
         String[] args = new String[]{};
@@ -162,7 +162,7 @@ class SortApplicationTest {
     }
 
     @Test
-    void testRun_invalidArgs_shouldThrow() {
+    void run_invalidArgs_shouldThrow() {
         String inputString = "ab" + STRING_NEWLINE + "A" + STRING_NEWLINE + "a" + STRING_NEWLINE + "AB";
         InputStream input = new ByteArrayInputStream(inputString.getBytes());
         String[] args = new String[]{"-z"};
@@ -170,7 +170,7 @@ class SortApplicationTest {
     }
 
     @Test
-    void testRun_fileIsDirectory_shouldThrow() {
+    void run_fileIsDirectory_shouldThrow() {
         String inputString = "ab" + STRING_NEWLINE + "A" + STRING_NEWLINE + "a" + STRING_NEWLINE + "AB";
         InputStream input = new ByteArrayInputStream(inputString.getBytes());
         String[] args = new String[]{TEST_PATH};

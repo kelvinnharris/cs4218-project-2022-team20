@@ -32,9 +32,13 @@ public class RmApplication implements RmInterface {
         RmArgsParser parser = new RmArgsParser();
         try {
             parser.parse(args);
+            if (parser.getFiles().isEmpty()) {
+                throw new InvalidArgsException("missing operand");
+            }
         } catch (InvalidArgsException e) {
             throw new RmException(e.getMessage());//NOPMD
         }
+
 
         try {
             remove(parser.isEmptyDir(), parser.isRecursive(), parser.getFiles().toArray(new String[0]));

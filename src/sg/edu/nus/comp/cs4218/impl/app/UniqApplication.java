@@ -50,6 +50,7 @@ public class UniqApplication implements UniqInterface {
                 if (parser.getOutputFile() == null) {
                     stdout.write(output.toString().getBytes());
                 } else {
+                    stdout.write(STRING_NEWLINE.getBytes());
                     Files.write(Path.of(parser.getOutputFile()), output.toString().getBytes());
                 }
             }

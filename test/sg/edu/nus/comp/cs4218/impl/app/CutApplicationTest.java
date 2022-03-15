@@ -286,7 +286,7 @@ class CutApplicationTest {
     }
 
     @Test
-    void testRun_nonEmptyArgsNonEmptyIndex_shouldPassed() {
+    void run_nonEmptyArgsNonEmptyIndex_shouldPassed() {
         String inputString = "a";
         InputStream input = new ByteArrayInputStream(inputString.getBytes());
         String[] args = new String[]{"-b", "1"};
@@ -294,7 +294,7 @@ class CutApplicationTest {
     }
 
     @Test
-    void testRun_emptyArgsNonEmptyIndex_shouldThrow() {
+    void run_emptyArgsNonEmptyIndex_shouldThrow() {
         String inputString = "a";
         InputStream input = new ByteArrayInputStream(inputString.getBytes());
         String[] args = new String[]{"1"};
@@ -302,7 +302,7 @@ class CutApplicationTest {
     }
 
     @Test
-    void testRun_nonEmptyArgsEmptyIndex_shouldThrow() {
+    void run_nonEmptyArgsEmptyIndex_shouldThrow() {
         String inputString = "a";
         InputStream input = new ByteArrayInputStream(inputString.getBytes());
         String[] args = new String[]{"-b"};
@@ -310,7 +310,7 @@ class CutApplicationTest {
     }
 
     @Test
-    void testRun_emptyArgsEmptyIndex_shouldThrow() {
+    void run_emptyArgsEmptyIndex_shouldThrow() {
         String inputString = "a";
         InputStream input = new ByteArrayInputStream(inputString.getBytes());
         String[] args = new String[]{};
@@ -318,7 +318,7 @@ class CutApplicationTest {
     }
 
     @Test
-    void testRun_nullOutputStream_shouldThrow() {
+    void run_nullOutputStream_shouldThrow() {
         String inputString = "a";
         InputStream input = new ByteArrayInputStream(inputString.getBytes());
         String[] args = new String[]{"-b", "1"};
@@ -326,7 +326,7 @@ class CutApplicationTest {
     }
 
     @Test
-    void testRun_argsError_shouldThrow() {
+    void run_argsError_shouldThrow() {
         String inputString = "a";
         InputStream input = new ByteArrayInputStream(inputString.getBytes());
         String[] args = new String[]{"-b", "-c", "1"};

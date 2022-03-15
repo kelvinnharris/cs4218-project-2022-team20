@@ -155,7 +155,7 @@ class RmApplicationTest {
     }
 
     @Test
-    void testRun_invalidArgs_shouldThrow() {
+    void run_invalidArgs_shouldThrow() {
         String inputString = "";
         InputStream input = new ByteArrayInputStream(inputString.getBytes());
         String[] args = new String[]{"-z"};
@@ -163,7 +163,7 @@ class RmApplicationTest {
     }
 
     @Test
-    void testRun_pathIsDirectory_shouldThrow() {
+    void run_pathIsDirectory_shouldThrow() {
         String path = TEST_PATH + FOLDER_10;
         String inputString = "";
         InputStream input = new ByteArrayInputStream(inputString.getBytes());
@@ -172,11 +172,23 @@ class RmApplicationTest {
     }
 
     @Test
-    void testRun_fileNotFound_shouldThrow() {
+    void run_fileNotFound_shouldThrow() {
         String path = TEST_PATH + FOLDER_11;
         String inputString = "";
         InputStream input = new ByteArrayInputStream(inputString.getBytes());
         String[] args = new String[]{path};
         assertThrows(RmException.class, () -> rmApplication.run(args, input, System.out));
+    }
+
+    @Test
+    void run_ZeroArguments_Throws() {
+        String[] args = new String[]{};
+        assertThrows(Exception.class, () -> rmApplication.run(args, System.in, System.out));
+    }
+
+    @Test
+    void run_FlagOnly_Throws() {
+        String[] args = new String[]{"-d"};
+        assertThrows(Exception.class, () -> rmApplication.run(args, System.in, System.out));
     }
 }
