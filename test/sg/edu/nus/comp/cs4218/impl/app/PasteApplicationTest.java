@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Environment;
+import sg.edu.nus.comp.cs4218.exception.PasteException;
 import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 import sg.edu.nus.comp.cs4218.impl.util.StringUtils;
 import sg.edu.nus.comp.cs4218.impl.util.TestUtils;
@@ -16,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
@@ -109,7 +111,7 @@ public class PasteApplicationTest {
     @Test
         // command: paste tmpPasteTestFolder/test1.txt tmpPasteTestFolder/test2.txt
     void testPaste_stdInWithoutFlag_shouldShowMergedContentsInParallel() throws Exception {
-        InputStream inputStream = IOUtils.openInputStream(FILE_PATH_2); // NOPMD
+        InputStream inputStream = IOUtils.openInputStream(FILE_PATH_2); //NOPMD - suppressed CloseResource - Resource has been closed in the 2 subsequent line
         String result = pasteApplication.mergeStdin(false, inputStream);
         IOUtils.closeInputStream(inputStream);
 
@@ -125,7 +127,7 @@ public class PasteApplicationTest {
     @Test
         // command: paste tmpPasteTestFolder/test1.txt tmpPasteTestFolder/test2.txt
     void testPaste_stdInWithFlag_shouldShowMergedContentsSerially() throws Exception {
-        InputStream inputStream = IOUtils.openInputStream(FILE_PATH_2); // NOPMD
+        InputStream inputStream = IOUtils.openInputStream(FILE_PATH_2); //NOPMD - suppressed CloseResource - Resource has been closed in the 2 subsequent line
         String result = pasteApplication.mergeStdin(true, inputStream);
         IOUtils.closeInputStream(inputStream);
 
@@ -141,7 +143,7 @@ public class PasteApplicationTest {
     @Test
         // command: paste - tmpPasteTestFolder/test1.txt -
     void testPaste_fileInputAndStdIntWithoutFlag_shouldShowMergedContentsInParallel() throws Exception {
-        InputStream inputStream = IOUtils.openInputStream(FILE_PATH_2); // NOPMD
+        InputStream inputStream = IOUtils.openInputStream(FILE_PATH_2); //NOPMD - suppressed CloseResource - Resource has been closed in the 2 subsequent line
         String result = pasteApplication.mergeFileAndStdin(false, inputStream, STD_IN, FILE_PATH_1, STD_IN);
         IOUtils.closeInputStream(inputStream);
 
@@ -157,7 +159,7 @@ public class PasteApplicationTest {
     @Test
         // command: paste -s - tmpPasteTestFolder/test2.txt -
     void testPaste_fileInputAndStdIntWithFlag_shouldShowMergedContentsSerially() throws Exception {
-        InputStream inputStream = IOUtils.openInputStream(FILE_PATH_1); // NOPMD
+        InputStream inputStream = IOUtils.openInputStream(FILE_PATH_1); //NOPMD - suppressed CloseResource - Resource has been closed in the 2 subsequent line
         String result = pasteApplication.mergeFileAndStdin(true, inputStream, STD_IN, FILE_PATH_2, STD_IN);
         IOUtils.closeInputStream(inputStream);
 
@@ -174,7 +176,7 @@ public class PasteApplicationTest {
     @Test
         // command: paste - tmpPasteTestFolder/test1.txt tmpPasteTestFolder/
     void testPaste_fileInputAndStdInAndDirectoryWithoutFlag_shouldShowMergedContentsInParallel() throws Exception {
-        InputStream inputStream = IOUtils.openInputStream(FILE_PATH_2); // NOPMD
+        InputStream inputStream = IOUtils.openInputStream(FILE_PATH_2); //NOPMD - suppressed CloseResource - Resource has been closed in the 2 subsequent line
         String result = pasteApplication.mergeFileAndStdin(false, inputStream, STD_IN, FILE_PATH_1, TEST_FOLDER_NAME);
         IOUtils.closeInputStream(inputStream);
 
@@ -191,10 +193,8 @@ public class PasteApplicationTest {
     @Test
         // command: paste - tmpPasteTestFolder/test1.txt paste
     void testPaste_fileInputAndStdInAndNonExistentFileWithoutFlag_shouldShowMergedContentsInParallel() throws Exception {
-        InputStream inputStream = IOUtils.openInputStream(FILE_PATH_2); // NOPMD
-        String result = pasteApplication.mergeFileAndStdin(false, inputStream, STD_IN, FILE_PATH_1, NONEXISTENTFILE);
+        InputStream inputStream = IOUtils.openInputStream(FILE_PATH_2); //NOPMD - suppressed CloseResource - Resource has been closed in the 2 subsequent line
+        assertThrows(PasteException.class, () -> pasteApplication.mergeFileAndStdin(false, inputStream, STD_IN, FILE_PATH_1, NONEXISTENTFILE), "Should throw pasteException");
         IOUtils.closeInputStream(inputStream);
-
-        assertEquals("paste: " + NONEXISTENTFILE + ": " + ERR_NOT_FOUND, result);
     }
 }

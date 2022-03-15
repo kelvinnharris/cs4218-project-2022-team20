@@ -203,7 +203,6 @@ public class WcApplication implements WcInterface {
 
     @Override
     public String countFromFileAndStdin(Boolean isBytes, Boolean isLines, Boolean isWords, InputStream stdin, String... fileName) throws Exception {
-        // TODO: To implement
         // Only when the [Filename] "-" is used then this function will be called
         if (stdin == null) {
             throw new WcException(ERR_NULL_STREAMS);
