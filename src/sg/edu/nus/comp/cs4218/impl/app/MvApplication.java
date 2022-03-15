@@ -58,28 +58,7 @@ public class MvApplication implements MvInterface { //NOPMD - suppressed GodClas
             throw new MvException(String.format("missing destination file operand after '%s'", destFile));
         }
 
-        if (!Files.exists(destAbsPath)) {
-            if (srcFiles.length > 1) {
-                throw new MvException(ERR_TOO_MANY_ARGS);
-            }
-
-            // create new file/dir and copy
-            if (Files.isRegularFile(Paths.get(srcFiles[0]))) {
-                try {
-                    Files.createFile(destAbsPath);
-                    mvSrcFileToDestFile(isOverwrite, srcFiles[0], destFile);
-                } catch (IOException ioe) {
-                    throw new MvException(ioe.getMessage());
-                }
-            } else if (Files.isDirectory(Paths.get(srcFiles[0]))) {
-                try {
-                    Files.createDirectories(destAbsPath);
-                    mvFilesToFolder(isOverwrite, destFile, srcFiles);
-                } catch (IOException ioe) {
-                    throw new MvException(ioe.getMessage());
-                }
-            }
-        } else if (Files.isDirectory(destAbsPath)) {
+        if (Files.isDirectory(destAbsPath)) {
             mvFilesToFolder(isOverwrite, destFile, srcFiles);
 
         } else {
@@ -104,6 +83,7 @@ public class MvApplication implements MvInterface { //NOPMD - suppressed GodClas
         Path srcAbsPath = IOUtils.resolveFilePath(srcFile);
         Path destAbsPath = IOUtils.resolveFilePath(destFile);
 
+
         if (!Files.exists(srcAbsPath)) {
             throw new MvException(String.format("cannot stat '%s': No such file or directory", srcFile));
         }
@@ -111,12 +91,21 @@ public class MvApplication implements MvInterface { //NOPMD - suppressed GodClas
             throw new MvException(String.format("'%s' and '%s' are the same file", srcFile, destFile));
         }
 
-        if (!isOverwrite && srcAbsPath.toFile().exists()) {
+        // if overwrite and src exists and dest exists, don't move
+        if (!isOverwrite && srcAbsPath.toFile().exists() && destAbsPath.toFile().exists()) {
             return null; // no exception thrown
         }
 
         try {
-            Files.move(srcAbsPath, destAbsPath, ATOMIC_MOVE);
+            // if dest doesn't exists, create and rename, regardless of flag
+            if (!Files.exists(destAbsPath)) {
+                if (Files.isRegularFile(srcAbsPath)) {
+                    Files.createFile(destAbsPath);
+                } else if (Files.isDirectory(srcAbsPath)) {
+                    Files.createDirectories(destAbsPath);
+                }
+            }
+            Files.move(srcAbsPath, destAbsPath, REPLACE_EXISTING);
         } catch (Exception e) {
             throw new MvException(e);
         }
@@ -139,19 +128,17 @@ public class MvApplication implements MvInterface { //NOPMD - suppressed GodClas
             if (!srcAbsPath.toFile().exists()) {
                 throw new MvException(String.format("cannot stat '%s': No such file or directory", srcFile));
             }
-        }
 
-        for (String srcFile : fileName) {
             String destCwd = String.valueOf(IOUtils.resolveFilePath(destFolder).getParent());
             String srcCwd = String.valueOf(IOUtils.resolveFilePath(srcFile).getParent());
             String destFolderName = IOUtils.resolveFilePath(destFolder).toFile().getName();
             String srcFileName = IOUtils.resolveFilePath(srcFile).toFile().getName();
 
-            Path destAbsPath = IOUtils.resolveFilePath(Paths.get(destCwd, destFolder, srcFile).toString());
-            if (isOverwrite || destAbsPath.toFile().exists()) {
+            Path destAbsPath = IOUtils.resolveFilePath(Paths.get(destCwd, destFolderName, srcFileName).toString());
+            if (isOverwrite || !destAbsPath.toFile().exists()) {
                 // copy and delete original files
                 cpFilesToFolderImpl(isOverwrite, destCwd, srcCwd, destFolderName, srcFileName, destFolder, srcFile, false);
-                Path srcAbsPath = IOUtils.resolveFilePath(srcFile);
+                srcAbsPath = IOUtils.resolveFilePath(srcFile);
                 if (Files.isRegularFile(srcAbsPath)) {
                     srcAbsPath.toFile().delete();
                 } else {

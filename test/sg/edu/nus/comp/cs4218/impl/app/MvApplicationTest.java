@@ -41,14 +41,14 @@ public class MvApplicationTest {
     private static final String DEST_FOLDER_NAME = "destFolder";
     private static final String NE_FILE_NAME = "nonExistent.txt";
     private static final String TEST_PATH = Environment.currentDirectory + CHAR_FILE_SEP + MV_FOLDER;
-    private static final String SRC_FOLDER_PATH = MV_FOLDER + CHAR_FILE_SEP + SRC_FOLDER_NAME;
-    private static final String SRC_FOLDER1_PATH = MV_FOLDER + CHAR_FILE_SEP + SRC_FOLDER_NAME + CHAR_FILE_SEP + SRC_FOLDER1_NAME;
-    private static final String SRC_FOLDER2_PATH = MV_FOLDER + CHAR_FILE_SEP + SRC_FOLDER_NAME + CHAR_FILE_SEP + SRC_FOLDER1_NAME + CHAR_FILE_SEP + SRC_FOLDER2_NAME;
-    private static final String FILE1_PATH = MV_FOLDER + CHAR_FILE_SEP + SRC_FOLDER_NAME + CHAR_FILE_SEP + FILE1_NAME;
-    private static final String FILE2_PATH = MV_FOLDER + CHAR_FILE_SEP + SRC_FOLDER_NAME + CHAR_FILE_SEP + SRC_FOLDER1_NAME + CHAR_FILE_SEP + FILE2_NAME;
-    private static final String FILE3_PATH = MV_FOLDER + CHAR_FILE_SEP + SRC_FOLDER_NAME + CHAR_FILE_SEP + SRC_FOLDER1_NAME + CHAR_FILE_SEP + SRC_FOLDER2_NAME + CHAR_FILE_SEP + FILE3_NAME;
-    private static final String DEST_FOLDER_PATH = MV_FOLDER + CHAR_FILE_SEP + DEST_FOLDER_NAME;
-    private static final String NE_FILE_PATH = MV_FOLDER + CHAR_FILE_SEP + NE_FILE_NAME;
+    private static final String SRC_FOLDER_PATH = TEST_PATH + CHAR_FILE_SEP + SRC_FOLDER_NAME;
+    private static final String SRC_FOLDER1_PATH = TEST_PATH + CHAR_FILE_SEP + SRC_FOLDER_NAME + CHAR_FILE_SEP + SRC_FOLDER1_NAME;
+    private static final String SRC_FOLDER2_PATH = TEST_PATH + CHAR_FILE_SEP + SRC_FOLDER_NAME + CHAR_FILE_SEP + SRC_FOLDER1_NAME + CHAR_FILE_SEP + SRC_FOLDER2_NAME;
+    private static final String FILE1_PATH = TEST_PATH + CHAR_FILE_SEP + SRC_FOLDER_NAME + CHAR_FILE_SEP + FILE1_NAME;
+    private static final String FILE2_PATH = TEST_PATH + CHAR_FILE_SEP + SRC_FOLDER_NAME + CHAR_FILE_SEP + SRC_FOLDER1_NAME + CHAR_FILE_SEP + FILE2_NAME;
+    private static final String FILE3_PATH = TEST_PATH + CHAR_FILE_SEP + SRC_FOLDER_NAME + CHAR_FILE_SEP + SRC_FOLDER1_NAME + CHAR_FILE_SEP + SRC_FOLDER2_NAME + CHAR_FILE_SEP + FILE3_NAME;
+    private static final String DEST_FOLDER_PATH = TEST_PATH + CHAR_FILE_SEP + DEST_FOLDER_NAME;
+    private static final String NE_FILE_PATH = TEST_PATH + CHAR_FILE_SEP + NE_FILE_NAME;
     private static MvApplication mvApplication;
 
     @BeforeAll
@@ -97,6 +97,22 @@ public class MvApplicationTest {
         try {
             String file1Content = readString(Paths.get(FILE1_PATH));
             mvApplication.mvSrcFileToDestFile(true, FILE1_PATH, NE_FILE_PATH);
+            assertFalse(Files.exists(Paths.get(FILE1_PATH)));
+            assertTrue(Files.exists(Paths.get(NE_FILE_PATH)));
+            String newFileContent = readString(Paths.get(NE_FILE_PATH));
+            assertEquals(file1Content, newFileContent);
+            Files.delete(Paths.get(NE_FILE_PATH));
+        } catch (Exception e) {
+            throw new MvException(e);
+        }
+    }
+
+
+    @Test
+    void run_moveSrcFileToNonExistentDestFile_shouldRenameSrcFileToDestFile() throws MvException {
+        try {
+            String file1Content = readString(Paths.get(FILE1_PATH));
+            mvApplication.run(new String[]{FILE1_PATH, NE_FILE_PATH}, System.in, System.out);
             assertFalse(Files.exists(Paths.get(FILE1_PATH)));
             assertTrue(Files.exists(Paths.get(NE_FILE_PATH)));
             String newFileContent = readString(Paths.get(NE_FILE_PATH));
