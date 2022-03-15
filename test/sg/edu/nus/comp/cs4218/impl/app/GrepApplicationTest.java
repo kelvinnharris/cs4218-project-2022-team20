@@ -5,12 +5,10 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Environment;
+import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.GrepException;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -21,6 +19,7 @@ import java.util.regex.Pattern;
 import static java.nio.file.Files.readString;
 import static java.nio.file.StandardOpenOption.APPEND;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 import static sg.edu.nus.comp.cs4218.impl.util.TestConstants.GREP_FOLDER;
@@ -38,11 +37,12 @@ public class GrepApplicationTest {
     private static final String PATTERN1 = "The second";
     private static final String PATTERN1_INSEN = "THE SECoND";
     private static final String TEST_PATH = Environment.currentDirectory + CHAR_FILE_SEP + GREP_FOLDER;
-    private static final String FILE1_PATH = GREP_FOLDER + CHAR_FILE_SEP + FILE1_NAME;
-    private static final String FILE2_PATH = GREP_FOLDER + CHAR_FILE_SEP + FILE2_NAME;
-    private static final String NE_FILE_PATH = GREP_FOLDER + CHAR_FILE_SEP + NE_FILE_NAME;
+    private static final String FILE1_PATH = TEST_PATH + CHAR_FILE_SEP + FILE1_NAME;
+    private static final String FILE2_PATH = TEST_PATH + CHAR_FILE_SEP + FILE2_NAME;
+    private static final String NE_FILE_PATH = TEST_PATH + CHAR_FILE_SEP + NE_FILE_NAME;
     private static GrepApplication grepApplication;
     private final InputStream inputStream = new ByteArrayInputStream(INPUT.getBytes());
+    private OutputStream stdout;
 
     @BeforeAll
     static void setUp() {
@@ -56,6 +56,7 @@ public class GrepApplicationTest {
 
     @BeforeEach
     void setUpEach() throws IOException {
+        stdout = new ByteArrayOutputStream();
         Files.createDirectory(Paths.get(TEST_PATH));
         Files.createFile(Paths.get(FILE1_PATH));
         Files.createFile(Paths.get(FILE2_PATH));
@@ -213,5 +214,25 @@ public class GrepApplicationTest {
         }
     }
 
+    @Test
+    void run_nullStdin_shouldThrowGrepException(){
+        assertThrows(GrepException.class, () -> grepApplication.run(new String[]{"abc"}, null, System.out));
+    }
 
+    @Test
+    void run_invalidRegex_shouldThrowGrepException(){
+        assertThrows(GrepException.class, () -> grepApplication.run(new String[]{"?i)"}, System.in, System.out));
+    }
+
+    @Test
+    void run_validGrepFromStdin_shouldReturnGrepOutput() throws Exception {
+        grepApplication.run(new String[]{"The second","-"}, inputStream, stdout);
+        assertEquals("The second line" + STRING_NEWLINE, stdout.toString());
+    }
+
+    @Test
+    void run_validGrepFromFiles_shouldReturnGrepOutput() throws Exception {
+        grepApplication.run(new String[]{"The second", FILE1_PATH}, inputStream, stdout);
+        assertEquals("The second line" + STRING_NEWLINE, stdout.toString());
+    }
 }
