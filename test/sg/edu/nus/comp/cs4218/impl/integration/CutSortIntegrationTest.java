@@ -58,7 +58,7 @@ public class CutSortIntegrationTest {
 
 
     @Test
-    void testCutSort_cutThenSort_shouldReturnCorrectOutput() throws Exception {
+    void testCutSortParseAndEvaluate_cutThenSort_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("cut -b 1-2 %s | sort", FILE1_PATH);
         String expected = "1" + STRING_NEWLINE +
                 "10" + STRING_NEWLINE +
@@ -72,7 +72,7 @@ public class CutSortIntegrationTest {
     }
 
     @Test
-    void testCutSort_SortThenCut_shouldReturnCorrectOutput() throws Exception {
+    void testCutSortParseAndEvaluate_SortThenCut_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("sort %s | cut -b 1-2", FILE1_PATH);
         String expected = "1" + STRING_NEWLINE +
                 "10" + STRING_NEWLINE +
@@ -86,7 +86,7 @@ public class CutSortIntegrationTest {
     }
 
     @Test
-    void testCutSort_cutAndSortSeparately_shouldReturnCorrectOutput() throws Exception {
+    void testCutSortParseAndEvaluate_cutAndSortSeparately_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("cut -b 1 %s; sort %s", FILE1_PATH, FILE1_PATH);
         String expected = "1" + STRING_NEWLINE +
                 "2" + STRING_NEWLINE +
@@ -107,7 +107,7 @@ public class CutSortIntegrationTest {
     }
 
     @Test
-    void testCutSort_sortAndCutSeparately_shouldReturnCorrectOutput() throws Exception {
+    void testCutSortParseAndEvaluate_sortAndCutSeparately_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("sort %s; cut -b 1 %s", FILE1_PATH, FILE1_PATH);
         String expected = "1" + STRING_NEWLINE +
                 "10" + STRING_NEWLINE +
@@ -128,7 +128,7 @@ public class CutSortIntegrationTest {
     }
 
     @Test
-    void testCutSort_sortInvalidAndCutValid_shouldReturnPartialCorrectOutput() throws Exception {
+    void testCutSortParseAndEvaluate_sortInvalidAndCutValid_shouldReturnPartialCorrectOutput() throws Exception {
         String commandString = String.format("sort -s %s; cut -b 1 %s", FILE1_PATH, FILE1_PATH);
         String expected = "sort: invalid option -- 's'" + STRING_NEWLINE +
                 "1" + STRING_NEWLINE +
@@ -143,7 +143,7 @@ public class CutSortIntegrationTest {
     }
 
     @Test
-    void testCutSort_multipleCutThenMultipleSort_shouldReturnCorrectOutput() throws Exception {
+    void testCutSortParseAndEvaluate_multipleCutThenMultipleSort_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("cut -b 1-2 %s | cut -b 1 | sort | sort -nrf", FILE1_PATH);
         String expected = "a" + STRING_NEWLINE +
                 "a" + STRING_NEWLINE +
