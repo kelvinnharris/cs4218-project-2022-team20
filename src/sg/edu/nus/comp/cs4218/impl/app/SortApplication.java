@@ -80,6 +80,10 @@ public class SortApplication implements SortInterface {
         List<String> lines = new ArrayList<>();
         for (String file : fileNames) {
             File node = IOUtils.resolveFilePath(file).toFile();
+            if (file.equals("")) {
+                String errorMessage = "cannot read: '': " + ERR_FILE_NOT_FOUND;
+                throw new Exception(errorMessage);
+            }
             if (!node.exists()) {
                 String errorMessage = "cannot read: " + file + ": " + ERR_FILE_NOT_FOUND;
                 throw new Exception(errorMessage);
