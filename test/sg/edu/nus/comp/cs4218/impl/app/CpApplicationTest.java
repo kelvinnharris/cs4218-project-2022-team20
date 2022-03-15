@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
@@ -204,5 +203,59 @@ public class CpApplicationTest {
         } catch (Exception e) {
             throw new CpException(e);
         }
+    }
+
+    @Test
+    void run_emptySrcFiles_shouldThrowException() {
+        assertThrows(Exception.class, () -> cpApplication.run(new String[]{null, FILE2_PATH}, System.in, System.out));
+    }
+
+    @Test
+    void run_nullArgs_shouldThrowCpException() {
+        assertThrows(CpException.class, () -> cpApplication.run(null, System.in, System.out));
+    }
+
+    @Test
+    void run_SrcIsNull_shouldThrowCpException() {
+        assertThrows(CpException.class, () -> cpApplication.run(new String[]{"newFile.txt"}, System.in, System.out));
+    }
+
+    @Test
+    void run_SrcIsZeroLength_shouldThrowCpException() {
+        assertThrows(CpException.class, () -> cpApplication.run(new String[]{"-r", "newFile.txt"}, System.in, System.out));
+    }
+
+    @Test
+    void run_copyFileToNonExistentFile_shouldCreateANewFile() throws Exception {
+        cpApplication.run(new String[]{FILE1_PATH, "newFile.txt"}, System.in, System.out);
+        assertTrue(Files.exists(Paths.get(FILE1_PATH)));
+        assertTrue(Files.exists(Paths.get("newFile.txt")));
+        Files.delete(Paths.get("newFile.txt"));
+    }
+
+    @Test
+    void run_copyFolderToAnotherFolderValid_shouldCopy() throws Exception {
+        cpApplication.run(new String[]{"-r", SRC_FOLDER2_PATH, DEST_FOLDER_PATH}, System.in, System.out);
+        assertTrue(Files.exists(Paths.get(DEST_FOLDER_PATH, SRC_FOLDER2_NAME)));
+    }
+
+    @Test
+    void run_copyFolderToAnotherFileNoFlag_shouldThrowCpException() {
+        assertThrows(CpException.class, () -> cpApplication.run(new String[]{SRC_FOLDER2_PATH, FILE1_PATH}, System.in, System.out));
+    }
+
+    @Test
+    void run_copyFolderToAnotherFileFlag_shouldThrowCpException() {
+        assertThrows(CpException.class, () -> cpApplication.run(new String[]{"-r", SRC_FOLDER2_PATH, FILE1_PATH}, System.in, System.out));
+    }
+
+    @Test
+    void run_copyFolderToNonExistentFolder_shouldCreateANewFolder() throws Exception {
+        cpApplication.run(new String[]{"-r", SRC_FOLDER2_PATH, "newFolder"}, System.in, System.out);
+        assertTrue(Files.exists(Paths.get(SRC_FOLDER2_PATH)));
+        assertTrue(Files.exists(Paths.get("newFolder")));
+        assertTrue(Files.exists(Paths.get("newFolder", SRC_FOLDER2_NAME)));
+        assertTrue(Files.exists(Paths.get("newFolder", SRC_FOLDER2_NAME, FILE3_NAME)));
+        deleteDir(Paths.get("newFolder").toFile());
     }
 }
