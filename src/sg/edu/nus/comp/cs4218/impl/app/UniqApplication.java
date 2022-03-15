@@ -110,7 +110,7 @@ public class UniqApplication implements UniqInterface {
 
         int counter = 0;
         String currString = "";
-        for (String s: input) {
+        for (String s : input) {
             if (currString.isEmpty()) {
                 currString = s;
                 counter = 1;
@@ -128,7 +128,6 @@ public class UniqApplication implements UniqInterface {
         }
         lines.add(currString);
         count.add(counter);
-
 
 
         if (isAllRepeated) {
