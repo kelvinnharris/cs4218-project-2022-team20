@@ -220,7 +220,7 @@ public class PasteApplication implements PasteInterface {
 
     // Produce the correct output to listResult
     public List<List<String>> mergeFileDataInParallel(List<List<String>> tempListResult) {
-        List<List<String>>  listResult = new ArrayList<>();
+        List<List<String>> listResult = new ArrayList<>();
         for (int i = 0; i < maxFileLength; ++i) {
             List<String> currLstToAdd = new ArrayList<>();
             for (List<String> currLst : tempListResult) {
