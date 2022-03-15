@@ -55,7 +55,7 @@ public class EchoApplication implements EchoInterface {
         try {
             stdout.write(result.getBytes());
         } catch (IOException e) {
-            throw new EchoException(ERR_IO_EXCEPTION); //NOPMD
+            throw new EchoException(ERR_IO_EXCEPTION); //NOPMD - suppressed PreserveStackTrace - We expect echo to output custom error message
         }
     }
 }

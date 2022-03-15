@@ -125,7 +125,6 @@ public class CatTeeIntegrationTest {
         assertEquals(expectedOutput, stdOut.toString());
     }
 
-    // TODO - Investigate semicolon
     @Test
     void testCatTeeParseAndEvaluate_catInvalidFilePathAndTee_shouldReturnEmptyTeeFile() throws Exception {
         String commandString = String.format("cat %s | tee %s; cat %s", NE_FILE_NAME, TMP_OUTPUT_FILE, TMP_OUTPUT_FILE);
@@ -135,7 +134,6 @@ public class CatTeeIntegrationTest {
         assertEquals(expectedOutput, stdOut.toString());
     }
 
-    // TODO - Investigate semicolon
     @Test
     void testCatTeeParseAndEvaluate_catFolderAndTee_shouldReturnEmptyTeeFile() throws Exception {
         String commandString = String.format("cat %s | tee %s; cat %s", TEST_PATH + FOLDER_1, TMP_OUTPUT_FILE, TMP_OUTPUT_FILE);

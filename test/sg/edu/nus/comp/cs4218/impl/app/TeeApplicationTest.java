@@ -31,11 +31,11 @@ public class TeeApplicationTest {
     private static final String[] LINES1 = {"The first file", "The second line"};
     private static final String[] LINES2 = {"The second file", "The second line"};
     private static final String TEST_PATH = Environment.currentDirectory + CHAR_FILE_SEP + TEE_FOLDER;
-    private static final String FILE1_PATH = TEE_FOLDER + CHAR_FILE_SEP + FILE1_NAME;
-    private static final String FILE2_PATH = TEE_FOLDER + CHAR_FILE_SEP + FILE2_NAME;
-    private static final String FOLDER1_PATH = TEE_FOLDER + CHAR_FILE_SEP + FOLDER1_NAME;
-    private static final String NE_FILE_PATH = TEE_FOLDER + CHAR_FILE_SEP + NE_FILE_NAME;
-    private static final String UNWR_FILE_PATH = TEE_FOLDER + CHAR_FILE_SEP + UNWR_FILE_NAME;
+    private static final String FILE1_PATH = TEST_PATH + CHAR_FILE_SEP + FILE1_NAME;
+    private static final String FILE2_PATH = TEST_PATH + CHAR_FILE_SEP + FILE2_NAME;
+    private static final String FOLDER1_PATH = TEST_PATH + CHAR_FILE_SEP + FOLDER1_NAME;
+    private static final String NE_FILE_PATH = TEST_PATH + CHAR_FILE_SEP + NE_FILE_NAME;
+    private static final String UNWR_FILE_PATH = TEST_PATH + CHAR_FILE_SEP + UNWR_FILE_NAME;
     private static TeeApplication teeApplication;
     private static OutputStream outputStream;
     private final InputStream inputStream = new ByteArrayInputStream(INPUT.getBytes());

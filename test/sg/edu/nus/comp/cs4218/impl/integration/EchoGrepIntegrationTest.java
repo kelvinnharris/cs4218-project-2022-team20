@@ -139,7 +139,6 @@ public class EchoGrepIntegrationTest {
         assertEquals(expectedOutput, stdOut.toString());
     }
 
-    // TODO - this test case is still error, will investigate later
     @Test
     void testEchoGrepParseAndEvaluate_grepParamFromInputRedirectionEcho_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("grep -icH \"tH*\" %s < echo %s", FILE1_PATH, FILE2_PATH);

@@ -41,6 +41,8 @@ public class CpApplicationTest {
     private static final String FILE3_NAME = "file3.xml";
     private static final String NE_FILE_NAME = "nonExistent.txt";
     private static final String DEST_FOLDER_NAME = "destFolder";
+    private static final String NEW_FOLDER_NAME = "newFolder";
+    private static final String NEW_FILE_NAME = "newFile.txt";
 
     private static final String SRC_FOLDER_PATH = TEST_PATH + CHAR_FILE_SEP + SRC_FOLDER_NAME;
     private static final String SRC_FOLDER1_PATH = TEST_PATH + CHAR_FILE_SEP + SRC_FOLDER_NAME + CHAR_FILE_SEP + SRC_FOLDER1_NAME;
@@ -217,20 +219,20 @@ public class CpApplicationTest {
 
     @Test
     void run_SrcIsNull_shouldThrowCpException() {
-        assertThrows(CpException.class, () -> cpApplication.run(new String[]{"newFile.txt"}, System.in, System.out));
+        assertThrows(CpException.class, () -> cpApplication.run(new String[]{NEW_FILE_NAME}, System.in, System.out));
     }
 
     @Test
     void run_SrcIsZeroLength_shouldThrowCpException() {
-        assertThrows(CpException.class, () -> cpApplication.run(new String[]{"-r", "newFile.txt"}, System.in, System.out));
+        assertThrows(CpException.class, () -> cpApplication.run(new String[]{"-r", NEW_FILE_NAME}, System.in, System.out));
     }
 
     @Test
     void run_copyFileToNonExistentFile_shouldCreateANewFile() throws Exception {
-        cpApplication.run(new String[]{FILE1_PATH, "newFile.txt"}, System.in, System.out);
+        cpApplication.run(new String[]{FILE1_PATH, NEW_FILE_NAME}, System.in, System.out);
         assertTrue(Files.exists(Paths.get(FILE1_PATH)));
-        assertTrue(Files.exists(Paths.get("newFile.txt")));
-        Files.delete(Paths.get("newFile.txt"));
+        assertTrue(Files.exists(Paths.get(NEW_FILE_NAME)));
+        Files.delete(Paths.get(NEW_FILE_NAME));
     }
 
     @Test
@@ -251,11 +253,11 @@ public class CpApplicationTest {
 
     @Test
     void run_copyFolderToNonExistentFolder_shouldCreateANewFolder() throws Exception {
-        cpApplication.run(new String[]{"-r", SRC_FOLDER2_PATH, "newFolder"}, System.in, System.out);
+        cpApplication.run(new String[]{"-r", SRC_FOLDER2_PATH, NEW_FOLDER_NAME}, System.in, System.out);
         assertTrue(Files.exists(Paths.get(SRC_FOLDER2_PATH)));
-        assertTrue(Files.exists(Paths.get("newFolder")));
-        assertTrue(Files.exists(Paths.get("newFolder", SRC_FOLDER2_NAME)));
-        assertTrue(Files.exists(Paths.get("newFolder", SRC_FOLDER2_NAME, FILE3_NAME)));
-        deleteDir(Paths.get("newFolder").toFile());
+        assertTrue(Files.exists(Paths.get(NEW_FOLDER_NAME)));
+        assertTrue(Files.exists(Paths.get(NEW_FOLDER_NAME, SRC_FOLDER2_NAME)));
+        assertTrue(Files.exists(Paths.get(NEW_FOLDER_NAME, SRC_FOLDER2_NAME, FILE3_NAME)));
+        deleteDir(Paths.get(NEW_FOLDER_NAME).toFile());
     }
 }

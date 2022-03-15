@@ -22,6 +22,7 @@ import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_NULL_FILES;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_NULL_STREAMS;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
+import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.isWindowsSystem;
 
 public class WcApplicationTest {
 
@@ -74,8 +75,8 @@ public class WcApplicationTest {
         TestUtils.deleteDir(new File(TEST_PATH));
     }
 
-    @Test
     // command: wc tmpWcTestFolder/test1.txt
+    @Test
     void testWcCountFromFiles_fileInputWithoutFlag_shouldShowWordsLinesBytesWithFilename() throws Exception {
         String result = wcApplication.countFromFiles(true, true, true, FILE_PATH_1);
 
@@ -92,8 +93,8 @@ public class WcApplicationTest {
         assertEquals(sbExpected.toString(), result);
     }
 
-    @Test
     // command: wc
+    @Test
     void testWcCountFromStdin_noFileArgumentsWithoutFlag_shouldShowWordsLinesBytesWithFilename() throws Exception {
         InputStream input = IOUtils.openInputStream(FILE_PATH_1); // NOPMD
         String result = wcApplication.countFromStdin(true, true, true, input);
@@ -106,8 +107,8 @@ public class WcApplicationTest {
         assertEquals(String.format(NUMBER_FORMAT, 1) + String.format(NUMBER_FORMAT, 6) + String.format(NUMBER_FORMAT, totalByte), result);
     }
 
-    @Test
     // command: wc -
+    @Test
     void testWcCountFromFileAndStdin_stdInFileArgumentWithoutFlag_shouldShowWordsLinesBytesWithFilename() throws Exception {
         InputStream input = IOUtils.openInputStream(FILE_PATH_1); // NOPMD
         String result = wcApplication.countFromFileAndStdin(true, true, true, input, STDIN);
@@ -123,8 +124,8 @@ public class WcApplicationTest {
         assertEquals(sbExpected, result);
     }
 
-    @Test
     // command: wc tmpWcTestFolder/test1.txt tmpWcTestFolder/test2.txt
+    @Test
     void testWcCountFromFiles_multipleFilesFromSameDirectoryInputWithoutFlag_shouldShowWordsLinesBytesWithFilename() throws Exception {
         String result = wcApplication.countFromFiles(true, true, true, new String[]{FILE_PATH_1, FILE_PATH_2});
 
@@ -145,8 +146,8 @@ public class WcApplicationTest {
         assertEquals(sbExpected.toString(), result);
     }
 
+    // command: wc tmpWcTestFolder/test1.txt tmpWcTestFolder/test2.txt -
     @Test
-        // command: wc tmpWcTestFolder/test1.txt tmpWcTestFolder/test2.txt -
     void testWcCountFromFileAndStdin_multipleFilesFromSameDirectoryAndStandardInputWithoutFlag_shouldShowWordsLinesBytesWithFilename() throws Exception {
         InputStream input = IOUtils.openInputStream(FILE_PATH_3); // NOPMD
         String result = wcApplication.countFromFileAndStdin(true, true, true, input, FILE_PATH_1, FILE_PATH_2, STDIN);
@@ -173,8 +174,8 @@ public class WcApplicationTest {
         assertEquals(sbExpected.toString(), result);
     }
 
+    // command: wc tmpWcTestFolder/test1.txt wc -
     @Test
-        // command: wc tmpWcTestFolder/test1.txt wc -
     void testWcCountFromFileAndStdin_singleFileAndNonExistentFilesAndStandardInputWithoutFlag_shouldShowWordsLinesBytesWithFilename() throws Exception {
         InputStream input = IOUtils.openInputStream(FILE_PATH_3); // NOPMD
         String result = wcApplication.countFromFileAndStdin(true, true, true, input, FILE_PATH_1, NON_EXISTENT_FILE, STDIN);
@@ -198,8 +199,8 @@ public class WcApplicationTest {
         assertEquals(sbExpected.toString(), result);
     }
 
+    // command: wc - - - < tmpWcTestFolder/test1.txt
     @Test
-        // command: wc - - - < tmpWcTestFolder/test1.txt
     void testWcCountFromFileAndStdin_InputRedirectionWithoutFlag_shouldShowWordsLinesBytesWithFilename() throws Exception {
         InputStream input = IOUtils.openInputStream(FILE_PATH_1); // NOPMD
         String result = wcApplication.countFromFileAndStdin(true, true, true, input, STDIN, STDIN, STDIN);
@@ -222,8 +223,8 @@ public class WcApplicationTest {
         assertEquals(sbExpected.toString(), result);
     }
 
+    // command: wc tmpWcTestFolder wc - tmpWcTestFolder/test1.txt
     @Test
-        // command: wc tmpWcTestFolder wc - tmpWcTestFolder/test1.txt
     void testWcCountFromFileAndStdin_argumentsFromDirectoryNonExistentFileStdInAndSingleFileWithoutFlag_shouldShowWordsLinesBytesWithFilename() throws Exception {
         InputStream input = IOUtils.openInputStream(FILE_PATH_1); // NOPMD
         String result = wcApplication.countFromFileAndStdin(true, true, true, input, TEST_FOLDER_NAME, NON_EXISTENT_FILE, STDIN, FILE_PATH_2);
@@ -250,8 +251,8 @@ public class WcApplicationTest {
         assertEquals(sbExpected.toString(), result);
     }
 
+    // command: wc tmpWcTestFolder/test1.txt -l
     @Test
-        // command: wc tmpWcTestFolder/test1.txt -l
     void testWcCountFromFiles_fileInputWithLineFlag_shouldShowLinesWithFilename() throws Exception {
         String result = wcApplication.countFromFiles(false, true, false, FILE_PATH_1);
 
@@ -261,8 +262,8 @@ public class WcApplicationTest {
         assertEquals(sbExpected, result);
     }
 
+    // command: wc tmpWcTestFolder/test1.txt -w
     @Test
-        // command: wc tmpWcTestFolder/test1.txt -w
     void testWcCountFromFiles_fileInputWithWordFlag_shouldShowWordsWithFilename() throws Exception {
         String result = wcApplication.countFromFiles(true, false, false, FILE_PATH_1);
 
@@ -274,8 +275,8 @@ public class WcApplicationTest {
         assertEquals(sbExpected.toString(), result);
     }
 
+    // command: wc tmpWcTestFolder/test1.txt -c
     @Test
-        // command: wc tmpWcTestFolder/test1.txt -c
     void testWcCountFromFiles_fileInputWithByteFlag_shouldShowBytesWithFilename() throws Exception {
         String result = wcApplication.countFromFiles(false, false, true, FILE_PATH_1);
 
@@ -285,8 +286,8 @@ public class WcApplicationTest {
         assertEquals(sbExpected, result);
     }
 
+    // command: wc tmpWcTestFolder
     @Test
-        // command: wc tmpWcTestFolder
     void testWcCountFromFiles_inputFileIsDirectory_shouldDisplayIsDirectoryError() throws Exception {
         String result = wcApplication.countFromFiles(true, true, true, TEST_FOLDER_NAME);
 
@@ -297,11 +298,10 @@ public class WcApplicationTest {
         assertEquals(sbExpected, result);
     }
 
+    // command: wc nonExistentName
     @Test
-        // command: wc nonExistentName
     void testWcCountFromFiles_inputNonExistentFileOrDirectory_shouldDisplayNoSuchFileOrDirectory() throws Exception {
         String result = wcApplication.countFromFiles(true, true, true, NON_EXISTENT_FILE);
-
         assertEquals(STRING_WC + NON_EXISTENT_FILE + ERR_NOT_FOUND, result);
     }
 
@@ -321,10 +321,6 @@ public class WcApplicationTest {
         InputStream input = IOUtils.openInputStream(FILE_PATH_1); // NOPMD
         assertThrows(WcException.class, () -> wcApplication.countFromFileAndStdin(true, true, true, input, null), ERR_NULL_FILES);
         IOUtils.closeInputStream(input);
-    }
-
-    public boolean isWindowsSystem() {
-        return System.getProperty("os.name").toLowerCase().contains("win"); // NOPMD
     }
 
     // TODO:

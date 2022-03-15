@@ -17,7 +17,7 @@ import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 public final class RegexArgument {
     private StringBuilder plaintext;
     private StringBuilder regex;
-    private boolean isRegex; //NOPMD
+    private boolean isRegex;
 
     public RegexArgument() {
         this.plaintext = new StringBuilder();
@@ -130,10 +130,6 @@ public final class RegexArgument {
             matches.addAll(traverseAndFilter(regexPattern, nextNode, isAbsolute, onlyDirectories));
         }
         return matches;
-    }
-
-    public boolean isRegex() {
-        return isRegex;
     }
 
     public boolean isEmpty() {

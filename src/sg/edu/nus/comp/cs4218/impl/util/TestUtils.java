@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Locale;
 
 import static java.nio.file.StandardOpenOption.APPEND;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
@@ -59,6 +60,6 @@ public class TestUtils { // NOPMD
     }
 
     public static boolean isWindowsSystem() {
-        return System.getProperty("os.name").toLowerCase().contains("win"); // NOPMD
+        return System.getProperty("os.name").toLowerCase(Locale.ENGLISH).contains("win");
     }
 }

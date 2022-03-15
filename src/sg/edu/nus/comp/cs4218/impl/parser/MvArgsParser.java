@@ -1,7 +1,7 @@
 package sg.edu.nus.comp.cs4218.impl.parser;
 
 public class MvArgsParser extends ArgsParser {
-    private final static char FLAG_IS_NOT_OVERWRITE = 'n';
+    private final static char FLAG_IS_NOT_OVERWRITE = 'n'; // NOPMD - suppressed LongVariable - For consistency and clarity
 
     public MvArgsParser() {
         super();

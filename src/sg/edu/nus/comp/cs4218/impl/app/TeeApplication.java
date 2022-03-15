@@ -77,7 +77,7 @@ public class TeeApplication implements TeeInterface {
                 try {
                     input = reader.readLine();
                 } catch (IOException e) {
-                    throw new TeeException("Streams are closed"); // Streams are closed, terminate proces // NOPMD
+                    throw new TeeException("Streams are closed"); // Streams are closed, terminate process // NOPMD
                 }
 
                 if (StringUtils.isBlank(input)) {

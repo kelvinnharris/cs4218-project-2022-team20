@@ -32,9 +32,7 @@ public class CatApplicationTest {
     private static final String ERR_NOT_FOUND = ": No such file or directory";
 
     private static final String STDIN = "-";
-
     private static final String NUMBER_FORMAT = "%6d ";
-
     private static final String NON_EXISTENT_FILE = "cat";
 
     private static final String FILE_NAME_1 = "test1.txt";
@@ -75,16 +73,16 @@ public class CatApplicationTest {
         TestUtils.deleteDir(new File(TEST_PATH));
     }
 
+    // command: cat tmpCatTestFolder/test1.txt
     @Test
-        // command: cat tmpCatTestFolder/test1.txt
     void testCatFiles_fileInputWithoutFlag_shouldShowContentsInFile() throws Exception {
         String result = catApplication.catFiles(false, FILE_PATH_1);
 
         assertEquals("This is WC Test file 1", result);
     }
 
+    // command: cat tmpCatTestFolder/test1.txt tmpCatTestFolder/test2.txt
     @Test
-        // command: cat tmpCatTestFolder/test1.txt tmpCatTestFolder/test2.txt
     void testCatFiles_multipleFilesInputWithoutFlag_shouldShowContentsInAllFiles() throws Exception {
         String result = catApplication.catFiles(false, FILE_PATH_1, FILE_PATH_2);
 
@@ -97,18 +95,22 @@ public class CatApplicationTest {
         assertEquals(sbExpected, result);
     }
 
+    // command: cat
     @Test
-        // command: cat
     void testCatStdin_noFileArgumentsWithoutFlag_shouldShowContentsInAllFiles() throws Exception {
-        InputStream inputStream = IOUtils.openInputStream(FILE_PATH_1); // NOPMD
-        String result = catApplication.catStdin(false, inputStream);
-        IOUtils.closeInputStream(inputStream);
+        InputStream inputStream = IOUtils.openInputStream(FILE_PATH_1);
+        String result;
+        try {
+            result = catApplication.catStdin(false, inputStream);
+        } finally {
+            inputStream.close();
+        }
 
         assertEquals("This is WC Test file 1", result);
     }
 
+    // command: cat -
     @Test
-        // command: cat -
     void testCatFileAndStdin_stdInWithoutFlag_shouldShowContentsInAllFiles() throws Exception {
         InputStream inputStream = IOUtils.openInputStream(FILE_PATH_1); // NOPMD
         String result = catApplication.catFileAndStdin(false, inputStream, STDIN);
@@ -117,8 +119,8 @@ public class CatApplicationTest {
         assertEquals("This is WC Test file 1", result);
     }
 
-    @Test
     // command: cat -n tmpCatTestFolder/test1.txt tmpCatTestFolder/test2.txt
+    @Test
     void testCatFiles_multipleFilesInputWithFlag_shouldShowContentsInAllFilesWithNumbers() throws Exception {
         String result = catApplication.catFiles(true, FILE_PATH_1, FILE_PATH_2);
 
@@ -139,8 +141,8 @@ public class CatApplicationTest {
         assertEquals(sbExpected, result);
     }
 
+    // command: cat -n tmpCatTestFolder/test1.txt - tmpCatTestFolder/test2.txt
     @Test
-        // command: cat -n tmpCatTestFolder/test1.txt - tmpCatTestFolder/test2.txt
     void testCatFileAndStdin_multipleFilesInputAndStdInWithFlag_shouldShowContentsInAllFilesWithNumbers() throws Exception {
         InputStream inputStream = IOUtils.openInputStream(FILE_PATH_STDIN); // NOPMD
         String result = catApplication.catFileAndStdin(true, inputStream, FILE_PATH_1, STDIN, FILE_PATH_2);
@@ -167,8 +169,8 @@ public class CatApplicationTest {
         assertEquals(sbExpected, result);
     }
 
+    // command: cat -n cat tmpCatTestFolder/test2.txt
     @Test
-        // command: cat -n cat tmpCatTestFolder/test2.txt
     void testCatFiles_multipleFilesWithNonExistentFileWithFlag_shouldShowContentsInAllFilesWithNumbers() throws Exception {
         String result = catApplication.catFiles(true, NON_EXISTENT_FILE, FILE_PATH_1);
 
@@ -179,8 +181,8 @@ public class CatApplicationTest {
         assertEquals(sbExpected, result);
     }
 
+    // command: cat -n cat tmpCatTestFolder/test2.txt
     @Test
-        // command: cat -n cat tmpCatTestFolder/test2.txt
     void testCatFiles_multipleFilesWithDirectoryFileWithFlag_shouldShowContentsInAllFilesWithNumbers() throws Exception {
         String result = catApplication.catFiles(true, FILE_PATH_1, TEST_FOLDER_NAME);
 

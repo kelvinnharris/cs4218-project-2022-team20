@@ -84,10 +84,9 @@ public class UniqApplication implements UniqInterface {
             String errorMessage = inputFileName + "': " + ERR_NO_PERM;
             throw new Exception(errorMessage);
         }
-        InputStream input = IOUtils.openInputStream(inputFileName);//NOPMD - suppressed CloseResource - Resource has been closed at line 91
-        try {
+
+        try (InputStream input = IOUtils.openInputStream(inputFileName)) {
             lines.addAll(IOUtils.getLinesFromInputStream(input));
-        } finally {
             IOUtils.closeInputStream(input);
         }
 
