@@ -1,15 +1,16 @@
 package sg.edu.nus.comp.cs4218.impl.app;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.exception.MvException;
-import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
@@ -40,6 +41,7 @@ public class MvApplicationTest {
     private static final String FILE3_NAME = "file3.xml";
     private static final String DEST_FOLDER_NAME = "destFolder";
     private static final String NE_FILE_NAME = "nonExistent.txt";
+    private static final String NE_FOLDER_NAME = "nonExistentFolder";
     private static final String TEST_PATH = Environment.currentDirectory + CHAR_FILE_SEP + MV_FOLDER;
     private static final String SRC_FOLDER_PATH = TEST_PATH + CHAR_FILE_SEP + SRC_FOLDER_NAME;
     private static final String SRC_FOLDER1_PATH = TEST_PATH + CHAR_FILE_SEP + SRC_FOLDER_NAME + CHAR_FILE_SEP + SRC_FOLDER1_NAME;
@@ -49,6 +51,7 @@ public class MvApplicationTest {
     private static final String FILE3_PATH = TEST_PATH + CHAR_FILE_SEP + SRC_FOLDER_NAME + CHAR_FILE_SEP + SRC_FOLDER1_NAME + CHAR_FILE_SEP + SRC_FOLDER2_NAME + CHAR_FILE_SEP + FILE3_NAME;
     private static final String DEST_FOLDER_PATH = TEST_PATH + CHAR_FILE_SEP + DEST_FOLDER_NAME;
     private static final String NE_FILE_PATH = TEST_PATH + CHAR_FILE_SEP + NE_FILE_NAME;
+    private static final String NE_FOLDER_PATH = TEST_PATH + CHAR_FILE_SEP + NE_FOLDER_NAME;
     private static MvApplication mvApplication;
 
     @BeforeAll
@@ -109,15 +112,13 @@ public class MvApplicationTest {
 
 
     @Test
-    void run_moveSrcFileToNonExistentDestFile_shouldRenameSrcFileToDestFile() throws MvException {
+    void mvSrcFileToDestFile_moveSrcFolderToNonExistentDestFolder_shouldRenameSrcFolderToDestFolder() throws MvException {
         try {
-            String file1Content = readString(Paths.get(FILE1_PATH));
-            mvApplication.run(new String[]{FILE1_PATH, NE_FILE_PATH}, System.in, System.out);
-            assertFalse(Files.exists(Paths.get(FILE1_PATH)));
-            assertTrue(Files.exists(Paths.get(NE_FILE_PATH)));
-            String newFileContent = readString(Paths.get(NE_FILE_PATH));
-            assertEquals(file1Content, newFileContent);
-            Files.delete(Paths.get(NE_FILE_PATH));
+            mvApplication.mvSrcFileToDestFile(true, SRC_FOLDER2_PATH, NE_FOLDER_PATH);
+            assertFalse(Files.exists(Paths.get(SRC_FOLDER2_PATH)));
+            assertTrue(Files.exists(Paths.get(NE_FOLDER_PATH)));
+            assertTrue(Files.exists(Paths.get(NE_FOLDER_PATH, FILE3_NAME)));
+            deleteDir(new File(NE_FOLDER_PATH));
         } catch (Exception e) {
             throw new MvException(e);
         }
@@ -127,6 +128,12 @@ public class MvApplicationTest {
     @Test
     void mvSrcFileToDestFile_moveNonExistentSrcFileToDestFile_shouldThrowMvException() {
         assertThrows(MvException.class, () -> mvApplication.mvSrcFileToDestFile(true, NE_FILE_PATH, FILE1_PATH));
+    }
+
+
+    @Test
+    void mvSrcFileToDestFile_sameSrcAndDestFile_shouldThrowMvException() {
+        assertThrows(MvException.class, () -> mvApplication.mvSrcFileToDestFile(true, FILE1_PATH, FILE1_PATH));
     }
 
 
@@ -228,5 +235,40 @@ public class MvApplicationTest {
     void mvFilesToFolder_moveSrcFilesToNonExistentDestFolder_shouldThrowMvException() {
         String[] files = {FILE1_PATH, FILE2_PATH};
         assertThrows(MvException.class, () -> mvApplication.mvFilesToFolder(true, "nonExistent", files));
+    }
+
+
+    @Test
+    void run_moveSrcFileToNonExistentDestFile_shouldRenameSrcFileToDestFile() throws MvException {
+        try {
+            String file1Content = readString(Paths.get(FILE1_PATH));
+            mvApplication.run(new String[]{FILE1_PATH, NE_FILE_PATH}, System.in, System.out);
+            assertFalse(Files.exists(Paths.get(FILE1_PATH)));
+            assertTrue(Files.exists(Paths.get(NE_FILE_PATH)));
+            String newFileContent = readString(Paths.get(NE_FILE_PATH));
+            assertEquals(file1Content, newFileContent);
+            Files.delete(Paths.get(NE_FILE_PATH));
+        } catch (Exception e) {
+            throw new MvException(e);
+        }
+    }
+
+
+    @Test
+    void run_insufficientArgs_shouldThrowMvException() {
+        String[] files = {FILE1_PATH};
+        assertThrows(MvException.class, () -> mvApplication.run(files, System.in, System.out));
+    }
+
+
+    @Test
+    void run_nullArgs_shouldThrowMvException() {
+        assertThrows(MvException.class, () -> mvApplication.run(null, System.in, System.out));
+    }
+
+
+    @Test
+    void run_emptyArgs_shouldThrowMvException() {
+        assertThrows(MvException.class, () -> mvApplication.run(new String[]{}, System.in, System.out));
     }
 }

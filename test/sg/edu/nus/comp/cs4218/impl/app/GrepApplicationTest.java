@@ -5,19 +5,15 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Environment;
-import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.GrepException;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
 import static java.nio.file.Files.readString;
-import static java.nio.file.StandardOpenOption.APPEND;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
@@ -215,18 +211,18 @@ public class GrepApplicationTest {
     }
 
     @Test
-    void run_nullStdin_shouldThrowGrepException(){
+    void run_nullStdin_shouldThrowGrepException() {
         assertThrows(GrepException.class, () -> grepApplication.run(new String[]{"abc"}, null, System.out));
     }
 
     @Test
-    void run_invalidRegex_shouldThrowGrepException(){
+    void run_invalidRegex_shouldThrowGrepException() {
         assertThrows(GrepException.class, () -> grepApplication.run(new String[]{"?i)"}, System.in, System.out));
     }
 
     @Test
     void run_validGrepFromStdin_shouldReturnGrepOutput() throws Exception {
-        grepApplication.run(new String[]{"The second","-"}, inputStream, stdout);
+        grepApplication.run(new String[]{"The second", "-"}, inputStream, stdout);
         assertEquals("The second line" + STRING_NEWLINE, stdout.toString());
     }
 
