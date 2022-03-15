@@ -14,9 +14,11 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
+import static java.nio.file.Files.readString;
 import static org.junit.jupiter.api.Assertions.*;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 import static sg.edu.nus.comp.cs4218.impl.util.TestConstants.MV_FOLDER;
+import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
 
 public class MvApplicationTest {
 
@@ -54,20 +56,6 @@ public class MvApplicationTest {
         mvApplication = new MvApplication();
     }
 
-    static void deleteDir(File file) {
-        File[] contents = file.listFiles();
-        if (contents != null) {
-            for (File f : contents) {
-                deleteDir(f);
-            }
-        }
-        file.delete();
-    }
-
-    static String readString(Path path) throws IOException {
-        return Files.readString(path, StandardCharsets.UTF_8);
-    }
-
     @BeforeEach
     void setUpEach() throws IOException {
         deleteDir(new File(SRC_FOLDER_PATH));
@@ -91,7 +79,7 @@ public class MvApplicationTest {
     }
 
     @Test
-    void testMv_moveSrcFileToDestFileValid_shouldOverwriteDestFileContent() throws MvException {
+    void mvSrcFileToDestFile_moveSrcFileToDestFileValid_shouldOverwriteDestFileContent() throws MvException {
         try {
             String file1Content = readString(Paths.get(FILE1_PATH));
             mvApplication.mvSrcFileToDestFile(true, FILE1_PATH, FILE2_PATH);
@@ -105,7 +93,7 @@ public class MvApplicationTest {
 
 
     @Test
-    void testMv_moveSrcFileToNonExistentDestFile_shouldRenameSrcFileToDestFile() throws MvException {
+    void mvSrcFileToDestFile_moveSrcFileToNonExistentDestFile_shouldRenameSrcFileToDestFile() throws MvException {
         try {
             String file1Content = readString(Paths.get(FILE1_PATH));
             mvApplication.mvSrcFileToDestFile(true, FILE1_PATH, NE_FILE_PATH);
@@ -121,13 +109,13 @@ public class MvApplicationTest {
 
 
     @Test
-    void testMv_moveNonExistentSrcFileToDestFile_shouldThrowMvException() {
+    void mvSrcFileToDestFile_moveNonExistentSrcFileToDestFile_shouldThrowMvException() {
         assertThrows(MvException.class, () -> mvApplication.mvSrcFileToDestFile(true, NE_FILE_PATH, FILE1_PATH));
     }
 
 
     @Test
-    void testMv_moveSrcFileToDestFolderDoNotOverwrite_shouldNotMoveSrcFile() throws MvException {
+    void mvFilesToFolder_moveSrcFileToDestFolderDoNotOverwrite_shouldNotMoveSrcFile() throws MvException {
         try {
             Files.createFile(Paths.get(DEST_FOLDER_PATH + CHAR_FILE_SEP + FILE1_NAME));
 
@@ -148,7 +136,7 @@ public class MvApplicationTest {
 
 
     @Test
-    void testMv_moveSrcFilesToDestFolderValid_shouldMoveSrcFile() throws MvException {
+    void mvFilesToFolder_moveSrcFilesToDestFolderValid_shouldMoveSrcFile() throws MvException {
         try {
             String file1Content = readString(Paths.get(FILE1_PATH));
             String file2Content = readString(Paths.get(FILE2_PATH));
@@ -172,7 +160,7 @@ public class MvApplicationTest {
 
 
     @Test
-    void testMv_moveSrcFolderToDestFolder_shouldMoveWholeFolder() throws MvException {
+    void mvFilesToFolder_moveSrcFolderToDestFolder_shouldMoveWholeFolder() throws MvException {
         try {
             String file1Content = readString(Paths.get(FILE1_PATH));
             String file2Content = readString(Paths.get(FILE2_PATH));
@@ -215,13 +203,13 @@ public class MvApplicationTest {
 
 
     @Test
-    void testMv_moveNonExistentSrcFileToDestFolder_shouldThrowMvException() {
+    void mvFilesToFolder_moveNonExistentSrcFileToDestFolder_shouldThrowMvException() {
         assertThrows(MvException.class, () -> mvApplication.mvFilesToFolder(true, DEST_FOLDER_PATH, NE_FILE_PATH));
     }
 
 
     @Test
-    void testMv_moveSrcFilesToNonExistentDestFolder_shouldThrowMvException() {
+    void mvFilesToFolder_moveSrcFilesToNonExistentDestFolder_shouldThrowMvException() {
         String[] files = {FILE1_PATH, FILE2_PATH};
         assertThrows(MvException.class, () -> mvApplication.mvFilesToFolder(true, "nonExistent", files));
     }
