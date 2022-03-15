@@ -11,10 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
@@ -43,7 +40,7 @@ public class SortApplication implements SortInterface {
         try {
             parser.parse(args);
         } catch (InvalidArgsException e) {
-            throw new SortException(e.getMessage());//NOPMD
+            throw new SortException(e.getMessage());//NOPMD - suppressed PreserveStackTrace - No reason to preserve stackTrace as reason is contained in message
         }
         StringBuilder output = new StringBuilder();
         try {
@@ -53,7 +50,7 @@ public class SortApplication implements SortInterface {
                 output.append(sortFromFiles(parser.isFirstWordNumber(), parser.isReverseOrder(), parser.isCaseIndependent(), parser.getFiles().toArray(new String[0])));
             }
         } catch (Exception e) {
-            throw new SortException(e.getMessage());//NOPMD
+            throw new SortException(e.getMessage());//NOPMD - suppressed PreserveStackTrace - No reason to preserve stackTrace as reason is contained in message
         }
         try {
             if (!output.toString().isEmpty()) {
@@ -61,7 +58,7 @@ public class SortApplication implements SortInterface {
                 stdout.write(STRING_NEWLINE.getBytes());
             }
         } catch (IOException e) {
-            throw new SortException(ERR_WRITE_STREAM);//NOPMD
+            throw new SortException(ERR_WRITE_STREAM);//NOPMD - suppressed PreserveStackTrace - No reason to preserve stackTrace as reason is contained in message
         }
     }
 
@@ -83,6 +80,10 @@ public class SortApplication implements SortInterface {
         List<String> lines = new ArrayList<>();
         for (String file : fileNames) {
             File node = IOUtils.resolveFilePath(file).toFile();
+            if (file.equals("")) {
+                String errorMessage = "cannot read: '': " + ERR_FILE_NOT_FOUND;
+                throw new Exception(errorMessage);
+            }
             if (!node.exists()) {
                 String errorMessage = "cannot read: " + file + ": " + ERR_FILE_NOT_FOUND;
                 throw new Exception(errorMessage);
@@ -94,7 +95,7 @@ public class SortApplication implements SortInterface {
             if (!node.canRead()) {
                 throw new Exception(ERR_NO_PERM);
             }
-            InputStream input = IOUtils.openInputStream(file);//NOPMD
+            InputStream input = IOUtils.openInputStream(file);//NOPMD - suppressed CloseResource - Resource has been closed at line 96
             lines.addAll(IOUtils.getLinesFromInputStream(input));
             IOUtils.closeInputStream(input);
         }
@@ -135,13 +136,13 @@ public class SortApplication implements SortInterface {
         Collections.sort(input, new Comparator<String>() {
             @Override
             public int compare(String str1, String str2) {
-                String temp1 = isCaseIndependent ? str1.toLowerCase() : str1;//NOPMD
-                String temp2 = isCaseIndependent ? str2.toLowerCase() : str2;//NOPMD
+                String temp1 = isCaseIndependent ? str1.toLowerCase(Locale.ENGLISH) : str1;
+                String temp2 = isCaseIndependent ? str2.toLowerCase(Locale.ENGLISH) : str2;
 
                 // Extract the first group of numbers if possible.
                 if (isFirstWordNumber && !temp1.isEmpty() && !temp2.isEmpty()) {
-                    String chunk1 = getChunk(temp1);//NOPMD
-                    String chunk2 = getChunk(temp2);//NOPMD
+                    String chunk1 = getChunk(temp1);
+                    String chunk2 = getChunk(temp2);
 
                     // If both chunks can be represented as numbers, sort them numerically.
                     int result = 0;
@@ -169,7 +170,7 @@ public class SortApplication implements SortInterface {
      *
      * @param str Input string to read from
      */
-    private String getChunk(String str) {
+    String getChunk(String str) {
         int startIndexLocal = 0;
         StringBuilder chunk = new StringBuilder();
         final int strLen = str.length();

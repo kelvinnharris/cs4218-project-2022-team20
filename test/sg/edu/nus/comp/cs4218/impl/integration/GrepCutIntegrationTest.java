@@ -35,19 +35,15 @@ public class GrepCutIntegrationTest {
     private static final String FIRST_LINE = "first line";
     private static final String SECOND_LINE = "second line";
     private static final String LINE = "line";
-    private static final String LINE_CASE_INSENSITIVE = "LiNe";
+    private static final String LINE_CASE_INSEN = "LiNe";
     private static final String LINES = "lines";
-
-
-
-
 
 
     public static final String FILE1_NAME = "file1.txt";
     public static final String FILE1_PATH = TEST_PATH + FILE1_NAME;
 
 
-    public static final String[] LINES1 = {FIRST_LINE, SECOND_LINE, LINE, LINE_CASE_INSENSITIVE, LINES};
+    public static final String[] LINES1 = {FIRST_LINE, SECOND_LINE, LINE, LINE_CASE_INSEN, LINES};
 
     @BeforeAll
     static void setUp() throws IOException {
@@ -74,7 +70,7 @@ public class GrepCutIntegrationTest {
 
 
     @Test
-    void testGrepCut_grepThenCut_shouldReturnCorrectOutput() throws Exception {
+    void testGrepCutParseAndEvaluate_grepThenCut_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("grep line %s | cut -b 1-15", FILE1_PATH);
         String expected = FIRST_LINE + STRING_NEWLINE +
                 SECOND_LINE + STRING_NEWLINE +
@@ -85,19 +81,19 @@ public class GrepCutIntegrationTest {
     }
 
     @Test
-    void testGrepCut_grepCaseInsensitiveThenCut_shouldReturnCorrectOutput() throws Exception {
+    void testGrepCutParseAndEvaluate_grepCaseInsensitiveThenCut_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("grep -i line %s | cut -b 1-15", FILE1_PATH);
         String expected = FIRST_LINE + STRING_NEWLINE +
                 SECOND_LINE + STRING_NEWLINE +
                 LINE + STRING_NEWLINE +
-                LINE_CASE_INSENSITIVE + STRING_NEWLINE +
+                LINE_CASE_INSEN + STRING_NEWLINE +
                 LINES + STRING_NEWLINE;
         shell.parseAndEvaluate(commandString, stdOut);
         assertEquals(expected, stdOut.toString());
     }
 
     @Test
-    void testGrepCut_grepCountThenCut_shouldReturnCorrectOutput() throws Exception {
+    void testGrepCutParseAndEvaluate_grepCountThenCut_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("grep -c line %s | cut -b 1-15", FILE1_PATH);
         String expected = "4" + STRING_NEWLINE;
         shell.parseAndEvaluate(commandString, stdOut);
@@ -105,7 +101,7 @@ public class GrepCutIntegrationTest {
     }
 
     @Test
-    void testGrepCut_grepWithFileNameThenCut_shouldReturnCorrectOutput() throws Exception {
+    void testGrepCutParseAndEvaluate_grepWithFileNameThenCut_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("grep -H line %s | cut -c 1-1000", FILE1_PATH);
         String expected = FILE1_PATH + ": " + FIRST_LINE + STRING_NEWLINE +
                 FILE1_PATH + ": " + SECOND_LINE + STRING_NEWLINE +
@@ -116,7 +112,7 @@ public class GrepCutIntegrationTest {
     }
 
     @Test
-    void testGrepCut_grepThenCutWithNoIndex_shouldThrowException() {
+    void testGrepCutParseAndEvaluate_grepThenCutWithNoIndex_shouldThrowException() {
         String commandString = String.format("grep line %s | cut -c", FILE1_PATH);
         assertThrows(CutException.class, () -> shell.parseAndEvaluate(commandString, stdOut));
         String expected = "";
@@ -124,7 +120,7 @@ public class GrepCutIntegrationTest {
     }
 
     @Test
-    void testGrepCut_cutWithNoIndexThenGrep_shouldThrowExceptionAndTerminate() {
+    void testGrepCutParseAndEvaluate_cutWithNoIndexThenGrep_shouldThrowExceptionAndTerminate() {
         String commandString = String.format("cut -c | grep line %s", FILE1_PATH);
         assertThrows(CutException.class, () -> shell.parseAndEvaluate(commandString, stdOut));
         String expected = "";
@@ -132,7 +128,7 @@ public class GrepCutIntegrationTest {
     }
 
     @Test
-    void testGrepCut_cutWithNoIndexAndGrep_shouldReturnExceptionMessageAndOutput() throws FileNotFoundException, AbstractApplicationException, ShellException {
+    void testGrepCutParseAndEvaluate_cutWithNoIndexAndGrep_shouldReturnExceptionMessageAndOutput() throws FileNotFoundException, AbstractApplicationException, ShellException {
         String commandString = String.format("cut -c ; grep line %s", FILE1_PATH);
         shell.parseAndEvaluate(commandString, stdOut);
         String expected = "cut: option requires an argument -- 'c'" + STRING_NEWLINE +
@@ -144,7 +140,7 @@ public class GrepCutIntegrationTest {
     }
 
     @Test
-    void testGrepCut_grepErrorThenCut_shouldThrowExceptionAndTerminate() throws Exception {
+    void testGrepCutParseAndEvaluate_grepErrorThenCut_shouldThrowExceptionAndTerminate() throws Exception {
         String commandString = String.format("grep -z line %s | cut -b 1-15", FILE1_PATH);
         assertThrows(GrepException.class, () -> shell.parseAndEvaluate(commandString, stdOut));
     }

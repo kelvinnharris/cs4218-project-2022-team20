@@ -83,7 +83,7 @@ public class TeePasteIntegrationTest {
 
 
     @Test
-    void testTeePaste_teeFilesAndPaste_shouldReturnCorrectOutput() throws Exception {
+    void testTeePasteParseAndEvaluate_teeFilesAndPaste_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("echo %s | tee %s ; paste %s %s > %s", FROM_TEE, FILE1_PATH, FILE1_PATH, FILE1_PATH, OUTPUT1_PATH);
         String expectedStdOut = FROM_TEE + STRING_NEWLINE;
         String expectedContent = FROM_TEE + STRING_TAB +
@@ -95,7 +95,7 @@ public class TeePasteIntegrationTest {
     }
 
     @Test
-    void testTeePaste_teeStdOutOnlyAndPaste_shouldReturnCorrectOutput() throws Exception {
+    void testTeePasteParseAndEvaluate_teeStdOutOnlyAndPaste_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("echo %s | tee ; paste %s %s > %s", FROM_TEE, FILE1_PATH, FILE1_PATH, OUTPUT2_PATH);
         String expectedStdOut = FROM_TEE + STRING_NEWLINE;
         String expectedContent = STRING_NEWLINE;
@@ -106,7 +106,7 @@ public class TeePasteIntegrationTest {
     }
 
     @Test
-    void testTeePaste_teeStdOutOnlyThenPaste_shouldReturnCorrectOutput() throws Exception {
+    void testTeePasteParseAndEvaluate_teeStdOutOnlyThenPaste_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("echo %s | tee | paste - %s > %s", FROM_TEE, FILE2_PATH, OUTPUT3_PATH);
         String expectedStdOut = "";
         String expectedContent = FROM_TEE + STRING_TAB +
@@ -119,7 +119,7 @@ public class TeePasteIntegrationTest {
     }
 
     @Test
-    void testTeePaste_pasteThenTeeAppend_shouldReturnCorrectOutput() throws Exception {
+    void testTeePasteParseAndEvaluate_pasteThenTeeAppend_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("paste %s %s > %s; echo %s | tee -a %s;", FILE2_PATH, FILE2_PATH, OUTPUT4_PATH, THIRD, OUTPUT4_PATH);
         String expectedStdOut = THIRD + STRING_NEWLINE;
         String expectedContent = FIRST  + STRING_TAB + FIRST + STRING_NEWLINE +
@@ -132,7 +132,7 @@ public class TeePasteIntegrationTest {
     }
 
     @Test
-    void testTeePaste_pasteThenTeeNoAppend_shouldReturnCorrectOutput() throws Exception {
+    void testTeePasteParseAndEvaluate_pasteThenTeeNoAppend_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("paste %s %s > %s; echo %s | tee %s;", FILE2_PATH, FILE2_PATH, OUTPUT5_PATH, THIRD, OUTPUT5_PATH);
         String expectedStdOut = THIRD + STRING_NEWLINE;
         String expectedContent = THIRD + STRING_NEWLINE;
@@ -143,7 +143,7 @@ public class TeePasteIntegrationTest {
     }
 
     @Test
-    void testTeePaste_pasteWithStdinAsFileThenTeeAppend_shouldReturnCorrectOutput() throws Exception {
+    void testTeePasteParseAndEvaluate_pasteWithStdinAsFileThenTeeAppend_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("paste - %s < %s > %s; echo %s | tee -a %s;", FILE2_PATH, FILE2_PATH, OUTPUT6_PATH, THIRD, OUTPUT6_PATH);
         String expectedStdOut = THIRD + STRING_NEWLINE;
         String expectedContent = FIRST  + STRING_TAB + FIRST + STRING_NEWLINE +
@@ -156,7 +156,7 @@ public class TeePasteIntegrationTest {
     }
 
     @Test
-    void testTeePaste_pasteErrorThenTeeAppend_shouldThrowError() throws Exception {
+    void testTeePasteParseAndEvaluate_pasteErrorThenTeeAppend_shouldThrowError() throws Exception {
         String commandString = String.format("paste -z; echo %s | tee -a %s;", THIRD, OUTPUT7_PATH);
         String expectedStdOut = "paste: invalid option -- 'z'" + STRING_NEWLINE +
                 THIRD + STRING_NEWLINE;

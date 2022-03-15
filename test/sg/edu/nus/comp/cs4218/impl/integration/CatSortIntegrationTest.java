@@ -67,7 +67,7 @@ public class CatSortIntegrationTest {
 
 
     @Test
-    void testCatSort_catThenSort_shouldReturnCorrectOutput() throws Exception {
+    void testCatSortParseAndEvaluate_catThenSort_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("cat %s %s | sort", FILE1_PATH, FILE2_PATH);
         String expected = "1" + STRING_NEWLINE +
                 "10" + STRING_NEWLINE +
@@ -81,7 +81,7 @@ public class CatSortIntegrationTest {
     }
 
     @Test
-    void testCatSort_sortThenCat_shouldReturnCorrectOutput() throws Exception {
+    void testCatSortParseAndEvaluate_sortThenCat_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("sort %s %s | cat", FILE1_PATH, FILE2_PATH);
         String expected = "1" + STRING_NEWLINE +
                 "10" + STRING_NEWLINE +
@@ -95,7 +95,7 @@ public class CatSortIntegrationTest {
     }
 
     @Test
-    void testCatSort_catWithPrefixThenSort_shouldReturnCorrectOutput() throws Exception {
+    void testCatSortParseAndEvaluate_catWithPrefixThenSort_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("cat -n %s %s | sort", FILE1_PATH, FILE2_PATH);
         String expected = SPACES + "1 1" + STRING_NEWLINE +
                 SPACES + "2 2" + STRING_NEWLINE +
@@ -109,7 +109,7 @@ public class CatSortIntegrationTest {
     }
 
     @Test
-    void testCatSort_sortThenCatWithPrefix_shouldReturnCorrectOutput() throws Exception {
+    void testCatSortParseAndEvaluate_sortThenCatWithPrefix_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("sort %s %s | cat -n ", FILE1_PATH, FILE2_PATH);
         String expected = SPACES + "1 1" + STRING_NEWLINE +
                 SPACES + "2 10" + STRING_NEWLINE +
@@ -123,7 +123,7 @@ public class CatSortIntegrationTest {
     }
 
     @Test
-    void testCatSort_sortThenCatWithPrefixDifferentFiles_shouldReturnCorrectOutputFromSecondFile() throws Exception {
+    void testCatSortParseAndEvaluate_sortThenCatWithPrefixDifferentFiles_shouldReturnCorrectOutputFromSecondFile() throws Exception {
         String commandString = String.format("sort %s | cat -n %s", FILE1_PATH, FILE2_PATH);
         String expected = SPACES + "1 a" + STRING_NEWLINE +
                 SPACES + "2 ab" + STRING_NEWLINE +
@@ -134,7 +134,7 @@ public class CatSortIntegrationTest {
     }
 
     @Test
-    void testCatSort_sortThenMultipleCatWithPrefix_shouldReturnCorrectOutput() throws Exception {
+    void testCatSortParseAndEvaluate_sortThenMultipleCatWithPrefix_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("sort %s %s | cat -n | cat -n | cat -n ", FILE1_PATH, FILE2_PATH);
         String expected = SPACES + "1 " + SPACES + "1 " + SPACES + "1 1" + STRING_NEWLINE +
                 SPACES + "2 " + SPACES + "2 " + SPACES + "2 10" + STRING_NEWLINE +
@@ -149,7 +149,7 @@ public class CatSortIntegrationTest {
 
 
     @Test
-    void testCatSort_sortThenCatWithPrefixThenSort_shouldReturnCorrectOutput() throws Exception {
+    void testCatSortParseAndEvaluate_sortThenCatWithPrefixThenSort_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("sort %s %s | cat -n | sort %s ", FILE1_PATH, FILE2_PATH, FILE1_PATH);
         String expected = "1" + STRING_NEWLINE +
                 "10" + STRING_NEWLINE +
@@ -160,7 +160,7 @@ public class CatSortIntegrationTest {
 
 
     @Test
-    void testCatSort_sortThenCatWithPrefixAndSort_shouldReturnCorrectOutputFromLastSort() throws Exception {
+    void testCatSortParseAndEvaluate_sortThenCatWithPrefixAndSort_shouldReturnCorrectOutputFromLastSort() throws Exception {
         String commandString = String.format("sort %s %s | cat -n ; sort %s ", FILE1_PATH, FILE2_PATH, FILE1_PATH);
         String expected = SPACES + "1" + " 1" + STRING_NEWLINE +
                 SPACES + "2" + " 10" + STRING_NEWLINE +
@@ -177,7 +177,7 @@ public class CatSortIntegrationTest {
     }
 
     @Test
-    void testCatSort_sortErrorThenCat_shouldThrowException() {
+    void testCatSortParseAndEvaluate_sortErrorThenCat_shouldThrowException() {
         String commandString = String.format("sort -z %s %s | cat", FILE1_PATH, FILE2_PATH);
         assertThrows(SortException.class, () -> shell.parseAndEvaluate(commandString, stdOut));
     }
