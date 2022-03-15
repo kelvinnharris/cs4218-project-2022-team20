@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Environment;
+import sg.edu.nus.comp.cs4218.exception.CutException;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.nio.file.StandardOpenOption.APPEND;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
@@ -284,5 +285,54 @@ class CutApplicationTest {
         String expected = "" + STRING_NEWLINE;
         assertEquals(expected , output);
     }
+
+    @Test
+    void testRun_nonEmptyArgsNonEmptyIndex_shouldPassed() {
+        String inputString = "a";
+        InputStream input = new ByteArrayInputStream(inputString.getBytes());
+        String[] args = new String[]{"-b", "1"};
+        assertDoesNotThrow(() -> cutApplication.run(args, input, System.out));
+    }
+
+    @Test
+    void testRun_emptyArgsNonEmptyIndex_shouldThrow() {
+        String inputString = "a";
+        InputStream input = new ByteArrayInputStream(inputString.getBytes());
+        String[] args = new String[]{"1"};
+        assertThrows(CutException.class, () -> cutApplication.run(args, input, System.out));
+    }
+
+    @Test
+    void testRun_nonEmptyArgsEmptyIndex_shouldThrow() {
+        String inputString = "a";
+        InputStream input = new ByteArrayInputStream(inputString.getBytes());
+        String[] args = new String[]{"-b"};
+        assertThrows(CutException.class, () -> cutApplication.run(args, input, System.out));
+    }
+
+    @Test
+    void testRun_emptyArgsEmptyIndex_shouldThrow() {
+        String inputString = "a";
+        InputStream input = new ByteArrayInputStream(inputString.getBytes());
+        String[] args = new String[]{};
+        assertThrows(CutException.class, () -> cutApplication.run(args, input, System.out));
+    }
+
+    @Test
+    void testRun_nullOutputStream_shouldThrow() {
+        String inputString = "a";
+        InputStream input = new ByteArrayInputStream(inputString.getBytes());
+        String[] args = new String[]{"-b", "1"};
+        assertThrows(CutException.class, () -> cutApplication.run(args, input, null));
+    }
+
+    @Test
+    void testRun_argsError_shouldThrow() {
+        String inputString = "a";
+        InputStream input = new ByteArrayInputStream(inputString.getBytes());
+        String[] args = new String[]{"-b", "-c", "1"};
+        assertThrows(CutException.class, () -> cutApplication.run(args, input, System.out));
+    }
+
 
 }

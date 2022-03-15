@@ -5,9 +5,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Environment;
+import sg.edu.nus.comp.cs4218.exception.RmException;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -30,6 +33,8 @@ class RmApplicationTest {
     private static final String FOLDER_7 = "folder7";
     private static final String FOLDER_8 = "folder8";
     private static final String FOLDER_9 = "folder9";
+    private static final String FOLDER_10 = "folder10";
+    private static final String FOLDER_11 = "folder11";
     private static final String FILE_1 = "file1.txt";
     private static final String FILE_2 = "file2.iml";
     private static final String FILE_3 = "file3.txt";
@@ -51,6 +56,7 @@ class RmApplicationTest {
         Files.createDirectories(Paths.get(TEST_PATH + FOLDER_6 + CHAR_FILE_SEP + FOLDER_7));
         Files.createDirectories(Paths.get(TEST_PATH + FOLDER_8));
         Files.createDirectories(Paths.get(TEST_PATH + FOLDER_9));
+        Files.createDirectories(Paths.get(TEST_PATH + FOLDER_10));
         Files.createFile(Paths.get(TEST_PATH + FOLDER_1 + CHAR_FILE_SEP + FILE_1));
         Files.createFile(Paths.get(TEST_PATH + FOLDER_1 + CHAR_FILE_SEP + FILE_2));
         Files.createFile(Paths.get(TEST_PATH + FILE_4));
@@ -146,5 +152,31 @@ class RmApplicationTest {
         File tempFile2 = new File(path2);
         assertFalse(tempFile.exists());
         assertTrue(tempFile2.exists());
+    }
+
+    @Test
+    void testRun_invalidArgs_shouldThrow() {
+        String inputString = "";
+        InputStream input = new ByteArrayInputStream(inputString.getBytes());
+        String[] args = new String[]{"-z"};
+        assertThrows(RmException.class, () -> rmApplication.run(args, input, System.out));
+    }
+
+    @Test
+    void testRun_pathIsDirectory_shouldThrow() {
+        String path = TEST_PATH + FOLDER_10;
+        String inputString = "";
+        InputStream input = new ByteArrayInputStream(inputString.getBytes());
+        String[] args = new String[]{path};
+        assertThrows(RmException.class, () -> rmApplication.run(args, input, System.out));
+    }
+
+    @Test
+    void testRun_fileNotFound_shouldThrow() {
+        String path = TEST_PATH + FOLDER_11;
+        String inputString = "";
+        InputStream input = new ByteArrayInputStream(inputString.getBytes());
+        String[] args = new String[]{path};
+        assertThrows(RmException.class, () -> rmApplication.run(args, input, System.out));
     }
 }

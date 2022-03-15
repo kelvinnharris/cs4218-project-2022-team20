@@ -88,8 +88,7 @@ public class RmApplication implements RmInterface {
             }
 
             if (!checkRemove) {
-                errorMessage += file;
-                throw new Exception(errorMessage);
+                throw new Exception(errorMessage + file);
             }
         }
     }

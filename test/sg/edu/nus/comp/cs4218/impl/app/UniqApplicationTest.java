@@ -170,6 +170,13 @@ public class UniqApplicationTest {
     }
 
     @Test
+    void uniqFromFiles_CountRepeatedNotAllRepeated_returnsOutput() throws Exception {
+        String expected = "2 " + HELLO_WORLD + STRING_NEWLINE + "2 " + ALICE + STRING_NEWLINE;
+        String output = uniqApplication.uniqFromFile(true, true, false, FILE_NAME, FILE_NAME2);
+        assertEquals(expected, output);
+    }
+
+    @Test
     void uniqFromFiles_NotCountNotRepeatedNotAllRepeated_returnsOutput() throws Exception {
         String expected = HELLO_WORLD + STRING_NEWLINE +
                 ALICE + STRING_NEWLINE +

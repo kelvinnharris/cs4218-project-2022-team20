@@ -4,6 +4,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Environment;
+import sg.edu.nus.comp.cs4218.exception.SortException;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -13,7 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import static java.nio.file.StandardOpenOption.APPEND;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
@@ -151,4 +152,29 @@ class SortApplicationTest {
         String output = sortApplication.sortFromStdin(false, false, false, input);
         assertEquals("A" + STRING_NEWLINE + "AB" + STRING_NEWLINE + "a" + STRING_NEWLINE + "ab", output);
     }
+
+    @Test
+    void testRun_emptyArgs_shouldPassed() {
+        String inputString = "ab" + STRING_NEWLINE + "A" + STRING_NEWLINE + "a" + STRING_NEWLINE + "AB";
+        InputStream input = new ByteArrayInputStream(inputString.getBytes());
+        String[] args = new String[]{};
+        assertDoesNotThrow(() -> sortApplication.run(args, input, System.out));
+    }
+
+    @Test
+    void testRun_invalidArgs_shouldThrow() {
+        String inputString = "ab" + STRING_NEWLINE + "A" + STRING_NEWLINE + "a" + STRING_NEWLINE + "AB";
+        InputStream input = new ByteArrayInputStream(inputString.getBytes());
+        String[] args = new String[]{"-z"};
+        assertThrows(SortException.class, () -> sortApplication.run(args, input, System.out));
+    }
+
+    @Test
+    void testRun_fileIsDirectory_shouldThrow() {
+        String inputString = "ab" + STRING_NEWLINE + "A" + STRING_NEWLINE + "a" + STRING_NEWLINE + "AB";
+        InputStream input = new ByteArrayInputStream(inputString.getBytes());
+        String[] args = new String[]{TEST_PATH};
+        assertThrows(SortException.class, () -> sortApplication.run(args, input, System.out));
+    }
+
 }
