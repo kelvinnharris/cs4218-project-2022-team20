@@ -7,7 +7,7 @@ import static org.mockito.Mockito.*;
 
 class ExitApplicationTest {
     @Test
-    void testExit_runApplication_shouldNotThrowError() throws ExitException {
+    void run_exitApplication_shouldNotThrowError() throws ExitException {
         String[] emptyArgs = new String[]{};
         ExitApplication mockApp = spy(ExitApplication.class);
         doNothing().when(mockApp).terminateExecution();

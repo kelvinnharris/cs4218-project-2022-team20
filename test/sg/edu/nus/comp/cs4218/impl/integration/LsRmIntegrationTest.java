@@ -62,7 +62,7 @@ public class LsRmIntegrationTest {
 
 
     @Test
-    void testLsRm_lsThenRm_shouldReturnCorrectOutput() throws Exception {
+    void testLsRmParseAndEvaluate_lsThenRm_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("ls %s | rm %s", FILE1_PATH, FILE1_PATH);
         String expected = "";
         shell.parseAndEvaluate(commandString, stdOut);
@@ -70,7 +70,7 @@ public class LsRmIntegrationTest {
     }
 
     @Test
-    void testLsRm_lsAndRm_shouldReturnCorrectOutput() throws Exception {
+    void testLsRmParseAndEvaluate_lsAndRm_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("ls %s; rm %s", FILE1_PATH, FILE1_PATH);
         String expected = TEST_FOLDER_NAME + FILE1_NAME + STRING_NEWLINE;
         shell.parseAndEvaluate(commandString, stdOut);
@@ -78,7 +78,7 @@ public class LsRmIntegrationTest {
     }
 
     @Test
-    void testLsRm_rmThenLs_shouldReturnCorrectOutput() throws Exception {
+    void testLsRmParseAndEvaluate_rmThenLs_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("rm %s | ls %s", FILE1_PATH, FILE1_PATH);
         String expected = String.format("ls: cannot access '%s': No such file or directory", TEST_FOLDER_NAME + FILE1_NAME) + STRING_NEWLINE;
         shell.parseAndEvaluate(commandString, stdOut);
@@ -86,7 +86,7 @@ public class LsRmIntegrationTest {
     }
 
     @Test
-    void testLsRm_rmAndLs_shouldReturnCorrectOutput() throws Exception {
+    void testLsRmParseAndEvaluate_rmAndLs_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("rm %s; ls %s", FILE1_PATH, FILE1_PATH);
         String expected = String.format("ls: cannot access '%s': No such file or directory", TEST_FOLDER_NAME + FILE1_NAME) + STRING_NEWLINE;
         shell.parseAndEvaluate(commandString, stdOut);
@@ -94,7 +94,7 @@ public class LsRmIntegrationTest {
     }
 
     @Test
-    void testLsRm_rmNotEmptyDirAndLs_shouldReturnCorrectOutput() throws Exception {
+    void testLsRmParseAndEvaluate_rmNotEmptyDirAndLs_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("rm %s; ls %s", FOLDER1_PATH, FOLDER1_PATH);
         String expected = String.format("rm: cannot remove '%s': Is a directory" + STRING_NEWLINE + "%s", FOLDER1_PATH, FILE1_NAME) + STRING_NEWLINE;
         shell.parseAndEvaluate(commandString, stdOut);
@@ -102,7 +102,7 @@ public class LsRmIntegrationTest {
     }
 
     @Test
-    void testLsRm_rmRecursiveAndLs_shouldReturnCorrectOutput() throws Exception {
+    void testLsRmParseAndEvaluate_rmRecursiveAndLs_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("rm -r %s; ls %s", FOLDER1_PATH, FOLDER1_PATH);
         String expected = String.format("ls: cannot access '%s': No such file or directory", TEST_FOLDER_NAME + FOLDER1_NAME) + STRING_NEWLINE;
         shell.parseAndEvaluate(commandString, stdOut);
@@ -110,7 +110,7 @@ public class LsRmIntegrationTest {
     }
 
     @Test
-    void testLsRm_LsEmptyDirThenRmEmptyDir_shouldReturnCorrectOutput() throws Exception {
+    void testLsRmParseAndEvaluate_LsEmptyDirThenRmEmptyDir_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("ls %s; rm -d %s", FOLDER2_PATH, FOLDER2_PATH);
         String expected = STRING_NEWLINE;
         shell.parseAndEvaluate(commandString, stdOut);

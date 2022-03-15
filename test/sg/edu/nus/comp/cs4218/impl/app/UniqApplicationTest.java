@@ -22,6 +22,7 @@ public class UniqApplicationTest {
     private static final String TEST_PATH = ROOT_PATH + CHAR_FILE_SEP + TEST_FOLDER_NAME;
     private static final String FILE_NAME = TEST_PATH + "file.txt";
     private static final String FILE_NAME2 = TEST_PATH + "file2.txt";
+    private static final String FILE_NAME3 = TEST_PATH + "file3.txt";
     private static final String HELLO_WORLD = "Hello World";
     private static final String ALICE = "Alice";
     private static final String BOB = "Bob";
@@ -138,7 +139,7 @@ public class UniqApplicationTest {
     }
 
     @Test
-    void uniqFromFiles_countNotRepeatedNotAllRepeated_returnsOutput() throws Exception {
+    void uniqFromFile_countNotRepeatedNotAllRepeated_returnsOutput() throws Exception {
         String expected = "2 " + HELLO_WORLD + STRING_NEWLINE +
                 "2 " + ALICE + STRING_NEWLINE +
                 "1 " + BOB + STRING_NEWLINE +
@@ -149,28 +150,35 @@ public class UniqApplicationTest {
     }
 
     @Test
-    void uniqFromFiles_notCountRepeatedNotAllRepeated_returnsOutput() throws Exception {
+    void uniqFromFile_notCountRepeatedNotAllRepeated_returnsOutput() throws Exception {
         String expected = HELLO_WORLD + STRING_NEWLINE + ALICE + STRING_NEWLINE;
         String output = uniqApplication.uniqFromFile(false, true, false, FILE_NAME, FILE_NAME2);
         assertEquals(expected, output);
     }
 
     @Test
-    void uniqFromFiles_notCountNotRepeatedAllRepeated_returnsOutput() throws Exception {
+    void uniqFromFile_notCountNotRepeatedAllRepeated_returnsOutput() throws Exception {
         String expected = HELLO_WORLD + STRING_NEWLINE + HELLO_WORLD + STRING_NEWLINE + ALICE + STRING_NEWLINE + ALICE + STRING_NEWLINE;
         String output = uniqApplication.uniqFromFile(false, false, true, FILE_NAME, FILE_NAME2);
         assertEquals(expected, output);
     }
 
     @Test
-    void uniqFromFiles_CountRepeatedAllRepeated_returnsOutput() throws Exception {
+    void uniqFromFile_CountRepeatedAllRepeated_returnsOutput() throws Exception {
         String expected = "2 " + HELLO_WORLD + STRING_NEWLINE + "2 " + HELLO_WORLD + STRING_NEWLINE + "2 " + ALICE + STRING_NEWLINE + "2 " + ALICE + STRING_NEWLINE;
         String output = uniqApplication.uniqFromFile(true, true, true, FILE_NAME, FILE_NAME2);
         assertEquals(expected, output);
     }
 
     @Test
-    void uniqFromFiles_NotCountNotRepeatedNotAllRepeated_returnsOutput() throws Exception {
+    void uniqFromFile_CountRepeatedNotAllRepeated_returnsOutput() throws Exception {
+        String expected = "2 " + HELLO_WORLD + STRING_NEWLINE + "2 " + ALICE + STRING_NEWLINE;
+        String output = uniqApplication.uniqFromFile(true, true, false, FILE_NAME, FILE_NAME2);
+        assertEquals(expected, output);
+    }
+
+    @Test
+    void uniqFromFile_NotCountNotRepeatedNotAllRepeated_returnsOutput() throws Exception {
         String expected = HELLO_WORLD + STRING_NEWLINE +
                 ALICE + STRING_NEWLINE +
                 BOB + STRING_NEWLINE +
@@ -181,7 +189,7 @@ public class UniqApplicationTest {
     }
 
     @Test
-    void testUniqFromStdin_NotCountNotRepeatedNotAllRepeated_returnsOutputStdOut() throws Exception {
+    void run_NotCountNotRepeatedNotAllRepeatedStdin_returnsOutputStdOut() throws Exception {
         InputStream stdin = new ByteArrayInputStream((HELLO_WORLD + STRING_NEWLINE +
                 HELLO_WORLD + STRING_NEWLINE +
                 ALICE + STRING_NEWLINE +
@@ -200,7 +208,7 @@ public class UniqApplicationTest {
     }
 
     @Test
-    void testUniqFromFile_NotCountNotRepeatedNotAllRepeated_returnsOutputStdOut() throws Exception {
+    void run_NotCountNotRepeatedNotAllRepeatedFiles_returnsOutputStdOut() throws Exception {
         InputStream stdin = new ByteArrayInputStream("".getBytes());
         String expected = HELLO_WORLD + STRING_NEWLINE +
                 ALICE + STRING_NEWLINE +
@@ -213,7 +221,8 @@ public class UniqApplicationTest {
     }
 
     @Test
-    void testUniqFromFile_NotCountNotRepeatedNotAllRepeated_returnsOutputFile() throws Exception {
+    void run_NotCountNotRepeatedNotAllRepeated_overwritesOutputFile() throws Exception {
+        Files.write(Path.of(FILE_NAME2), (BOB).getBytes());
         InputStream stdin = new ByteArrayInputStream("".getBytes());
         String expected = HELLO_WORLD + STRING_NEWLINE +
                 ALICE + STRING_NEWLINE +
@@ -224,10 +233,26 @@ public class UniqApplicationTest {
         uniqApplication.run(args, stdin, outputStream);
         String actual = Files.readString(Paths.get(FILE_NAME2));
         assertEquals(expected, actual);
+        assertEquals(STRING_NEWLINE, outputStream.toString());
     }
 
     @Test
-    void testUniqFromFileDash_NotCountNotRepeatedNotAllRepeated_returnsOutputStdOut() throws Exception {
+    void run_NotCountNotRepeatedNotAllRepeated_createsOutputFile() throws Exception {
+        InputStream stdin = new ByteArrayInputStream("".getBytes());
+        String expected = HELLO_WORLD + STRING_NEWLINE +
+                ALICE + STRING_NEWLINE +
+                BOB + STRING_NEWLINE +
+                ALICE + STRING_NEWLINE +
+                BOB + STRING_NEWLINE;
+        String[] args = {FILE_NAME, FILE_NAME3};
+        uniqApplication.run(args, stdin, outputStream);
+        String actual = Files.readString(Paths.get(FILE_NAME3));
+        assertEquals(expected, actual);
+        assertEquals(STRING_NEWLINE, outputStream.toString());
+    }
+
+    @Test
+    void run_NotCountNotRepeatedNotAllRepeatedDash_returnsOutputStdOut() throws Exception {
         String stdinInput = HELLO_WORLD + STRING_NEWLINE +
                 HELLO_WORLD + STRING_NEWLINE +
                 ALICE + STRING_NEWLINE +
@@ -248,7 +273,7 @@ public class UniqApplicationTest {
 
 
     @Test
-    void uniqFromFiles_IsDir_throwsException() {
+    void uniqFromFile_IsDir_throwsException() {
         assertThrows(Exception.class, () -> uniqApplication.uniqFromFile(false, false, false, TEST_PATH, null));
     }
 

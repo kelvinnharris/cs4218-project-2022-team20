@@ -19,6 +19,7 @@ import java.nio.file.Paths;
 import static org.junit.jupiter.api.Assertions.*;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 import static sg.edu.nus.comp.cs4218.impl.util.TestConstants.CMD_SUBS_FOLDER;
+import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
 
 class CommandSubstitutionTest {
     ByteArrayOutputStream myOut;
@@ -37,16 +38,6 @@ class CommandSubstitutionTest {
         deleteDir(new File(TEST_PATH));
     }
 
-    static void deleteDir(File file) {
-        File[] contents = file.listFiles();
-        if (contents != null) {
-            for (File f : contents) {
-                deleteDir(f);
-            }
-        }
-        file.delete();
-    }
-
     @BeforeEach
     void setUpEach() {
         myOut = new ByteArrayOutputStream();
@@ -54,7 +45,7 @@ class CommandSubstitutionTest {
     }
 
     @Test
-    void testCommandSubstitution_echoBackQuoteWithoutDoubleQuote_testPassed() throws Exception {
+    void testCommandSubstitutionParseCommand_echoBackQuoteWithoutDoubleQuote_testPassed() throws Exception {
         String inputString = "echo `echo 'quote is interpreted as special character'`";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -64,7 +55,7 @@ class CommandSubstitutionTest {
     }
 
     @Test
-    void testCommandSubstitution_doubleQuoteEchoOutsideBackQuote_testPassed() throws Exception {
+    void testCommandSubstitutionParseCommand_doubleQuoteEchoOutsideBackQuote_testPassed() throws Exception {
         String inputString = "echo \"`echo 'quote is interpreted as special character'`\"";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -74,7 +65,7 @@ class CommandSubstitutionTest {
     }
 
     @Test
-    void testCommandSubstitution_doubleQuoteEchoInsideBackQuote_testPassed() throws Exception {
+    void testCommandSubstitutionParseCommand_doubleQuoteEchoInsideBackQuote_testPassed() throws Exception {
         String inputString = "echo `echo \"'quote is not interpreted as special character'\"`";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -84,7 +75,7 @@ class CommandSubstitutionTest {
     }
 
     @Test
-    void testCommandSubstitution_echoOnRealSubstitutable_testPassed() throws Exception {
+    void testCommandSubstitutionParseCommand_echoOnRealSubstitutable_testPassed() throws Exception {
         String inputString = "echo `ls " + TEST_PATH + "`";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 

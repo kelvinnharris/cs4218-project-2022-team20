@@ -44,6 +44,9 @@ public class WcApplication implements WcInterface {
     public void run(String[] args, InputStream stdin, OutputStream stdout)
             throws WcException {
         // Format: wc [-clw] [FILES]
+        if (stdin == null) {
+            throw new WcException(ERR_NO_ISTREAM);
+        }
         if (stdout == null) {
             throw new WcException(ERR_NULL_STREAMS);
         }
@@ -52,11 +55,7 @@ public class WcApplication implements WcInterface {
         try {
             wcArgs.parse(args);
         } catch (Exception e) {
-            String errorMessage = e.toString();
-            String sBuilder = "invalid option -- '" +
-                    errorMessage.charAt(errorMessage.length() - 1) +
-                    "'";
-            throw new WcException(sBuilder); //NOPMD
+            throw new WcException(e.getMessage()); //NOPMD
         }
 
         String result;
@@ -203,7 +202,6 @@ public class WcApplication implements WcInterface {
 
     @Override
     public String countFromFileAndStdin(Boolean isBytes, Boolean isLines, Boolean isWords, InputStream stdin, String... fileName) throws Exception {
-        // TODO: To implement
         // Only when the [Filename] "-" is used then this function will be called
         if (stdin == null) {
             throw new WcException(ERR_NULL_STREAMS);

@@ -44,6 +44,9 @@ public class CatApplication implements CatInterface {
     @Override
     public void run(String[] args, InputStream stdin, OutputStream stdout) throws CatException {
         // TODO: To implement *.txt etcetc
+        if (stdin == null) {
+            throw new CatException(ERR_NO_ISTREAM);
+        }
         if (stdout == null) {
             throw new CatException(ERR_NULL_STREAMS);
         }
@@ -52,11 +55,7 @@ public class CatApplication implements CatInterface {
         try {
             catArgs.parse(args);
         } catch (Exception e) {
-            String errorMessage = e.toString();
-            String sBuilder = "invalid option -- '" +
-                    errorMessage.charAt(errorMessage.length() - 1) +
-                    "'";
-            throw new CatException(sBuilder); // NOPMD
+            throw new CatException(e.getMessage()); // NOPMD
         }
 
         String result;

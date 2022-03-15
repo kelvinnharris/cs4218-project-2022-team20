@@ -6,6 +6,14 @@ public class TestConstants {
     public static final String CMD_SUBS_FOLDER = "tmpCmdSubsTestFolder";
     public static final String GLOBBING_FOLDER = "tmpCmdSubsTestFolder";
     public static final String ECHO_PASTE_FOLDER = "tmpEchoPasteTestFolder";
+    public static final String ECHO_GREP_FOLDER = "tmpEchoGrepTestFolder";
+    public static final String CUT_PASTE_FOLDER = "tmpCutPasteTestFolder";
+    public static final String CAT_TEE_FOLDER = "tmpCatTeeTestFolder";
+    public static final String RM_CD_FOLDER = "tmpRmCdTestFolder";
+    public static final String WC_CAT_FOLDER = "tmpWcCatTestFolder";
+    public static final String PASTE_WC_FOLDER = "tmpPasteWcTestFolder";
+    public static final String CAT_CUT_FOLDER = "tmpCatCutTestFolder";
+    public static final String LS_SORT_FOLDER = "tmpLsSortTestFolder";
 
     public static final String CP_FOLDER = "tmpCpTestFolder";
     public static final String GREP_FOLDER = "tmpGrepTestFolder";

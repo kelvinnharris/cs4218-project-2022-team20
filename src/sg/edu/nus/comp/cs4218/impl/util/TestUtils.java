@@ -61,5 +61,4 @@ public class TestUtils { // NOPMD
     public static boolean isWindowsSystem() {
         return System.getProperty("os.name").toLowerCase().contains("win"); // NOPMD
     }
-
 }
