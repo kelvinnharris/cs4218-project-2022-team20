@@ -91,7 +91,7 @@ public final class IOUtils {
 
     public static Path resolveFilePath(String fileName) {
         Path currentDirectory = Paths.get(Environment.currentDirectory);
-        return currentDirectory.resolve(fileName);
+        return currentDirectory.resolve(fileName).normalize();
     }
 
     /**

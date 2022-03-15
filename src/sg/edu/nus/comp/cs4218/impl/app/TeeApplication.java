@@ -133,7 +133,11 @@ public class TeeApplication implements TeeInterface {
             } else if (Files.isDirectory(filePath)) {
                 stringBuilder.append(String.format("%s: Is a directory" + STRING_NEWLINE, file));
             } else {
-                writableFiles.add(file);
+                if (Files.isWritable(filePath)) {
+                    writableFiles.add(file);
+                } else {
+                    stringBuilder.append(String.format("%s: Permission denied" + STRING_NEWLINE, file));
+                }
             }
         }
         return writableFiles;

@@ -8,6 +8,7 @@ import sg.edu.nus.comp.cs4218.impl.parser.MvArgsParser;
 import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -59,6 +60,7 @@ public class MvApplication implements MvInterface { //NOPMD - suppressed GodClas
 
         if (Files.isDirectory(destAbsPath)) {
             mvFilesToFolder(isOverwrite, destFile, srcFiles);
+
         } else {
             if (srcFiles.length > 1) {
                 throw new MvException(ERR_TOO_MANY_ARGS);
@@ -71,8 +73,8 @@ public class MvApplication implements MvInterface { //NOPMD - suppressed GodClas
      * Move or rename source file as destination file.
      *
      * @param isOverwrite Boolean option to perform overwriting
-     * @param srcFile  of path to source file
-     * @param destFile of path to destination file
+     * @param srcFile     of path to source file
+     * @param destFile    of path to destination file
      * @return null
      * @throws MvException Exception related to mv
      */
@@ -81,22 +83,29 @@ public class MvApplication implements MvInterface { //NOPMD - suppressed GodClas
         Path srcAbsPath = IOUtils.resolveFilePath(srcFile);
         Path destAbsPath = IOUtils.resolveFilePath(destFile);
 
+
         if (!Files.exists(srcAbsPath)) {
             throw new MvException(String.format("cannot stat '%s': No such file or directory", srcFile));
         }
         if (srcAbsPath.toString().equals(destAbsPath.toString())) {
             throw new MvException(String.format("'%s' and '%s' are the same file", srcFile, destFile));
         }
-        if (Files.isDirectory(srcAbsPath)) {
-            throw new MvException(String.format("cannot overwrite non-directory '%s' with directory '%s'", destFile, srcFile));
-        }
 
-        if (!isOverwrite && srcAbsPath.toFile().exists()) {
+        // if overwrite and src exists and dest exists, don't move
+        if (!isOverwrite && srcAbsPath.toFile().exists() && destAbsPath.toFile().exists()) {
             return null; // no exception thrown
         }
 
         try {
-            Files.move(srcAbsPath, destAbsPath, ATOMIC_MOVE);
+            // if dest doesn't exists, create and rename, regardless of flag
+            if (!Files.exists(destAbsPath)) {
+                if (Files.isRegularFile(srcAbsPath)) {
+                    Files.createFile(destAbsPath);
+                } else if (Files.isDirectory(srcAbsPath)) {
+                    Files.createDirectories(destAbsPath);
+                }
+            }
+            Files.move(srcAbsPath, destAbsPath, REPLACE_EXISTING);
         } catch (Exception e) {
             throw new MvException(e);
         }
@@ -107,8 +116,8 @@ public class MvApplication implements MvInterface { //NOPMD - suppressed GodClas
      * Wrapper function for moving files to destination folder.
      *
      * @param isOverwrite Boolean option to perform overwriting
-     * @param destFolder of path to destination folder
-     * @param fileName   Array of String of file names
+     * @param destFolder  of path to destination folder
+     * @param fileName    Array of String of file names
      * @return null
      * @throws MvException Exception related to mv
      */
@@ -119,19 +128,17 @@ public class MvApplication implements MvInterface { //NOPMD - suppressed GodClas
             if (!srcAbsPath.toFile().exists()) {
                 throw new MvException(String.format("cannot stat '%s': No such file or directory", srcFile));
             }
-        }
 
-        for (String srcFile : fileName) {
             String destCwd = String.valueOf(IOUtils.resolveFilePath(destFolder).getParent());
             String srcCwd = String.valueOf(IOUtils.resolveFilePath(srcFile).getParent());
             String destFolderName = IOUtils.resolveFilePath(destFolder).toFile().getName();
             String srcFileName = IOUtils.resolveFilePath(srcFile).toFile().getName();
 
-            Path destAbsPath = IOUtils.resolveFilePath(Paths.get(destCwd, destFolder, srcFile).toString());
-            if (isOverwrite || destAbsPath.toFile().exists()) {
+            Path destAbsPath = IOUtils.resolveFilePath(Paths.get(destCwd, destFolderName, srcFileName).toString());
+            if (isOverwrite || !destAbsPath.toFile().exists()) {
                 // copy and delete original files
                 cpFilesToFolderImpl(isOverwrite, destCwd, srcCwd, destFolderName, srcFileName, destFolder, srcFile, false);
-                Path srcAbsPath = IOUtils.resolveFilePath(srcFile);
+                srcAbsPath = IOUtils.resolveFilePath(srcFile);
                 if (Files.isRegularFile(srcAbsPath)) {
                     srcAbsPath.toFile().delete();
                 } else {
