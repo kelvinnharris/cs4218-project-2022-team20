@@ -6,10 +6,7 @@ import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.exception.SortException;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -167,6 +164,15 @@ class SortApplicationTest {
         InputStream input = new ByteArrayInputStream(inputString.getBytes());
         String[] args = new String[]{"-z"};
         assertThrows(SortException.class, () -> sortApplication.run(args, input, System.out));
+    }
+
+    @Test
+    void sortFromStdin_emptyArgs_shouldThrow() throws Exception {
+        String inputString = "ab" + STRING_NEWLINE + "A" + STRING_NEWLINE + "a" + STRING_NEWLINE + "AB";
+        InputStream input = new ByteArrayInputStream(inputString.getBytes());
+        String[] argList = new String[]{""};
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        assertThrows(SortException.class, () -> sortApplication.run(argList, input, output));
     }
 
     @Test
