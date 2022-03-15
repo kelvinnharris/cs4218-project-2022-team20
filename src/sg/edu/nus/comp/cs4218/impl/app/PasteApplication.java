@@ -3,7 +3,6 @@ package sg.edu.nus.comp.cs4218.impl.app;
 import sg.edu.nus.comp.cs4218.app.PasteInterface;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.PasteException;
-import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.impl.parser.PasteArgsParser;
 import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 
@@ -14,6 +13,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_NO_ISTREAM;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_NO_PERM;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_TAB;
@@ -27,22 +27,15 @@ public class PasteApplication implements PasteInterface {
     private static final String ERR_IS_DIRECTORY = ": Is a directory";
     private static final String ERR_NOT_FOUND = ": No such file or directory";
 
-    List<List<String>> listResult;
     List<List<String>> tempListResult;
     private int maxFileLength = Integer.MIN_VALUE;
 
     private boolean fileNotExist = false;
     String fileNotExistName = "";
 
-    private int currentOperation = 0;
-    private static final int STDIN_OP = 1;
-    private static final int FILE_OP = 2;
-    private static final int STDIN_FILE_OP = 3;
-
     private static final String STRING_PASTE = "paste: ";
 
     public PasteApplication() {
-        this.listResult = new ArrayList<>();
         this.tempListResult = new ArrayList<>();
     }
 
@@ -58,6 +51,9 @@ public class PasteApplication implements PasteInterface {
      */
     @Override
     public void run(String[] args, InputStream stdin, OutputStream stdout) throws AbstractApplicationException {
+        if (stdin == null) {
+            throw new PasteException(ERR_NO_ISTREAM);
+        }
         if (stdout == null) {
             throw new PasteException(ERR_NULL_STREAMS);
         }
@@ -72,13 +68,10 @@ public class PasteApplication implements PasteInterface {
         String result;
         try {
             if (pasteArgs.getFiles().isEmpty()) {
-                currentOperation = STDIN_OP;
                 result = mergeStdin(pasteArgs.isSerial(), stdin);
             } else if (!pasteArgs.getFiles().contains("-")) { //NOPMD - suppressed ConfusingTernary - This was the initial implementation and changing might cause regression
-                currentOperation = FILE_OP;
                 result = mergeFile(pasteArgs.isSerial(), pasteArgs.getFiles().toArray(new String[0]));
             } else {
-                currentOperation = STDIN_FILE_OP;
                 result = mergeFileAndStdin(pasteArgs.isSerial(), stdin, pasteArgs.getFiles().toArray(new String[0]));
             }
         } catch (PasteException e) {
@@ -106,10 +99,11 @@ public class PasteApplication implements PasteInterface {
         tempListResult.add(data);
 
         // produce result in listResult
+        List<List<String>> listResult;
         if (isSerial) {
-            mergeFileDataInSerial(tempListResult);
+            listResult = mergeFileDataInSerial(tempListResult);
         } else {
-            mergeFileDataInParallel(tempListResult);
+            listResult = mergeFileDataInParallel(tempListResult);
         }
 
         return stringifyListResult(listResult);
@@ -148,20 +142,12 @@ public class PasteApplication implements PasteInterface {
             tempListResult.add(fileDatas);
         }
 
-        if (currentOperation != FILE_OP) {
-            return "";
-        }
-
         // produce result in listResult
+        List<List<String>> listResult;
         if (isSerial) {
-            mergeFileDataInSerial(tempListResult);
+            listResult = mergeFileDataInSerial(tempListResult);
         } else {
-            mergeFileDataInParallel(tempListResult);
-        }
-
-        // If there is a file that doesn't exist, output file doesn't exist error
-        if (fileNotExist) {
-            return STRING_PASTE + fileNotExistName + ": " + ERR_NOT_FOUND;
+            listResult = mergeFileDataInParallel(tempListResult);
         }
 
         return stringifyListResult(listResult);
@@ -212,25 +198,29 @@ public class PasteApplication implements PasteInterface {
             return STRING_PASTE + fileNotExistName + ": " + ERR_NOT_FOUND;
         }
 
+        List<List<String>> listResult;
         if (isSerial) {
-            mergeFileDataInSerial(tempListResult);
+            listResult = mergeFileDataInSerial(tempListResult);
         } else {
-            mergeFileDataInParallel(tempListResult);
+            listResult = mergeFileDataInParallel(tempListResult);
         }
 
         return stringifyListResult(listResult);
     }
 
     // Produce the correct output to listResult
-    public void mergeFileDataInSerial(List<List<String>> tempListResult) {
+    public List<List<String>> mergeFileDataInSerial(List<List<String>> tempListResult) {
+        List<List<String>> listResult = new ArrayList<>();
         for (List<String> lst : tempListResult) {
             List<String> currLst = new ArrayList<>(lst);
-            this.listResult.add(currLst);
+            listResult.add(currLst);
         }
+        return listResult;
     }
 
     // Produce the correct output to listResult
-    public void mergeFileDataInParallel(List<List<String>> tempListResult) {
+    public List<List<String>> mergeFileDataInParallel(List<List<String>> tempListResult) {
+        List<List<String>> listResult = new ArrayList<>();
         for (int i = 0; i < maxFileLength; ++i) {
             List<String> currLstToAdd = new ArrayList<>();
             for (List<String> currLst : tempListResult) {
@@ -240,8 +230,9 @@ public class PasteApplication implements PasteInterface {
                     currLstToAdd.add("");
                 }
             }
-            this.listResult.add(currLstToAdd);
+            listResult.add(currLstToAdd);
         }
+        return listResult;
     }
 
     public String stringifyListResult(List<List<String>> listResult) {
@@ -253,13 +244,5 @@ public class PasteApplication implements PasteInterface {
         }
 
         return String.join(STRING_NEWLINE, interRes);
-    }
-
-    public void setCurrentOperation(int operation) {
-        this.currentOperation = operation;
-    }
-
-    public int getFileOperation() {
-        return this.FILE_OP;
     }
 }

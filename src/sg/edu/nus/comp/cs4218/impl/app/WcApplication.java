@@ -44,6 +44,9 @@ public class WcApplication implements WcInterface {
     public void run(String[] args, InputStream stdin, OutputStream stdout)
             throws WcException {
         // Format: wc [-clw] [FILES]
+        if (stdin == null) {
+            throw new WcException(ERR_NO_ISTREAM);
+        }
         if (stdout == null) {
             throw new WcException(ERR_NULL_STREAMS);
         }
