@@ -80,7 +80,6 @@ public class PasteApplicationTest {
     @Test
         // command: paste tmpPasteTestFolder/test1.txt tmpPasteTestFolder/test2.txt
     void testPasteMergeFile_fileInputWithoutFlag_shouldShowMergedContentsInParallel() throws Exception {
-        pasteApplication.setCurrentOperation(pasteApplication.getFileOperation());
         String result = pasteApplication.mergeFile(false, FILE_PATH_1, FILE_PATH_2);
 
         String sbExpected = "1" + StringUtils.STRING_TAB + "A" + StringUtils.STRING_NEWLINE +
@@ -95,7 +94,6 @@ public class PasteApplicationTest {
     @Test
         // command: paste -s tmpPasteTestFolder/test1.txt tmpPasteTestFolder/test2.txt
     void testPasteMergeFile_fileInputWithFlag_shouldShowMergedContentsSerially() throws Exception {
-        pasteApplication.setCurrentOperation(pasteApplication.getFileOperation());
         String result = pasteApplication.mergeFile(true, FILE_PATH_1, FILE_PATH_2);
 
         String sbExpected = "1" + StringUtils.STRING_TAB + "2" + StringUtils.STRING_TAB +

@@ -44,6 +44,9 @@ public class CatApplication implements CatInterface {
     @Override
     public void run(String[] args, InputStream stdin, OutputStream stdout) throws CatException {
         // TODO: To implement *.txt etcetc
+        if (stdin == null) {
+            throw new CatException(ERR_NO_ISTREAM);
+        }
         if (stdout == null) {
             throw new CatException(ERR_NULL_STREAMS);
         }
