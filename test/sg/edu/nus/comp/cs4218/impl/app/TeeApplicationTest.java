@@ -13,11 +13,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static java.nio.file.Files.readString;
 import static java.nio.file.StandardOpenOption.APPEND;
 import static org.junit.jupiter.api.Assertions.*;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 import static sg.edu.nus.comp.cs4218.impl.util.TestConstants.TEE_FOLDER;
+import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.appendToFile;
+import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
 
 public class TeeApplicationTest {
 
@@ -42,26 +45,6 @@ public class TeeApplicationTest {
         teeApplication = new TeeApplication();
     }
 
-    static void deleteDir(File file) {
-        File[] contents = file.listFiles();
-        if (contents != null) {
-            for (File f : contents) {
-                deleteDir(f);
-            }
-        }
-        file.delete();
-    }
-
-    static void appendToFile(Path file, String... lines) throws IOException {
-        for (String line : lines) {
-            Files.write(file, (line + STRING_NEWLINE).getBytes(), APPEND);
-        }
-    }
-
-    static String readString(Path path) throws IOException {
-        return Files.readString(path, StandardCharsets.UTF_8);
-    }
-
     @AfterEach
     void tearDown() throws IOException {
         deleteDir(new File(TEST_PATH));
@@ -81,7 +64,7 @@ public class TeeApplicationTest {
     }
 
     @Test
-    void testTee_teeWithValidFile_shouldOverwritePreviousContent() throws TeeException {
+    void teeFromStdin_teeWithValidFile_shouldOverwritePreviousContent() throws TeeException {
         try {
             teeApplication.teeFromStdin(false, inputStream, FILE1_PATH);
             String fileContent = readString(Paths.get(FILE1_PATH));
@@ -92,7 +75,7 @@ public class TeeApplicationTest {
     }
 
     @Test
-    void testTee_teeWithValidFiles_shouldOverwritePreviousContent() throws TeeException {
+    void teeFromStdin_teeWithValidFiles_shouldOverwritePreviousContent() throws TeeException {
         try {
             String[] files = {FILE1_PATH, FILE2_PATH};
             teeApplication.teeFromStdin(false, inputStream, files);
@@ -106,7 +89,7 @@ public class TeeApplicationTest {
     }
 
     @Test
-    void testTee_teeWithValidFileAppend_shouldAppendToFile() throws TeeException {
+    void teeFromStdin_teeWithValidFileAppend_shouldAppendToFile() throws TeeException {
         try {
             StringBuilder stringBuilder = new StringBuilder();
             for (String s : LINES1) {
@@ -123,7 +106,7 @@ public class TeeApplicationTest {
 
 
     @Test
-    void testTee_teeWithSameNameFilesAppend_shouldAppendOrderPreserved() throws TeeException {
+    void teeFromStdin_teeWithSameNameFilesAppend_shouldAppendOrderPreserved() throws TeeException {
         try {
             StringBuilder stringBuilder = new StringBuilder();
             for (String s : LINES1) {
@@ -144,12 +127,12 @@ public class TeeApplicationTest {
     }
 
     @Test
-    void testTee_teeWithFolderAsInputFile_shouldReadFromStdin() throws IOException, TeeException {
+    void teeFromStdin_teeWithFolderAsInputFile_shouldReadFromStdin() throws IOException, TeeException {
         assertDoesNotThrow(() -> teeApplication.teeFromStdin(false, inputStream, FOLDER1_PATH));
     }
 
     @Test
-    void testTee_teeWithNonExistentFile_shouldCreateNewFileAndWrite() throws TeeException {
+    void teeFromStdin_teeWithNonExistentFile_shouldCreateNewFileAndWrite() throws TeeException {
         try {
             teeApplication.teeFromStdin(false, inputStream, NE_FILE_PATH);
             String fileContent = readString(Paths.get(NE_FILE_PATH));
@@ -160,19 +143,19 @@ public class TeeApplicationTest {
     }
 
     @Test
-    void testTee_teeWithEmptyArgs_shouldPass() {
+    void run_teeWithEmptyArgs_shouldPass() {
         String[] args = {};
         assertDoesNotThrow(() -> teeApplication.run(args, inputStream, outputStream));
     }
 
     @Test
-    void testTee_teeWithNullStdin_shouldThrowException() {
+    void run_teeWithNullStdin_shouldThrowException() {
         String[] args = {FILE1_NAME};
         assertThrows(TeeException.class, () -> teeApplication.run(args, null, outputStream));
     }
 
     @Test
-    void testTee_teeWithNullStdout_shouldThrowException() {
+    void run_teeWithNullStdout_shouldThrowException() {
         String[] args = {FILE1_NAME};
         assertThrows(TeeException.class, () -> teeApplication.run(args, inputStream, null));
     }

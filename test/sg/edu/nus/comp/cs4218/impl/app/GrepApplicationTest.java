@@ -18,11 +18,14 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
+import static java.nio.file.Files.readString;
 import static java.nio.file.StandardOpenOption.APPEND;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 import static sg.edu.nus.comp.cs4218.impl.util.TestConstants.GREP_FOLDER;
+import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.appendToFile;
+import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
 
 public class GrepApplicationTest {
 
@@ -44,26 +47,6 @@ public class GrepApplicationTest {
     @BeforeAll
     static void setUp() {
         grepApplication = new GrepApplication();
-    }
-
-    static void deleteDir(File file) {
-        File[] contents = file.listFiles();
-        if (contents != null) {
-            for (File f : contents) {
-                deleteDir(f);
-            }
-        }
-        file.delete();
-    }
-
-    static void appendToFile(Path file, String... lines) throws IOException {
-        for (String line : lines) {
-            Files.write(file, (line + STRING_NEWLINE).getBytes(), APPEND);
-        }
-    }
-
-    static String readString(Path path) throws IOException {
-        return Files.readString(path, StandardCharsets.UTF_8);
     }
 
     @AfterEach
