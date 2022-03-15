@@ -59,7 +59,6 @@ public final class IOUtils {
      * @param inputStream InputStream to be closed.
      * @throws ShellException If inputStream cannot be closed successfully.
      */
-    @SuppressWarnings("PMD.PreserveStackTrace")
     public static void closeInputStream(InputStream inputStream) throws ShellException {
         if (inputStream == null || inputStream.equals(System.in)) {
             return;

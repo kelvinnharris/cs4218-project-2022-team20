@@ -304,7 +304,7 @@ public class WcApplication implements WcInterface {
         return sb.append(' ').append(name).toString();
     }
 
-    private static class Result { // NOPMD
+    static class Result { // NOPMD
         long bytes = -1;
         long lines = -1;
         long words = -1;
