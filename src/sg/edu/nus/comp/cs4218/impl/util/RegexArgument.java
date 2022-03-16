@@ -76,16 +76,19 @@ public final class RegexArgument {
             String dir = "";
             String tokens[] = plaintext.toString().replaceAll("\\\\", "/").split("/");
             for (int i = 0; i < tokens.length - 1; i++) {
+                if (tokens[i].contains(String.valueOf(CHAR_ASTERISK))) {
+                    break;
+                }
                 dir += tokens[i] + File.separator;
             }
 
-            File currentDir = Paths.get(Environment.currentDirectory + File.separator + dir).toFile();
+            Boolean isAbsolute = Paths.get(dir).toFile().isAbsolute();
 
-            for (String candidate : currentDir.list()) {
-                if (regexPattern.matcher(candidate).matches()) {
-                    globbedFiles.add(dir + candidate);
-                }
-            }
+            File currentDir = isAbsolute
+                    ? Paths.get(dir).toFile()
+                    : Paths.get(Environment.currentDirectory + File.separator + dir).toFile();
+
+            globbedFiles = traverseAndFilter(regexPattern, currentDir, isAbsolute, false);
 
             Collections.sort(globbedFiles);
         }
