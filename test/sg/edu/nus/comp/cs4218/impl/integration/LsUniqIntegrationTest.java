@@ -75,7 +75,7 @@ public class LsUniqIntegrationTest {
     }
 
     @Test
-    void testLsUniq_uniqFromLsFiles_shouldReturnCorrectUniqLines() throws Exception {
+    void testLsUniqParseCommand_uniqFromLsFiles_shouldReturnCorrectUniqLines() throws Exception {
         String commandString = String.format("uniq `ls %s`", FILE1_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         command.evaluate(inputStream, stdOut);
@@ -84,7 +84,7 @@ public class LsUniqIntegrationTest {
     }
 
     @Test
-    void testLsUniq_uniqDuplicateFromLsFiles_shouldReturnCorrectDuplicateLines() throws Exception {
+    void testLsUniqParseCommand_uniqDuplicateFromLsFiles_shouldReturnCorrectDuplicateLines() throws Exception {
         String commandString = String.format("uniq -d `ls %s`", FILE1_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         command.evaluate(inputStream, stdOut);
@@ -93,7 +93,7 @@ public class LsUniqIntegrationTest {
     }
 
     @Test
-    void testLsUniq_uniqDuplicateOutputOfLsAsInput_shouldReturnNoOutput() throws Exception {
+    void testLsUniqParseCommand_uniqDuplicateOutputOfLsAsInput_shouldReturnNoOutput() throws Exception {
         String commandString = String.format("ls %s | uniq -d", FILE1_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         command.evaluate(inputStream, stdOut);
@@ -101,7 +101,7 @@ public class LsUniqIntegrationTest {
     }
 
     @Test
-    void testLsUniq_LsFilenamesReturnedByUniq_shouldReturnCorrectOutput() throws Exception {
+    void testLsUniqParseCommand_LsFilenamesReturnedByUniq_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("ls `uniq %s`", FILE3_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         command.evaluate(inputStream, stdOut);
@@ -111,7 +111,7 @@ public class LsUniqIntegrationTest {
     }
 
     @Test
-    void testLsUniq_UniqOutputOfLsFromUniq_shouldReturnCorrectOutput() throws Exception {
+    void testLsUniqParseCommand_UniqOutputOfLsFromUniq_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("ls `uniq %s` | uniq -c", FILE3_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         command.evaluate(inputStream, stdOut);
