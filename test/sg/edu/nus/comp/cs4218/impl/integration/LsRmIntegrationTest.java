@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Environment;
+import sg.edu.nus.comp.cs4218.exception.RmException;
 import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 
 import java.io.ByteArrayOutputStream;
@@ -13,7 +14,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
@@ -67,6 +68,8 @@ public class LsRmIntegrationTest {
         String expected = "";
         shell.parseAndEvaluate(commandString, stdOut);
         assertEquals(expected, stdOut.toString());
+        File tempFile = new File(FILE1_PATH);
+        assertFalse(tempFile.exists());
     }
 
     @Test
@@ -75,6 +78,8 @@ public class LsRmIntegrationTest {
         String expected = TEST_FOLDER_NAME + FILE1_NAME + STRING_NEWLINE;
         shell.parseAndEvaluate(commandString, stdOut);
         assertEquals(expected, stdOut.toString());
+        File tempFile = new File(FILE1_PATH);
+        assertFalse(tempFile.exists());
     }
 
     @Test
@@ -82,6 +87,8 @@ public class LsRmIntegrationTest {
         String commandString = String.format("rm %s | ls %s", FILE1_PATH, FILE1_PATH);
         String expected = String.format("ls: cannot access '%s': No such file or directory", TEST_FOLDER_NAME + FILE1_NAME) + STRING_NEWLINE;
         shell.parseAndEvaluate(commandString, stdOut);
+        File tempFile = new File(FILE1_PATH);
+        assertFalse(tempFile.exists());
         assertEquals(expected, stdOut.toString());
     }
 
@@ -90,6 +97,8 @@ public class LsRmIntegrationTest {
         String commandString = String.format("rm %s; ls %s", FILE1_PATH, FILE1_PATH);
         String expected = String.format("ls: cannot access '%s': No such file or directory", TEST_FOLDER_NAME + FILE1_NAME) + STRING_NEWLINE;
         shell.parseAndEvaluate(commandString, stdOut);
+        File tempFile = new File(FILE1_PATH);
+        assertFalse(tempFile.exists());
         assertEquals(expected, stdOut.toString());
     }
 
@@ -115,5 +124,11 @@ public class LsRmIntegrationTest {
         String expected = STRING_NEWLINE;
         shell.parseAndEvaluate(commandString, stdOut);
         assertEquals(expected, stdOut.toString());
+    }
+
+    @Test
+    void testLsRmParseAndEvaluate_lsAndRmNotEmptyDir_throwsException() {
+        String commandString = String.format("ls %s | rm %s", FOLDER1_PATH, FOLDER1_PATH);
+        assertThrows(RmException.class, () -> shell.parseAndEvaluate(commandString, stdOut));
     }
 }
