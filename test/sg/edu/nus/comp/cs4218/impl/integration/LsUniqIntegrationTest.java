@@ -6,7 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Command;
 import sg.edu.nus.comp.cs4218.Environment;
-import sg.edu.nus.comp.cs4218.exception.LsException;
+import sg.edu.nus.comp.cs4218.exception.UniqException;
 import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 import sg.edu.nus.comp.cs4218.impl.util.ApplicationRunner;
 import sg.edu.nus.comp.cs4218.impl.util.CommandBuilder;
@@ -75,7 +75,7 @@ public class LsUniqIntegrationTest {
     }
 
     @Test
-    void testLsUniqParseCommand_uniqFromLsFiles_shouldReturnCorrectUniqLines() throws Exception {
+    void testLsUniq_uniqFromLsFiles_shouldReturnCorrectUniqLines() throws Exception {
         String commandString = String.format("uniq `ls %s`", FILE1_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         command.evaluate(inputStream, stdOut);
@@ -84,8 +84,8 @@ public class LsUniqIntegrationTest {
     }
 
     @Test
-    void testLsUniqParseCommand_uniqDuplicateFromLsFiles_shouldReturnCorrectDuplicateLines() throws Exception {
-        String commandString = String.format("uniq -d `ls %s", FILE1_NAME);
+    void testLsUniq_uniqDuplicateFromLsFiles_shouldReturnCorrectDuplicateLines() throws Exception {
+        String commandString = String.format("uniq -d `ls %s`", FILE1_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         command.evaluate(inputStream, stdOut);
         String uniqResult1 = "abc" + STRING_NEWLINE + "abc" + STRING_NEWLINE;
@@ -93,7 +93,7 @@ public class LsUniqIntegrationTest {
     }
 
     @Test
-    void testLsUniqParseCommand_uniqDuplicateOutputOfLsAsInput_shouldReturnNoOutput() throws Exception {
+    void testLsUniq_uniqDuplicateOutputOfLsAsInput_shouldReturnNoOutput() throws Exception {
         String commandString = String.format("ls %s | uniq -d", FILE1_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         command.evaluate(inputStream, stdOut);
@@ -101,28 +101,30 @@ public class LsUniqIntegrationTest {
     }
 
     @Test
-    void testLsUniqParseCommand_LsFilenamesReturnedByUniq_shouldReturnCorrectOutput() throws Exception {
+    void testLsUniq_LsFilenamesReturnedByUniq_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("ls `uniq %s`", FILE3_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         command.evaluate(inputStream, stdOut);
 
-        String expectedOutput = FILE1_NAME + STRING_NEWLINE + FILE1_NAME + STRING_NEWLINE;
+        String expectedOutput = FILE1_NAME + STRING_NEWLINE + FILE2_NAME + STRING_NEWLINE + FILE1_NAME + STRING_NEWLINE;
         assertEquals(expectedOutput, stdOut.toString());
     }
 
     @Test
-    void testLsUniqParseCommand_UniqOutputOfLsFromUniq_shouldReturnCorrectOutput() throws Exception {
+    void testLsUniq_UniqOutputOfLsFromUniq_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("ls `uniq %s` | uniq -c", FILE3_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         command.evaluate(inputStream, stdOut);
-        String expectedOutput = "2" + CHAR_SPACE + FILE1_NAME + STRING_NEWLINE;
+        String expectedOutput = "1" + CHAR_SPACE + FILE1_NAME + STRING_NEWLINE
+                + "1" + CHAR_SPACE + FILE2_NAME + STRING_NEWLINE
+                + "1" + CHAR_SPACE + FILE1_NAME + STRING_NEWLINE;
         assertEquals(expectedOutput, stdOut.toString());
     }
 
     @Test
-    void testLsUniqParseCommand_UniqOutputOfLsNoSuchFile_shouldThrowLsException() throws Exception {
-        String commandString = String.format("ls `uniq %s`", FILE2_NAME);
+    void testLsUniq_UniqDirOutputOfLs_shouldThrowUniqException() throws Exception {
+        String commandString = String.format("ls `uniq %s`", FOLDER1_PATH);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
-        assertThrows(LsException.class, () -> command.evaluate(inputStream, stdOut));
+        assertThrows(UniqException.class, () -> command.evaluate(inputStream, stdOut));
     }
 }
