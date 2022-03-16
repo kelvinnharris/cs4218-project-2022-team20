@@ -24,7 +24,8 @@ import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
 
 public class GrepApplicationTest {
 
-    private static final String INPUT = "The first file" + STRING_NEWLINE + "The second line" + STRING_NEWLINE + "1000" + STRING_NEWLINE;
+    private static final String INPUT = "The first file" + STRING_NEWLINE + "The second line" + STRING_NEWLINE + "1000"
+            + STRING_NEWLINE; //NOPMD - suppressed AvoidDuplicateLiterals - String literals are file content
     private static final String FILE1_NAME = "file1.txt";
     private static final String FILE2_NAME = "file2.txt";
     private static final String NE_FILE_NAME = "nonExistent.txt";
