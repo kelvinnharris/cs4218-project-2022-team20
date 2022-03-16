@@ -76,7 +76,7 @@ public class GrepSortIntegrationTest {
     }
 
     @Test
-    void testGrepSort_grepOutputOfSortValid_shouldReturnCorrectLines() throws Exception {
+    void testGrepSortParseCommand_grepOutputOfSortValid_shouldReturnCorrectLines() throws Exception {
         String commandString = String.format("sort -n %s | grep \"2\"", FILE2_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         command.evaluate(inputStream, stdOut);
@@ -85,7 +85,7 @@ public class GrepSortIntegrationTest {
     }
 
     @Test
-    void testGrepSort_sortOutputOfGrepValid_shouldReturnCorrectLines() throws Exception {
+    void testGrepSortParseCommand_sortOutputOfGrepValid_shouldReturnCorrectLines() throws Exception {
         String commandString = String.format("grep \"Ab\" %s -i | sort", FILE1_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         command.evaluate(inputStream, stdOut);
@@ -94,7 +94,7 @@ public class GrepSortIntegrationTest {
     }
 
     @Test
-    void testGrepSort_sortOutputOfGrepFromStdin_shouldReturnCorrectLines() throws Exception {
+    void testGrepSortParseCommand_sortOutputOfGrepFromStdin_shouldReturnCorrectLines() throws Exception {
         String commandString = "grep \"00\" - | sort -n";
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         command.evaluate(inputStream, stdOut);
@@ -103,7 +103,7 @@ public class GrepSortIntegrationTest {
     }
 
     @Test
-    void testGrepSort_sortEmptyOutputOfGrep_shouldReturnCorrectLines() throws Exception {
+    void testGrepSortParseCommand_sortEmptyOutputOfGrep_shouldReturnCorrectLines() throws Exception {
         String commandString = String.format("grep \"hello\" %s | sort", FILE2_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         command.evaluate(inputStream, stdOut);
@@ -111,7 +111,7 @@ public class GrepSortIntegrationTest {
     }
 
     @Test
-    void testGrepSort_sortGrepOutputFromMultipleFilesAndStdin_shouldReturnCorrectLines() throws Exception {
+    void testGrepSortParseCommand_sortGrepOutputFromMultipleFilesAndStdin_shouldReturnCorrectLines() throws Exception {
         String commandString = String.format("grep \"1\" %s %s - | sort", FILE1_NAME, FILE2_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         command.evaluate(inputStream, stdOut);
@@ -121,7 +121,7 @@ public class GrepSortIntegrationTest {
     }
 
     @Test
-    void testGrepSort_sortErrorOutputThenGrepPattern_shouldReturnCorrectLines() throws Exception {
+    void testGrepSortParseCommand_sortErrorOutputThenGrepPattern_shouldReturnCorrectLines() throws Exception {
         String commandString = String.format("sort -z %s | grep \"f\"", FILE3_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         assertThrows(SortException.class, () -> command.evaluate(inputStream, stdOut));

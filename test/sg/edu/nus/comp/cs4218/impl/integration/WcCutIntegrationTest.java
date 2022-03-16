@@ -74,7 +74,7 @@ public class WcCutIntegrationTest {
     }
 
     @Test
-    void testWcCut_cutFromWcOutputValid_shouldReturnCorrectOutput() throws Exception {
+    void testWcCutParseCommand_cutFromWcOutputValid_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("wc %s | cut -b 26-34", FILE1_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         command.evaluate(inputStream, stdOut);
@@ -83,7 +83,7 @@ public class WcCutIntegrationTest {
     }
 
     @Test
-    void testWcCut_cutFromWcOutputOutOfBoundRange_shouldReturnOutputWithNullsForOutOfBoundValues() throws Exception {
+    void testWcCutParseCommand_cutFromWcOutputOutOfBoundRange_shouldReturnOutputWithNullsForOutOfBoundValues() throws Exception {
         String commandString = String.format("wc %s | cut -b 26-35", FILE1_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         command.evaluate(inputStream, stdOut);
@@ -92,7 +92,7 @@ public class WcCutIntegrationTest {
     }
 
     @Test
-    void testWcCut_cutFromWcOutputMultipleFiles_shouldReturnCorrectOutput() throws Exception {
+    void testWcCutParseCommand_cutFromWcOutputMultipleFiles_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("wc %s %s | cut -b 23-24", FILE1_NAME, FILE2_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         command.evaluate(inputStream, stdOut);
@@ -106,7 +106,7 @@ public class WcCutIntegrationTest {
     }
 
     @Test
-    void testWcCut_cutFromValidWcOutputAsArgument_shouldReturnCorrectOutput() throws Exception {
+    void testWcCutParseCommand_cutFromValidWcOutputAsArgument_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("cut -b 1 `wc %s | cut -b 26-34`", FILE1_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         command.evaluate(inputStream, stdOut);
@@ -116,7 +116,7 @@ public class WcCutIntegrationTest {
     }
 
     @Test
-    void testWcCut_cutFromInvalidWcOutputAsArgument_shouldThrowCutException() throws Exception {
+    void testWcCutParseCommand_cutFromInvalidWcOutputAsArgument_shouldThrowCutException() throws Exception {
         String commandString = String.format("cut -c 1-3 `wc %s`", FILE1_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         assertThrows(CutException.class, () -> command.evaluate(inputStream, stdOut));
