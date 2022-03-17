@@ -135,9 +135,12 @@ public class PasteApplication implements PasteInterface {
                 continue;
             }
 
-            InputStream input = IOUtils.openInputStream(file); //NOPMD - suppressed CloseResource - Resource has been closed at line 146
-            List<String> fileDatas = IOUtils.getLinesFromInputStream(input);
-            IOUtils.closeInputStream(input);
+            List<String> fileDatas;
+            try (InputStream input = IOUtils.openInputStream(file)) {
+                fileDatas = IOUtils.getLinesFromInputStream(input);
+                IOUtils.closeInputStream(input);
+            }
+
             maxFileLength = Math.max(maxFileLength, fileDatas.size());
             tempListResult.add(fileDatas);
         }

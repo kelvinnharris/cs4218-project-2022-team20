@@ -55,27 +55,27 @@ public class WcApplication implements WcInterface {
         try {
             wcArgs.parse(args);
         } catch (Exception e) {
-            throw new WcException(e.getMessage()); //NOPMD
+            throw new WcException(e.getMessage()); //NOPMD - suppressed PreserveStackTrace - No reason to preserve stackTrace as this is the only Exception
         }
 
         String result;
         try {
             if (wcArgs.getFiles().isEmpty()) {
                 result = countFromStdin(wcArgs.isBytes(), wcArgs.isLines(), wcArgs.isWords(), stdin);
-            } else if (!wcArgs.getFiles().contains("-")) { //NOPMD
+            } else if (!wcArgs.getFiles().contains("-")) { //NOPMD - suppressed ConfusingTernary - This was the initial implementation and changing might cause regression
                 result = countFromFiles(wcArgs.isBytes(), wcArgs.isLines(), wcArgs.isWords(), wcArgs.getFiles().toArray(new String[0]));
             } else {
                 result = countFromFileAndStdin(wcArgs.isBytes(), wcArgs.isLines(), wcArgs.isWords(), stdin, wcArgs.getFiles().toArray(new String[0]));
             }
         } catch (Exception e) {
             // Will never happen
-            throw new WcException(ERR_GENERAL); //NOPMD
+            throw new WcException(ERR_GENERAL); // NOPMD - suppressed PreserveStackTrace - No reason to preserve stackTrace as this is the only Exception
         }
         try {
             stdout.write(result.getBytes());
             stdout.write(STRING_NEWLINE.getBytes());
         } catch (IOException e) {
-            throw new WcException(ERR_WRITE_STREAM);//NOPMD
+            throw new WcException(ERR_WRITE_STREAM);// NOPMD - suppressed PreserveStackTrace - No reason to preserve stackTrace as reason is contained in message
         }
     }
 
@@ -89,7 +89,7 @@ public class WcApplication implements WcInterface {
      * @throws Exception
      */
     @Override
-    public String countFromFiles(Boolean isBytes, Boolean isLines, Boolean isWords, //NOPMD
+    public String countFromFiles(Boolean isBytes, Boolean isLines, Boolean isWords, //NOPMD - suppressed ExcessiveMethodLength - keep to preserve readability of method
                                  String... fileName) throws Exception {
         if (fileName == null) {
             throw new WcException(ERR_NULL_FILES);
@@ -125,9 +125,11 @@ public class WcApplication implements WcInterface {
                 continue;
             }
 
-            InputStream input = IOUtils.openInputStream(file); // NOPMD
-            long[] count = getCountReport(input); // lines words bytes
-            IOUtils.closeInputStream(input);
+            long[] count; // lines words bytes
+            try (InputStream input = IOUtils.openInputStream(file)) {
+                count = getCountReport(input);
+                IOUtils.closeInputStream(input);
+            }
 
             // Update total count
             totalLines += count[0];
@@ -136,23 +138,23 @@ public class WcApplication implements WcInterface {
 
             // Format all output: " %7d %7d %7d %s"
             // Output in the following order: lines words bytes filename
-            StringBuilder sb = new StringBuilder(); //NOPMD
+            StringBuilder stringBuilder = new StringBuilder();
             if (isLines) {
-                sb.append(String.format(NUMBER_FORMAT, count[0]));
+                stringBuilder.append(String.format(NUMBER_FORMAT, count[0]));
                 res.setLines(count[0]);
             }
             if (isWords) {
-                sb.append(String.format(NUMBER_FORMAT, count[1]));
+                stringBuilder.append(String.format(NUMBER_FORMAT, count[1]));
                 res.setWords(count[1]);
             }
             if (isBytes) {
-                sb.append(String.format(NUMBER_FORMAT, count[2]));
+                stringBuilder.append(String.format(NUMBER_FORMAT, count[2]));
                 res.setBytes(count[2]);
             }
             res.setFileName(file);
             listRes.add(res);
-            sb.append(String.format(" %s", file));
-            result.add(sb.toString());
+            stringBuilder.append(String.format(" %s", file));
+            result.add(stringBuilder.toString());
         }
 
         // Print cumulative counts for all the files
@@ -291,20 +293,20 @@ public class WcApplication implements WcInterface {
     }
 
     public String getCountReportInString(boolean isBytes, boolean isLines, boolean isWords, long[] count, String name) {
-        StringBuilder sb = new StringBuilder(); //NOPMD
+        StringBuilder stringBuilder = new StringBuilder();
         if (isLines) {
-            sb.append(String.format(NUMBER_FORMAT, count[0]));
+            stringBuilder.append(String.format(NUMBER_FORMAT, count[0]));
         }
         if (isWords) {
-            sb.append(String.format(NUMBER_FORMAT, count[1]));
+            stringBuilder.append(String.format(NUMBER_FORMAT, count[1]));
         }
         if (isBytes) {
-            sb.append(String.format(NUMBER_FORMAT, count[2]));
+            stringBuilder.append(String.format(NUMBER_FORMAT, count[2]));
         }
-        return sb.append(' ').append(name).toString();
+        return stringBuilder.append(' ').append(name).toString();
     }
 
-    static class Result { // NOPMD
+    static class Result { //NOPMD - suppressed DataClass - done as this is the most reasonable implementation
         long bytes = -1;
         long lines = -1;
         long words = -1;
@@ -357,20 +359,20 @@ public class WcApplication implements WcInterface {
                 return errorMessage + STRING_NEWLINE + countReportErr;
             }
 
-            StringBuilder sb = new StringBuilder(); //NOPMD
+            StringBuilder stringBuilder = new StringBuilder();
             if (lines != -1) {
-                sb.append(String.format(WcApplication.NUMBER_FORMAT, lines));
+                stringBuilder.append(String.format(WcApplication.NUMBER_FORMAT, lines));
             }
             if (words != -1) {
-                sb.append(String.format(WcApplication.NUMBER_FORMAT, words));
+                stringBuilder.append(String.format(WcApplication.NUMBER_FORMAT, words));
             }
             if (bytes != -1) {
-                sb.append(String.format(WcApplication.NUMBER_FORMAT, bytes));
+                stringBuilder.append(String.format(WcApplication.NUMBER_FORMAT, bytes));
             }
             if (fileName != null) {
-                sb.append(String.format(" %s", fileName));
+                stringBuilder.append(String.format(" %s", fileName));
             }
-            return sb.toString();
+            return stringBuilder.toString();
         }
     }
 }

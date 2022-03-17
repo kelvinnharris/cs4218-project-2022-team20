@@ -55,7 +55,7 @@ public class CatApplication implements CatInterface {
         try {
             catArgs.parse(args);
         } catch (Exception e) {
-            throw new CatException(e.getMessage()); // NOPMD
+            throw new CatException(e.getMessage());  //NOPMD - suppressed PreserveStackTrace - No reason to preserve stackTrace as this is the only Exception
         }
 
         String result;
@@ -69,14 +69,14 @@ public class CatApplication implements CatInterface {
             }
         } catch (Exception e) {
             // Will never happen
-            throw new CatException(ERR_GENERAL); // NOPMD
+            throw new CatException(ERR_GENERAL);  //NOPMD - suppressed PreserveStackTrace - No reason to preserve stackTrace as this is the only Exception
         }
 
         try {
             stdout.write(result.getBytes());
             stdout.write(STRING_NEWLINE.getBytes());
         } catch (IOException e) {
-            throw new CatException(ERR_WRITE_STREAM); // NOPMD
+            throw new CatException(ERR_WRITE_STREAM);  // NOPMD - suppressed PreserveStackTrace - No reason to preserve stackTrace as reason is contained in message
         }
     }
 
@@ -106,13 +106,15 @@ public class CatApplication implements CatInterface {
                 continue;
             }
 
-            InputStream input = IOUtils.openInputStream(file); // NOPMD
-            List<String> fileDatas = IOUtils.getLinesFromInputStream(input);
-            IOUtils.closeInputStream(input);
+            List<String> fileDatas;
+            try (InputStream input = IOUtils.openInputStream(file)) {
+                fileDatas = IOUtils.getLinesFromInputStream(input);
+                IOUtils.closeInputStream(input);
+            }
 
             // Format all output: " %6d "
             if (isLineNumber) {
-                appendLineNumberToListString(fileDatas, listResult, listResult.size()+1-numOfErrors);
+                appendLineNumberToListString(fileDatas, listResult, listResult.size() + 1 - numOfErrors);
             } else {
                 listResult.addAll(fileDatas);
             }
@@ -130,7 +132,7 @@ public class CatApplication implements CatInterface {
         List<String> data = IOUtils.getLinesFromInputStream(stdin);
 
         if (isLineNumber) {
-            appendLineNumberToListString(data, listResult, listResult.size()+1-numOfErrors);
+            appendLineNumberToListString(data, listResult, listResult.size() + 1 - numOfErrors);
         } else {
             listResult.addAll(data);
         }

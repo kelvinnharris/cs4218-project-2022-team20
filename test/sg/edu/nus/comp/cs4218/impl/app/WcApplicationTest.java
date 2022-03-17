@@ -96,9 +96,13 @@ public class WcApplicationTest {
     // command: wc
     @Test
     void testWcCountFromStdin_noFileArgumentsWithoutFlag_shouldShowWordsLinesBytesWithFilename() throws Exception {
-        InputStream input = IOUtils.openInputStream(FILE_PATH_1); // NOPMD
-        String result = wcApplication.countFromStdin(true, true, true, input);
-        IOUtils.closeInputStream(input);
+        InputStream input = IOUtils.openInputStream(FILE_PATH_1);
+        String result;
+        try {
+            result = wcApplication.countFromStdin(true, true, true, input);
+        } finally {
+            input.close();
+        }
 
         int totalByte = 23;
         if (isWindowsSystem()) {
@@ -110,9 +114,13 @@ public class WcApplicationTest {
     // command: wc -
     @Test
     void testWcCountFromFileAndStdin_stdInFileArgumentWithoutFlag_shouldShowWordsLinesBytesWithFilename() throws Exception {
-        InputStream input = IOUtils.openInputStream(FILE_PATH_1); // NOPMD
-        String result = wcApplication.countFromFileAndStdin(true, true, true, input, STDIN);
-        IOUtils.closeInputStream(input);
+        InputStream input = IOUtils.openInputStream(FILE_PATH_1);
+        String result;
+        try {
+            result = wcApplication.countFromFileAndStdin(true, true, true, input, STDIN);
+        } finally {
+            input.close();
+        }
 
         int totalByte = 23;
         if (isWindowsSystem()) {
@@ -149,9 +157,13 @@ public class WcApplicationTest {
     // command: wc tmpWcTestFolder/test1.txt tmpWcTestFolder/test2.txt -
     @Test
     void testWcCountFromFileAndStdin_multipleFilesFromSameDirectoryAndStandardInputWithoutFlag_shouldShowWordsLinesBytesWithFilename() throws Exception {
-        InputStream input = IOUtils.openInputStream(FILE_PATH_3); // NOPMD
-        String result = wcApplication.countFromFileAndStdin(true, true, true, input, FILE_PATH_1, FILE_PATH_2, STDIN);
-        IOUtils.closeInputStream(input);
+        InputStream input = IOUtils.openInputStream(FILE_PATH_3);
+        String result;
+        try {
+            result = wcApplication.countFromFileAndStdin(true, true, true, input, FILE_PATH_1, FILE_PATH_2, STDIN);
+        } finally {
+            input.close();
+        }
 
         StringBuilder sbExpected = new StringBuilder();
         int totalByte = 23;
@@ -177,9 +189,13 @@ public class WcApplicationTest {
     // command: wc tmpWcTestFolder/test1.txt wc -
     @Test
     void testWcCountFromFileAndStdin_singleFileAndNonExistentFilesAndStandardInputWithoutFlag_shouldShowWordsLinesBytesWithFilename() throws Exception {
-        InputStream input = IOUtils.openInputStream(FILE_PATH_3); // NOPMD
-        String result = wcApplication.countFromFileAndStdin(true, true, true, input, FILE_PATH_1, NON_EXISTENT_FILE, STDIN);
-        IOUtils.closeInputStream(input);
+        InputStream input = IOUtils.openInputStream(FILE_PATH_3);
+        String result;
+        try {
+            result = wcApplication.countFromFileAndStdin(true, true, true, input, FILE_PATH_1, NON_EXISTENT_FILE, STDIN);
+        } finally {
+            input.close();
+        }
 
         StringBuilder sbExpected = new StringBuilder();
         int totalByte = 23;
@@ -202,9 +218,13 @@ public class WcApplicationTest {
     // command: wc - - - < tmpWcTestFolder/test1.txt
     @Test
     void testWcCountFromFileAndStdin_InputRedirectionWithoutFlag_shouldShowWordsLinesBytesWithFilename() throws Exception {
-        InputStream input = IOUtils.openInputStream(FILE_PATH_1); // NOPMD
-        String result = wcApplication.countFromFileAndStdin(true, true, true, input, STDIN, STDIN, STDIN);
-        IOUtils.closeInputStream(input);
+        InputStream input = IOUtils.openInputStream(FILE_PATH_1);
+        String result;
+        try {
+            result = wcApplication.countFromFileAndStdin(true, true, true, input, STDIN, STDIN, STDIN);
+        } finally {
+            input.close();
+        }
 
         StringBuilder sbExpected = new StringBuilder();
         int totalByte = 23;
@@ -226,9 +246,13 @@ public class WcApplicationTest {
     // command: wc tmpWcTestFolder wc - tmpWcTestFolder/test1.txt
     @Test
     void testWcCountFromFileAndStdin_argumentsFromDirectoryNonExistentFileStdInAndSingleFileWithoutFlag_shouldShowWordsLinesBytesWithFilename() throws Exception {
-        InputStream input = IOUtils.openInputStream(FILE_PATH_1); // NOPMD
-        String result = wcApplication.countFromFileAndStdin(true, true, true, input, TEST_FOLDER_NAME, NON_EXISTENT_FILE, STDIN, FILE_PATH_2);
-        IOUtils.closeInputStream(input);
+        InputStream input = IOUtils.openInputStream(FILE_PATH_1);
+        String result;
+        try {
+            result = wcApplication.countFromFileAndStdin(true, true, true, input, TEST_FOLDER_NAME, NON_EXISTENT_FILE, STDIN, FILE_PATH_2);
+        } finally {
+            input.close();
+        }
 
         StringBuilder sbExpected = new StringBuilder();
         int totalByte = 23;
@@ -306,26 +330,23 @@ public class WcApplicationTest {
     }
 
     @Test
-    void testWcCountFromStdin_nullInputStream_shouldThrowException(){
+    void testWcCountFromStdin_nullInputStream_shouldThrowException() {
         assertThrows(WcException.class, () -> wcApplication.countFromStdin(true, true, true, null), ERR_NULL_STREAMS);
     }
 
     @Test
-    void testWcCountFromFiles_nullFileNames_shouldThrowException(){
+    void testWcCountFromFiles_nullFileNames_shouldThrowException() {
         assertThrows(WcException.class, () -> wcApplication.countFromFiles(true, true, true, null), ERR_NULL_FILES);
     }
 
     @Test
-    void testWcCountFromFileAndStdin_nullFileNamesAndInputStream_shouldThrowException() throws ShellException {
+    void testWcCountFromFileAndStdin_nullFileNamesAndInputStream_shouldThrowException() throws ShellException, IOException {
         assertThrows(WcException.class, () -> wcApplication.countFromFileAndStdin(true, true, true, null, new String[]{}), ERR_NULL_STREAMS);
-        InputStream input = IOUtils.openInputStream(FILE_PATH_1); // NOPMD
-        assertThrows(WcException.class, () -> wcApplication.countFromFileAndStdin(true, true, true, input, null), ERR_NULL_FILES);
-        IOUtils.closeInputStream(input);
+        InputStream input = IOUtils.openInputStream(FILE_PATH_1);
+        try {
+            assertThrows(WcException.class, () -> wcApplication.countFromFileAndStdin(true, true, true, input, null), ERR_NULL_FILES);
+        } finally {
+            input.close();
+        }
     }
-
-    // TODO:
-    //  test redirection
-    //  test with different flags combination (many duplicates, single ones)
-    //  test with globing
-    //  test with multiple stdIn arguments
 }
