@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Environment;
+import sg.edu.nus.comp.cs4218.exception.CutException;
 import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 
 import java.io.ByteArrayOutputStream;
@@ -14,6 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.appendToFile;
@@ -154,5 +156,11 @@ public class CutSortIntegrationTest {
                 "1" + STRING_NEWLINE;
         shell.parseAndEvaluate(commandString, stdOut);
         assertEquals(expected, stdOut.toString());
+    }
+
+    @Test
+    void testCutSortParseAndEvaluate_sortValidAndCutInvalid_shouldThrowError() {
+        String commandString = String.format("sort %s | cut -z 1 %s", FILE1_PATH, FILE1_PATH);
+        assertThrows(CutException.class, () -> shell.parseAndEvaluate(commandString, stdOut));
     }
 }

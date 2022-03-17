@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Environment;
+import sg.edu.nus.comp.cs4218.exception.PasteException;
 import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 
 import java.io.ByteArrayOutputStream;
@@ -15,6 +16,7 @@ import java.nio.file.Paths;
 
 import static java.nio.file.Files.readString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.*;
 import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.appendToFile;
 import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
@@ -156,7 +158,7 @@ public class TeePasteIntegrationTest {
     }
 
     @Test
-    void testTeePasteParseAndEvaluate_pasteErrorThenTeeAppend_shouldThrowError() throws Exception {
+    void testTeePasteParseAndEvaluate_pasteErrorThenTeeAppend_shouldReturnExceptionMessage() throws Exception {
         String commandString = String.format("paste -z; echo %s | tee -a %s;", THIRD, OUTPUT7_PATH);
         String expectedStdOut = "paste: invalid option -- 'z'" + STRING_NEWLINE +
                 THIRD + STRING_NEWLINE;
@@ -165,5 +167,11 @@ public class TeePasteIntegrationTest {
         assertEquals(expectedStdOut, stdOut.toString());
         String fileContent = readString(Paths.get(OUTPUT7_PATH));
         assertEquals(expectedContent, fileContent);
+    }
+
+    @Test
+    void testTeePasteParseAndEvaluate_teeStdOutOnlyThenPaste_shouldThrowError() {
+        String commandString = String.format("echo %s | tee | paste -z", FROM_TEE, FILE2_PATH, OUTPUT3_PATH);
+        assertThrows(PasteException.class, () -> shell.parseAndEvaluate(commandString, stdOut));
     }
 }
