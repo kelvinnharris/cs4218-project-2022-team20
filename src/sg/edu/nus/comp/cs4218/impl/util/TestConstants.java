@@ -25,4 +25,5 @@ public class TestConstants {
     public static final String LS_UNIQ_FOLDER = "tmpLsUniqTestFolder";
     public static final String WC_CUT_FOLDER = "tmpWcCutTestFolder";
     public static final String GREP_SORT_FOLDER = "tmpGrepSortTestFolder";
+    public static final String TEE_UNIQ_FOLDER = "tmpTeeUniqTestFolder";
 }
