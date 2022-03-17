@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -227,5 +229,28 @@ public class CatApplicationTest {
         } finally {
             inputStream.close();
         }
+    }
+
+    @Test
+    void testCatRun_nullStdIn_shouldThrowCatException() {
+        assertThrows(CatException.class, () -> catApplication.run(new String[]{FILE_PATH_1}, null, System.out), "Should Throw CatException");
+    }
+
+    @Test
+    void testCatRun_nullStdout_shouldThrowCatException() {
+        assertThrows(CatException.class, () -> catApplication.run(new String[]{FILE_PATH_1}, System.in, null), "Should Throw CatException");
+    }
+
+    @Test
+    void testCatRun_invalidFlag_shouldThrowCatException() {
+        assertThrows(CatException.class, () -> catApplication.run(new String[]{FILE_PATH_1, "-z"}, System.in, System.out), "Should Throw CatException");
+    }
+
+    @Test
+    void testCatRun_correctInputs_shouldNotThrowException() throws CatException {
+        catApplication.run(new String[]{FILE_PATH_1}, System.in, System.out);
+        List<String> expected = new ArrayList<>();
+        expected.add("This is WC Test file 1");
+        assertEquals(expected, catApplication.listResult);
     }
 }

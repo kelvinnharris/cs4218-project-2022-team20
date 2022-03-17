@@ -17,8 +17,6 @@ import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 public class CatApplication implements CatInterface {
-    public static final String ERR_IS_DIR = "This is a directory";
-    public static final String ERR_READING_FILE = "Could not read file";
     public static final String ERR_WRITE_STREAM = "Could not write to output stream";
     public static final String ERR_NULL_STREAMS = "Null Pointer Exception";
     public static final String ERR_GENERAL = "Exception Caught";
@@ -43,7 +41,6 @@ public class CatApplication implements CatInterface {
      */
     @Override
     public void run(String[] args, InputStream stdin, OutputStream stdout) throws CatException {
-        // TODO: To implement *.txt etcetc
         if (stdin == null) {
             throw new CatException(ERR_NO_ISTREAM);
         }

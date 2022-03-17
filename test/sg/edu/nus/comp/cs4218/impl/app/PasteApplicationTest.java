@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Environment;
+import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.PasteException;
 import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 import sg.edu.nus.comp.cs4218.impl.util.StringUtils;
@@ -15,6 +16,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -216,5 +219,34 @@ public class PasteApplicationTest {
         } finally {
             inputStream.close();
         }
+    }
+
+    @Test
+    void testPasteRun_nullStdIn_shouldThrowCatException() {
+        assertThrows(PasteException.class, () -> pasteApplication.run(new String[]{FILE_PATH_1}, null, System.out), "Should Throw PasteException");
+    }
+
+    @Test
+    void testPasteRun_nullStdout_shouldThrowCatException() {
+        assertThrows(PasteException.class, () -> pasteApplication.run(new String[]{FILE_PATH_1}, System.in, null), "Should Throw PasteException");
+    }
+
+    @Test
+    void testCatRun_invalidFlag_shouldThrowCatException() {
+        assertThrows(PasteException.class, () -> pasteApplication.run(new String[]{FILE_PATH_1, "-z"}, System.in, System.out), "Should Throw PasteException");
+    }
+
+    @Test
+    void testCatRun_correctInputs_shouldNotThrowException() throws AbstractApplicationException {
+        pasteApplication.run(new String[]{FILE_PATH_1}, System.in, System.out);
+        List<List<String>> expected = new ArrayList<>();
+        List<String> expectedInside = new ArrayList<>();
+        expected.add(expectedInside);
+        expectedInside.add("1");
+        expectedInside.add("2");
+        expectedInside.add("3");
+        expectedInside.add("4");
+        expectedInside.add("5");
+        assertEquals(expected, pasteApplication.tempListResult);
     }
 }

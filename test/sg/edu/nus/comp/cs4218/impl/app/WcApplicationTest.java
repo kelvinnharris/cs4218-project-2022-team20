@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Environment;
+import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.exception.WcException;
 import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
@@ -15,6 +16,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -348,5 +351,31 @@ public class WcApplicationTest {
         } finally {
             input.close();
         }
+    }
+
+    @Test
+    void testWcRun_nullStdIn_shouldThrowCatException() {
+        assertThrows(WcException.class, () -> wcApplication.run(new String[]{FILE_PATH_1}, null, System.out), "Should Throw WcException");
+    }
+
+    @Test
+    void testWcRun_nullStdout_shouldThrowCatException() {
+        assertThrows(WcException.class, () -> wcApplication.run(new String[]{FILE_PATH_1}, System.in, null), "Should Throw WcException");
+    }
+
+    @Test
+    void testWcRun_invalidFlag_shouldThrowCatException() {
+        assertThrows(WcException.class, () -> wcApplication.run(new String[]{FILE_PATH_1, "-z"}, System.in, System.out), "Should Throw WcException");
+    }
+
+    @Test
+    void testWcRun_correctInputs_shouldNotThrowException() throws AbstractApplicationException {
+        wcApplication.run(new String[]{FILE_PATH_1}, System.in, System.out);
+        WcApplication.Result actualRes = wcApplication.listResult.get(0);
+
+        assertEquals(actualRes.words, 6);
+        assertEquals(actualRes.lines, 1);
+        assertEquals(actualRes.bytes, TestUtils.isWindowsSystem() ? 24 : 23);
+        assertEquals(actualRes.fileName, FILE_PATH_1);
     }
 }
