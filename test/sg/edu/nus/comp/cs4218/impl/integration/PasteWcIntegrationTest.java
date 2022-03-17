@@ -311,26 +311,13 @@ public class PasteWcIntegrationTest {
         assertThrows(PasteException.class, () -> command.evaluate(System.in, myOut), PASTE_EXCPTN_MSG);
     }
 
-    // TODO: Put this behavior in Assumption ??
+    // TODO: Put this behavior in Assumption
     @Test
     void testPasteWcParseCommand_forwardPasteWithNonExistentFileToWc_testThrowsException() throws Exception {
         String inputString = "paste blabla.txt | wc";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
-        command.evaluate(System.in, myOut);
-        final String standardOutput = myOut.toString();
-
-        int totalByte = 47;
-        if (TestUtils.isWindowsSystem()) {
-            totalByte = 48;
-        }
-
-
-        String sbExpected = String.format(WC_NUMBER_FORMAT, 1) +
-                String.format(WC_NUMBER_FORMAT, 8) +
-                String.format(WC_NUMBER_FORMAT, totalByte);
-
-        assertEquals(sbExpected + STRING_NEWLINE, standardOutput);
+        assertThrows(PasteException.class, () -> command.evaluate(System.in, myOut), "Should throw PasteException");
     }
 
     @Test
