@@ -249,4 +249,10 @@ class SemicolonCommandTest {
         assertEquals(expected, standardOutput);
     }
 
+    @Test
+    void testSemicolonParseCommand_threeCommandsSemicolonAtEnd_returnException() {
+        String inputString = String.format(";echo %s; echo; echo", FIRST_OUTPUT);
+        assertThrows(Exception.class, () -> CommandBuilder.parseCommand(inputString, new ApplicationRunner()));
+    }
+
 }
