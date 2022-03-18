@@ -87,7 +87,7 @@ public class WcCutIntegrationTest {
         String commandString = String.format("wc %s | cut -b 26-35", FILE1_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         command.evaluate(inputStream, stdOut);
-        String expectedOutput = FILE1_NAME + CHAR_NULL + STRING_NEWLINE;
+        String expectedOutput = FILE1_NAME + STRING_NEWLINE;
         assertEquals(expectedOutput, stdOut.toString());
     }
 
