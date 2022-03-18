@@ -1,5 +1,6 @@
 package sg.edu.nus.comp.cs4218.impl.parser;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -47,6 +48,6 @@ public class PasteArgsParserTest {
         when(map.contains('s')).thenReturn(true);
 
         assertTrue(pasteArgsParser.isSerial());
-        assertEquals(pasteArgsParser.getFiles().get(0), "file1.txt");
+        Assertions.assertEquals(pasteArgsParser.getFiles().get(0), "file1.txt");
     }
 }
