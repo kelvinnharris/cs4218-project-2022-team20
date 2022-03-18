@@ -33,7 +33,7 @@ class IORedirectionTest {
 
     private static final String NONEXISTENTFILE = "IORedir.txt";
 
-    private IORedirectionHandler ioRedirectionHandler; // NOPMD
+    private IORedirectionHandler ioRedirectionHandler; //NOPMD - suppressed LongVariable - long variable to preserve meaningful variable naming
     List<String> argsList;
     private ArgumentResolver argumentResolver;
     private InputStream inputStream;
@@ -72,14 +72,18 @@ class IORedirectionTest {
     }
 
     @Test
-    void testIORedirection_InputRedirectionWithMultipleArguments_shouldHaveSameInputStreamAsFile() throws Exception {
+    void testIORedirectionExtractRedirOptions_InputRedirectionWithMultipleArguments_shouldHaveSameInputStreamAsFile() throws Exception {
         argsList.addAll(Arrays.asList("wc", "-", FILE_PATH_1, "<", FILE_PATH_1));
         ioRedirectionHandler = new IORedirectionHandler(argsList, inputStream, outputStream, argumentResolver);
         ioRedirectionHandler.extractRedirOptions();
 
-        InputStream inStrmExpected = IOUtils.openInputStream(FILE_PATH_1); // NOPMD
-        List<String> dataExpected = IOUtils.getLinesFromInputStream(inStrmExpected);
-        IOUtils.closeInputStream(inStrmExpected);
+        InputStream inStrmExpected = IOUtils.openInputStream(FILE_PATH_1);
+        List<String> dataExpected;
+        try {
+            dataExpected = IOUtils.getLinesFromInputStream(inStrmExpected);
+        } finally {
+            inStrmExpected.close();
+        }
 
         List<String> dataActual = IOUtils.getLinesFromInputStream(ioRedirectionHandler.getInputStream());
 
@@ -92,7 +96,7 @@ class IORedirectionTest {
     }
 
     @Test
-    void testIORedirection_InputRedirectionWithMultipleArguments_shouldHaveSameOutputStreamAsFile() throws Exception {
+    void testIORedirectionExtractRedirOptions_InputRedirectionWithMultipleArguments_shouldHaveSameOutputStreamAsFile() throws Exception {
         argsList.addAll(Arrays.asList("wc", "-", FILE_PATH_1, ">", FILE_PATH_2));
         ioRedirectionHandler = new IORedirectionHandler(argsList, inputStream, outputStream, argumentResolver);
         ioRedirectionHandler.extractRedirOptions();
@@ -102,33 +106,41 @@ class IORedirectionTest {
 
         assertIterableEquals(noRedirExpected, noRedirActual, "List from both should be equal");
 
-        OutputStream outStrmExpected = ioRedirectionHandler.getOutputStream(); // NOPMD
+        OutputStream outStrmExpected = ioRedirectionHandler.getOutputStream();
         String sampleData = "This result is to be appended to filePath2";
 
         try {
             outStrmExpected.write(sampleData.getBytes());
             outStrmExpected.write(StringUtils.STRING_NEWLINE.getBytes());
-        } catch (IOException e) {
-            throw new IOException(ErrorConstants.ERR_WRITE_STREAM); // NOPMD
+        } finally {
+            outStrmExpected.close();
         }
 
-        InputStream inStrmActual = IOUtils.openInputStream(FILE_PATH_2); // NOPMD
-        List<String> dataActual = IOUtils.getLinesFromInputStream(inStrmActual);
-        IOUtils.closeInputStream(inStrmActual);
+        InputStream inStrmActual = IOUtils.openInputStream(FILE_PATH_2);
+        List<String> dataActual;
+        try {
+            dataActual = IOUtils.getLinesFromInputStream(inStrmActual);
+        } finally {
+            inStrmActual.close();
+        }
 
         assertEquals(1, dataActual.size(), "Should only have one element");
         assertEquals(sampleData, dataActual.get(0), "Should have the same message");
     }
 
     @Test
-    void testIORedirection_InputRedirection_shouldHaveSameInputStreamAsFile() throws Exception {
+    void testIORedirectionExtractRedirOptions_InputRedirection_shouldHaveSameInputStreamAsFile() throws Exception {
         argsList.addAll(Arrays.asList("wc", "<", FILE_PATH_1));
         ioRedirectionHandler = new IORedirectionHandler(argsList, inputStream, outputStream, argumentResolver);
         ioRedirectionHandler.extractRedirOptions();
 
-        InputStream inStrmExpected = IOUtils.openInputStream(FILE_PATH_1); // NOPMD
-        List<String> dataExpected = IOUtils.getLinesFromInputStream(inStrmExpected);
-        IOUtils.closeInputStream(inStrmExpected);
+        InputStream inStrmExpected = IOUtils.openInputStream(FILE_PATH_1);
+        List<String> dataExpected;
+        try {
+            dataExpected = IOUtils.getLinesFromInputStream(inStrmExpected);
+        } finally {
+            inStrmExpected.close();
+        }
 
         List<String> dataActual = IOUtils.getLinesFromInputStream(ioRedirectionHandler.getInputStream());
 
@@ -136,7 +148,19 @@ class IORedirectionTest {
     }
 
     @Test
-    void testIORedirection_nonExistentInputFile_shouldThrowShellException() {
+    void testIORedirectionExtractRedirOptions_InputAndOutputRedirection_shouldHaveSameOutputStreamAsFile() throws Exception {
+        argsList.addAll(Arrays.asList("wc", "-", "<", FILE_PATH_1, ">", FILE_PATH_2));
+        ioRedirectionHandler = new IORedirectionHandler(argsList, inputStream, outputStream, argumentResolver);
+        ioRedirectionHandler.extractRedirOptions();
+
+        List<String> noRedirExpected = Arrays.asList("wc", "-");
+        List<String> noRedirActual = ioRedirectionHandler.getNoRedirArgsList();
+
+        assertIterableEquals(noRedirExpected, noRedirActual, "List from both should be equal");
+    }
+
+    @Test
+    void testIORedirectionExtractRedirOptions_nonExistentInputFile_shouldThrowShellException() {
         argsList.addAll(Arrays.asList("wc", "<", NONEXISTENTFILE));
 
         ioRedirectionHandler = new IORedirectionHandler(argsList, inputStream, outputStream, argumentResolver);
@@ -144,7 +168,7 @@ class IORedirectionTest {
     }
 
     @Test
-    void testIORedirection_nonValidOutputFile_shouldThrowFileNotFoundException() {
+    void testIORedirectionExtractRedirOptions_nonValidOutputFile_shouldThrowFileNotFoundException() {
         argsList.addAll(Arrays.asList("wc", ">", TEST_FOLDER_NAME));
 
         ioRedirectionHandler = new IORedirectionHandler(argsList, inputStream, outputStream, argumentResolver);
@@ -152,7 +176,7 @@ class IORedirectionTest {
     }
 
     @Test
-    void testIORedirection_nullArgsList_shouldThrowException() {
+    void testIORedirectionExtractRedirOptions_nullArgsList_shouldThrowException() {
         ioRedirectionHandler = new IORedirectionHandler(null, inputStream, outputStream, argumentResolver);
         assertThrows(ShellException.class, () -> ioRedirectionHandler.extractRedirOptions(), ERR_SYNTAX);
     }
