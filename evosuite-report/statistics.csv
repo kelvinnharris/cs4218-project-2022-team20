@@ -1,0 +1,9 @@
+TARGET_CLASS,criterion,Coverage,Total_Goals,Covered_Goals
+sg.edu.nus.comp.cs4218.impl.app.CatApplication,BRANCH,0.8717948717948718,39,34
+sg.edu.nus.comp.cs4218.impl.app.EchoApplication,BRANCH,1.0,7,7
+sg.edu.nus.comp.cs4218.impl.app.GrepApplication,BRANCH,0.7804878048780488,82,64
+sg.edu.nus.comp.cs4218.impl.app.PasteApplication,BRANCH,0.7746478873239436,71,55
+sg.edu.nus.comp.cs4218.impl.app.RmApplication,BRANCH,0.7407407407407407,27,20
+sg.edu.nus.comp.cs4218.impl.app.SortApplication,BRANCH,0.42,50,21
+sg.edu.nus.comp.cs4218.impl.app.TeeApplication,BRANCH,0.8571428571428571,21,18
+sg.edu.nus.comp.cs4218.impl.app.WcApplication,BRANCH,0.8807339449541285,109,96
