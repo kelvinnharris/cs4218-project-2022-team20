@@ -70,7 +70,7 @@ public class EchoGrepIntegrationTest {
     @Test
     void testEchoGrepParseAndEvaluate_echoOutputOfGrepInsensitive_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("echo \"`grep \"The\" %s`\"", FILE1_PATH);
-        String expectedOutput = "The first file Thee second line" + STRING_NEWLINE;
+        String expectedOutput = "The first file" + STRING_NEWLINE + "Thee second line" + STRING_NEWLINE;
         shell.parseAndEvaluate(commandString, stdOut);
         assertEquals(expectedOutput, stdOut.toString());
     }

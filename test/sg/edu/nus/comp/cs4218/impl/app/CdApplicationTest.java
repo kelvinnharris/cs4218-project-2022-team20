@@ -117,7 +117,7 @@ class CdApplicationTest {
 
     @Test
     void run_oneArgs_shouldNotReturnError() {
-        String[] oneArg = new String[]{ FOLDER_1 };
+        String[] oneArg = new String[]{ TEST_PATH + FOLDER_1 };
         assertDoesNotThrow(() -> cdApplication.run(oneArg, System.in, System.out));
     }
 
