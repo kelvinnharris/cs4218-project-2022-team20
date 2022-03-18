@@ -183,7 +183,7 @@ public class CatCutIntegrationTest {
     }
 
     @Test
-    void testPasteWcParseCommand_forwardPasteToWcWithInvalidOption_testThrowsException() throws Exception {
+    void testCatCutParseCommand_forwardCutToCatWithInvalidOption_testThrowsException() throws Exception {
         String inputString = "cut -c file1.txt | cat";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
