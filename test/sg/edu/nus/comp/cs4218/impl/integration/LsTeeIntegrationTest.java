@@ -72,7 +72,7 @@ public class LsTeeIntegrationTest {
     }
 
     @Test
-    void testLsTee_teeAppendIntoFileOfLs_shouldAppendIntoFile() throws Exception {
+    void testLsTeeParseCommand_teeAppendIntoFileOfLs_shouldAppendIntoFile() throws Exception {
         String commandString = String.format("tee -a `ls %s`", FILE1_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         command.evaluate(inputStream, stdOut);
@@ -88,7 +88,7 @@ public class LsTeeIntegrationTest {
     }
 
     @Test
-    void testLsTee_teeAppendIntoFilesOfLs_shouldAppendIntoFiles() throws Exception {
+    void testLsTeeParseCommand_teeAppendIntoFilesOfLs_shouldAppendIntoFiles() throws Exception {
         String commandString = "tee -a `ls *.txt`";
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         command.evaluate(inputStream, stdOut);
@@ -110,7 +110,7 @@ public class LsTeeIntegrationTest {
     }
 
     @Test
-    void testLsTee_teeNonAppendIntoFilesOfLs_shouldTeeIntoFile() throws Exception {
+    void testLsTeeParseCommand_teeNonAppendIntoFilesOfLs_shouldTeeIntoFile() throws Exception {
         String commandString = String.format("tee `ls %s`", FILE1_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         command.evaluate(inputStream, stdOut);
@@ -121,7 +121,7 @@ public class LsTeeIntegrationTest {
     }
 
     @Test
-    void testLsTee_teeOutputOfLsIntoFiles_shouldAppendFilenames() throws Exception {
+    void testLsTeeParseCommand_teeOutputOfLsIntoFiles_shouldAppendFilenames() throws Exception {
         String commandString = String.format("ls %s | tee -a %s", FILE1_NAME, FILE1_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         command.evaluate(inputStream, stdOut);
@@ -139,7 +139,7 @@ public class LsTeeIntegrationTest {
     }
 
     @Test
-    void testLsTee_teeAndLsMultiplePipes_shouldTeeFilenamesRespectively() throws Exception {
+    void testLsTeeParseCommand_teeAndLsMultiplePipes_shouldTeeFilenamesRespectively() throws Exception {
         String commandString = String.format("ls %s | tee -a %s | tee %s", FILE1_NAME, FILE1_NAME, FILE2_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         command.evaluate(inputStream, stdOut);
@@ -156,7 +156,7 @@ public class LsTeeIntegrationTest {
     }
 
     @Test
-    void testLsTee_lsTeeOutputInvalidArgs_shouldThrowTeeException() throws Exception {
+    void testLsTeeParseCommand_lsTeeOutputInvalidArgs_shouldThrowTeeException() throws Exception {
         String commandString = String.format("tee `ls %s` -d", FILE1_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         assertThrows(TeeException.class, () -> command.evaluate(inputStream, stdOut));

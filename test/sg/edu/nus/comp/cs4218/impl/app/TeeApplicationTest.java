@@ -170,4 +170,10 @@ public class TeeApplicationTest {
         assertFalse(Files.isWritable(Paths.get(UNWR_FILE_PATH)));
         assertEquals(String.format("%s: Permission denied", UNWR_FILE_NAME) + STRING_NEWLINE + INPUT, outputStream.toString());
     }
+
+    @Test
+    void run_teeWithInvalidArgs_shouldThrowException() {
+        String[] argList = new String[]{"-d", FILE1_NAME};
+        assertThrows(Exception.class, () -> teeApplication.run(argList, inputStream, outputStream));
+    }
 }
