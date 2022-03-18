@@ -35,8 +35,10 @@ public class UniqGrepIntegrationTest {
     private static final String FILE_NAME_2 = "file2.txt";
     private static final String FILE_PATH_2 = TEST_PATH + FILE_NAME_2;
 
-    private static final String UNIQ_EXCEPTION_MSG = "Should throw UniqException";
-    private static final String GREP_EXCEPTION_MSG = "Should throw GrepException";
+    private static final String UNIQ_EXCEPTN_MSG = "Should throw UniqException";
+    private static final String GREP_EXCEPTN_MSG = "Should throw GrepException";
+
+    private static final String BOB = "Bob";
 
     @BeforeAll
     static void setUp() throws IOException {
@@ -46,12 +48,12 @@ public class UniqGrepIntegrationTest {
                 + "Hello World" + STRING_NEWLINE
                 + "Alice" + STRING_NEWLINE
                 + "Alice" + STRING_NEWLINE
-                + "Bob" + STRING_NEWLINE
+                + BOB + STRING_NEWLINE
                 + "Alice" + STRING_NEWLINE
-                + "Bob" + STRING_NEWLINE
+                + BOB + STRING_NEWLINE
                 + "bOb";
         TestUtils.createFile(FILE_PATH_1, fileContent);
-        TestUtils.createFile(FILE_PATH_2, "A" + STRING_NEWLINE + "B" + STRING_NEWLINE + "C" +STRING_NEWLINE + "D" + STRING_NEWLINE + "b");
+        TestUtils.createFile(FILE_PATH_2, "A" + STRING_NEWLINE + "B" + STRING_NEWLINE + "C" + STRING_NEWLINE + "D" + STRING_NEWLINE + "b");
     }
 
     @BeforeEach
@@ -74,7 +76,7 @@ public class UniqGrepIntegrationTest {
         command.evaluate(System.in, myOut);
         final String standardOutput = myOut.toString();
 
-        String sbExpected = "Bob" + STRING_NEWLINE + "Bob";
+        String sbExpected = BOB + STRING_NEWLINE + BOB;
         assertEquals(sbExpected + STRING_NEWLINE, standardOutput);
     }
 
@@ -86,8 +88,7 @@ public class UniqGrepIntegrationTest {
         command.evaluate(System.in, myOut);
         final String standardOutput = myOut.toString();
 
-        String sbExpected = "Bob";
-        assertEquals(sbExpected + STRING_NEWLINE, standardOutput);
+        assertEquals(BOB + STRING_NEWLINE, standardOutput);
     }
 
     @Test
@@ -145,27 +146,27 @@ public class UniqGrepIntegrationTest {
     void testUniqGrepParseCommand_forwardUniqWithInvalidFileToGrep_throwsException() throws Exception {
         String inputString = "uniq blabla.txt | grep b -i";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
-        assertThrows(UniqException.class, () -> command.evaluate(System.in, myOut), UNIQ_EXCEPTION_MSG);
+        assertThrows(UniqException.class, () -> command.evaluate(System.in, myOut), UNIQ_EXCEPTN_MSG);
     }
 
     @Test
     void testUniqGrepParseCommand_forwardUniqWithFolderToGrep_throwsException() throws Exception {
         String inputString = String.format("uniq %s | grep b -i", TEST_FOLDER_NAME);
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
-        assertThrows(UniqException.class, () -> command.evaluate(System.in, myOut), UNIQ_EXCEPTION_MSG);
+        assertThrows(UniqException.class, () -> command.evaluate(System.in, myOut), UNIQ_EXCEPTN_MSG);
     }
 
     @Test
     void testUniqGrepParseCommand_forwardGrepWithInvalidFlagsToUniq_throwsException() throws Exception {
         String inputString = String.format("grep b -z %s | uniq", FILE_NAME_1);
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
-        assertThrows(GrepException.class, () -> command.evaluate(System.in, myOut), GREP_EXCEPTION_MSG);
+        assertThrows(GrepException.class, () -> command.evaluate(System.in, myOut), GREP_EXCEPTN_MSG);
     }
 
     @Test
     void testUniqGrepParseCommand_forwardUniqWithInvalidFlagsToGrep_throwsException() throws Exception {
         String inputString = String.format("uniq %s -z| grep b -i", FILE_NAME_1);
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
-        assertThrows(UniqException.class, () -> command.evaluate(System.in, myOut), UNIQ_EXCEPTION_MSG);
+        assertThrows(UniqException.class, () -> command.evaluate(System.in, myOut), UNIQ_EXCEPTN_MSG);
     }
 }
