@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -42,15 +44,21 @@ public class CatApplicationTest {
     private static final String STD_IN_TXT = "stdIn.txt";
     private static final String FILE_PATH_STDIN = TEST_PATH + STD_IN_TXT;
 
+    private static final String MULT_LINE_MSG = "Multiple Lines: ";
+    private static final String WC_FILE_ONE = "This is WC Test file 1";
+    private static final String WC_FILE_TWO = "This is WC Test file 2";
+
     @BeforeAll
     static void setUp() throws IOException {
         TestUtils.deleteDir(new File(TEST_PATH));
         Files.createDirectories(Paths.get(TEST_PATH));
 
-        TestUtils.createFile(FILE_PATH_1, "This is WC Test file 1"); // NOPMD
+        TestUtils.createFile(FILE_PATH_1, WC_FILE_ONE);
 
-        String sbContentFile2 = "This is WC Test file 2" + StringUtils.STRING_NEWLINE + // NOPMD
-                "Multiple Lines: " + StringUtils.STRING_NEWLINE + // NOPMD
+        String sbContentFile2 = WC_FILE_TWO +
+                StringUtils.STRING_NEWLINE +
+                MULT_LINE_MSG +
+                StringUtils.STRING_NEWLINE +
                 "a" + StringUtils.STRING_NEWLINE + "b" + StringUtils.STRING_NEWLINE +
                 "c" + StringUtils.STRING_NEWLINE + "d";
         TestUtils.createFile(FILE_PATH_2, sbContentFile2);
@@ -78,7 +86,7 @@ public class CatApplicationTest {
     void testCatFiles_fileInputWithoutFlag_shouldShowContentsInFile() throws Exception {
         String result = catApplication.catFiles(false, FILE_PATH_1);
 
-        assertEquals("This is WC Test file 1", result);
+        assertEquals(WC_FILE_ONE, result);
     }
 
     // command: cat tmpCatTestFolder/test1.txt tmpCatTestFolder/test2.txt
@@ -86,9 +94,9 @@ public class CatApplicationTest {
     void testCatFiles_multipleFilesInputWithoutFlag_shouldShowContentsInAllFiles() throws Exception {
         String result = catApplication.catFiles(false, FILE_PATH_1, FILE_PATH_2);
 
-        String sbExpected = "This is WC Test file 1" + StringUtils.STRING_NEWLINE +
-                "This is WC Test file 2" + StringUtils.STRING_NEWLINE +
-                "Multiple Lines: " + StringUtils.STRING_NEWLINE +
+        String sbExpected = WC_FILE_ONE + StringUtils.STRING_NEWLINE +
+                WC_FILE_TWO + StringUtils.STRING_NEWLINE +
+                MULT_LINE_MSG + StringUtils.STRING_NEWLINE +
                 "a" + StringUtils.STRING_NEWLINE + "b" + StringUtils.STRING_NEWLINE +
                 "c" + StringUtils.STRING_NEWLINE + "d";
 
@@ -106,17 +114,22 @@ public class CatApplicationTest {
             inputStream.close();
         }
 
-        assertEquals("This is WC Test file 1", result);
+        assertEquals(WC_FILE_ONE, result);
     }
 
     // command: cat -
     @Test
     void testCatFileAndStdin_stdInWithoutFlag_shouldShowContentsInAllFiles() throws Exception {
-        InputStream inputStream = IOUtils.openInputStream(FILE_PATH_1); // NOPMD
-        String result = catApplication.catFileAndStdin(false, inputStream, STDIN);
-        IOUtils.closeInputStream(inputStream);
 
-        assertEquals("This is WC Test file 1", result);
+        InputStream inputStream = IOUtils.openInputStream(FILE_PATH_1);
+        String result;
+        try {
+            result = catApplication.catFileAndStdin(false, inputStream, STDIN);
+        } finally {
+            inputStream.close();
+        }
+
+        assertEquals(WC_FILE_ONE, result);
     }
 
     // command: cat -n tmpCatTestFolder/test1.txt tmpCatTestFolder/test2.txt
@@ -125,11 +138,11 @@ public class CatApplicationTest {
         String result = catApplication.catFiles(true, FILE_PATH_1, FILE_PATH_2);
 
         String sbExpected = String.format(NUMBER_FORMAT, 1) +
-                "This is WC Test file 1" + StringUtils.STRING_NEWLINE +
+                WC_FILE_ONE + StringUtils.STRING_NEWLINE +
                 String.format(NUMBER_FORMAT, 2) +
-                "This is WC Test file 2" + StringUtils.STRING_NEWLINE +
+                WC_FILE_TWO + StringUtils.STRING_NEWLINE +
                 String.format(NUMBER_FORMAT, 3) +
-                "Multiple Lines: " + StringUtils.STRING_NEWLINE +
+                MULT_LINE_MSG + StringUtils.STRING_NEWLINE +
                 String.format(NUMBER_FORMAT, 4) +
                 "a" + StringUtils.STRING_NEWLINE +
                 String.format(NUMBER_FORMAT, 5) +
@@ -144,20 +157,24 @@ public class CatApplicationTest {
     // command: cat -n tmpCatTestFolder/test1.txt - tmpCatTestFolder/test2.txt
     @Test
     void testCatFileAndStdin_multipleFilesInputAndStdInWithFlag_shouldShowContentsInAllFilesWithNumbers() throws Exception {
-        InputStream inputStream = IOUtils.openInputStream(FILE_PATH_STDIN); // NOPMD
-        String result = catApplication.catFileAndStdin(true, inputStream, FILE_PATH_1, STDIN, FILE_PATH_2);
-        IOUtils.closeInputStream(inputStream);
+        InputStream inputStream = IOUtils.openInputStream(FILE_PATH_STDIN);
+        String result;
+        try {
+            result = catApplication.catFileAndStdin(true, inputStream, FILE_PATH_1, STDIN, FILE_PATH_2);
+        } finally {
+            inputStream.close();
+        }
 
         String sbExpected = String.format(NUMBER_FORMAT, 1) +
-                "This is WC Test file 1" + StringUtils.STRING_NEWLINE +
+                WC_FILE_ONE + StringUtils.STRING_NEWLINE +
                 String.format(NUMBER_FORMAT, 2) +
                 "This is from stdIn" + StringUtils.STRING_NEWLINE +
                 String.format(NUMBER_FORMAT, 3) +
                 "This is from stdIn line 2" + StringUtils.STRING_NEWLINE +
                 String.format(NUMBER_FORMAT, 4) +
-                "This is WC Test file 2" + StringUtils.STRING_NEWLINE +
+                WC_FILE_TWO + StringUtils.STRING_NEWLINE +
                 String.format(NUMBER_FORMAT, 5) +
-                "Multiple Lines: " + StringUtils.STRING_NEWLINE +
+                MULT_LINE_MSG + StringUtils.STRING_NEWLINE +
                 String.format(NUMBER_FORMAT, 6) +
                 "a" + StringUtils.STRING_NEWLINE +
                 String.format(NUMBER_FORMAT, 7) +
@@ -176,7 +193,7 @@ public class CatApplicationTest {
 
         String sbExpected = "cat: " + NON_EXISTENT_FILE + ERR_NOT_FOUND + StringUtils.STRING_NEWLINE +
                 String.format(NUMBER_FORMAT, 1) +
-                "This is WC Test file 1";
+                WC_FILE_ONE;
 
         assertEquals(sbExpected, result);
     }
@@ -187,27 +204,53 @@ public class CatApplicationTest {
         String result = catApplication.catFiles(true, FILE_PATH_1, TEST_FOLDER_NAME);
 
         String sbExpected = String.format(NUMBER_FORMAT, 1) +
-                "This is WC Test file 1" + StringUtils.STRING_NEWLINE +
+                WC_FILE_ONE + StringUtils.STRING_NEWLINE +
                 "cat: " + TEST_FOLDER_NAME + ERR_IS_DIRECTORY;
 
         assertEquals(sbExpected, result);
     }
 
     @Test
-    void testCatStdin_nullInputStream_shouldThrowException(){
-        assertThrows(CatException.class, () -> catApplication.catStdin( true, null), ERR_NULL_STREAMS);
+    void testCatStdin_nullInputStream_shouldThrowException() {
+        assertThrows(CatException.class, () -> catApplication.catStdin(true, null), ERR_NULL_STREAMS);
     }
 
     @Test
-    void testCatFiles_nullFileNames_shouldThrowException(){
+    void testCatFiles_nullFileNames_shouldThrowException() {
         assertThrows(CatException.class, () -> catApplication.catFiles(true, null), ERR_NULL_FILES);
     }
 
     @Test
-    void testCatFileAndStdin_nullFileNamesAndInputStream_shouldThrowException() throws ShellException {
+    void testCatFileAndStdin_nullFileNamesAndInputStream_shouldThrowException() throws ShellException, IOException {
         assertThrows(CatException.class, () -> catApplication.catFileAndStdin(true, null, new String[]{}), ERR_NULL_STREAMS);
-        InputStream input = IOUtils.openInputStream(FILE_PATH_1); // NOPMD
-        assertThrows(CatException.class, () -> catApplication.catFileAndStdin(true, input, null), ERR_NULL_FILES);
-        IOUtils.closeInputStream(input);
+        InputStream inputStream = IOUtils.openInputStream(FILE_PATH_1);
+        try {
+            assertThrows(CatException.class, () -> catApplication.catFileAndStdin(true, inputStream, null), ERR_NULL_FILES);
+        } finally {
+            inputStream.close();
+        }
+    }
+
+    @Test
+    void testCatRun_nullStdIn_shouldThrowCatException() {
+        assertThrows(CatException.class, () -> catApplication.run(new String[]{FILE_PATH_1}, null, System.out), "Should Throw CatException");
+    }
+
+    @Test
+    void testCatRun_nullStdout_shouldThrowCatException() {
+        assertThrows(CatException.class, () -> catApplication.run(new String[]{FILE_PATH_1}, System.in, null), "Should Throw CatException");
+    }
+
+    @Test
+    void testCatRun_invalidFlag_shouldThrowCatException() {
+        assertThrows(CatException.class, () -> catApplication.run(new String[]{FILE_PATH_1, "-z"}, System.in, System.out), "Should Throw CatException");
+    }
+
+    @Test
+    void testCatRun_correctInputs_shouldNotThrowException() throws CatException {
+        catApplication.run(new String[]{FILE_PATH_1}, System.in, System.out);
+        List<String> expected = new ArrayList<>();
+        expected.add("This is WC Test file 1");
+        assertEquals(expected, catApplication.listResult);
     }
 }
