@@ -78,7 +78,7 @@ public class CutPasteIntegrationTest {
     void testCutPasteParseAndEvaluate_cutPasteWithSerialFlag_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("cut -c 1 %s > %s; cut -c 2 %s > %s; paste -s %s %s > %s; cut -c 1-3 %s;",
                 FILE1_PATH, TMP_INPUT1_FILE, FILE1_PATH, TMP_INPUT2_FILE, TMP_INPUT1_FILE, TMP_INPUT2_FILE, TMP_OUTPUT_FILE, TMP_OUTPUT_FILE);
-        String expectedOutput = "H" + STRING_TAB + "F" + STRING_TAB + "!" + STRING_NEWLINE + "e" + STRING_TAB + "i" + STRING_TAB + STRING_NEWLINE;
+        String expectedOutput = "H" + STRING_TAB + "F" + STRING_NEWLINE + "e" + STRING_TAB + "i" + STRING_NEWLINE;
         shell.parseAndEvaluate(commandString, stdOut);
         assertEquals(expectedOutput, stdOut.toString());
     }
@@ -101,9 +101,9 @@ public class CutPasteIntegrationTest {
     void testCutPasteParseCommand_cutPasteWithStdinInputWithSerialFlag_shouldReturnCorrectOutput() throws Exception {
         String inputString = "1" + STRING_NEWLINE + "2" + STRING_NEWLINE + "3";
         InputStream input = new ByteArrayInputStream(inputString.getBytes());
-        String commandString = String.format("cut -c 1 %s > %s; paste -s %s - > %s; cut -c 1-3 %s;",
+        String commandString = String.format("cut -c 1 %s > %s; paste -s %s - > %s; cut -c 1-3,5 %s;",
                 FILE1_PATH, TMP_INPUT1_FILE, TMP_INPUT1_FILE, TMP_OUTPUT_FILE, TMP_OUTPUT_FILE);
-        String expectedOutput = "H" + STRING_TAB + "F" + STRING_TAB + "!" + STRING_NEWLINE + "1" + STRING_TAB + "2" + STRING_TAB + "3" + STRING_NEWLINE;
+        String expectedOutput = "H" + STRING_TAB + "F" + "!" + STRING_NEWLINE + "1" + STRING_TAB + "2" + "3" + STRING_NEWLINE;
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         command.evaluate(input, stdOut);
         final String standardOutput = stdOut.toString();
