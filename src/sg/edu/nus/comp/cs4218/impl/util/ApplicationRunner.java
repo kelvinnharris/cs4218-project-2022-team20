@@ -75,6 +75,9 @@ public class ApplicationRunner {
             case APP_MV:
                 application = new MvApplication();
                 break;
+            case APP_PASTE:
+                application = new PasteApplication();
+                break;
             case APP_RM:
                 application = new RmApplication();
                 break;
@@ -84,15 +87,11 @@ public class ApplicationRunner {
             case APP_TEE:
                 application = new TeeApplication();
                 break;
-            case APP_WC:
-                application = new WcApplication();
-                break;
-            case APP_PASTE:
-                application = new PasteApplication();
-                break;
             case APP_UNIQ:
                 application = new UniqApplication();
-                System.out.println("[UNIQ] CALLED");
+                break;
+            case APP_WC:
+                application = new WcApplication();
                 break;
             default:
                 throw new ShellException(app + ": " + ERR_INVALID_APP);

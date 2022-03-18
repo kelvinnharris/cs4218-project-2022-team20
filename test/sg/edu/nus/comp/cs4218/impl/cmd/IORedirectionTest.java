@@ -89,8 +89,6 @@ class IORedirectionTest {
         List<String> noRedirActual = ioRedirectionHandler.getNoRedirArgsList();
 
         assertIterableEquals(noRedirExpected, noRedirActual, "List from both should be equal");
-
-        System.out.println("Test redir output");
     }
 
     @Test
