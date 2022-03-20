@@ -17,13 +17,12 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
-import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.*;
 import static sg.edu.nus.comp.cs4218.impl.util.TestConstants.GLOBBING_FOLDER;
 import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
 
 class GlobbingCommandTest {
-    ByteArrayOutputStream myOut;
     private static final String ROOT_PATH = Environment.currentDirectory;
     private static final String TEST_FOLDER_NAME = GLOBBING_FOLDER;
     private static final String TEST_PATH = ROOT_PATH + CHAR_FILE_SEP + TEST_FOLDER_NAME;
@@ -32,6 +31,8 @@ class GlobbingCommandTest {
     private static final String FILE2 = "file2.xml";
     private static final String FILE3 = "file3.txt";
     private static final String FILE4 = "file4.txt";
+    private static final String FILE5 = "file5.txt";
+    ByteArrayOutputStream myOut;
 
     @BeforeAll
     static void setUp() throws IOException {
@@ -41,7 +42,7 @@ class GlobbingCommandTest {
         Files.createFile(Paths.get(TEST_PATH + CHAR_FILE_SEP + FOLDER1 + CHAR_FILE_SEP + FILE2));
         Files.createFile(Paths.get(TEST_PATH + CHAR_FILE_SEP + FOLDER1 + CHAR_FILE_SEP + FILE3));
         Files.createFile(Paths.get(TEST_PATH + CHAR_FILE_SEP + FILE4));
-        Files.createFile(Paths.get(TEST_PATH + CHAR_FILE_SEP + "tmp_file1.txt"));
+        Files.createFile(Paths.get(TEST_PATH + CHAR_FILE_SEP + FILE5));
     }
 
     @AfterAll
@@ -58,44 +59,86 @@ class GlobbingCommandTest {
     }
 
     @Test
-    void testGlobbing_currentDirectory_shouldReturnCorrectOutput() throws Exception {
+    void testGlobbing_globFilesInCurrentDirectory_shouldReturnCorrectOutput() throws Exception {
         String inputString = "ls fil*";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
         command.evaluate(System.in, System.out);
         final String standardOutput = myOut.toString();
-        assertEquals("file4.txt" + STRING_NEWLINE, standardOutput);
+        assertEquals(FILE4 + STRING_NEWLINE + FILE5 + STRING_NEWLINE, standardOutput);
     }
 
     @Test
-    void testGlobbing_currentDirectoryMultipleStars_shouldReturnCorrectOutput() throws Exception {
+    void testGlobbing_globFilesInCurrentDirectoryNoMatchingFiles_shouldThrowException() throws Exception {
+        String inputString = "ls abc*";
+        Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
+
+        assertThrows(Exception.class, () -> command.evaluate(System.in, System.out));
+    }
+
+    @Test
+    void testGlobbing_globFilesInCurrentDirectoryDot_shouldReturnCorrectOutput() throws Exception {
+        String inputString = "ls ." + CHAR_FILE_SEP + "fil*";
+        Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
+
+        command.evaluate(System.in, System.out);
+        final String standardOutput = myOut.toString();
+        assertEquals(FILE4 + STRING_NEWLINE + FILE5 + STRING_NEWLINE, standardOutput);
+    }
+
+    @Test
+    void testGlobbing_globFilesInPreviousDirectoryDotDot_shouldReturnCorrectOutput() throws Exception {
+        String prevDirPrefix = ".." + CHAR_FILE_SEP;
+        Environment.currentDirectory = TEST_PATH + CHAR_FILE_SEP + FOLDER1;
+        String inputString = "ls " + prevDirPrefix + "fil*";
+        Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
+
+        command.evaluate(System.in, System.out);
+        final String standardOutput = myOut.toString();
+
+        assertEquals(prevDirPrefix + FILE4 + STRING_NEWLINE + prevDirPrefix + FILE5 + STRING_NEWLINE, standardOutput);
+    }
+
+    @Test
+    void testGlobbing_globFilesInCurrentDirectoryMultipleStars_shouldReturnCorrectOutput() throws Exception {
         String inputString = "ls -X *fil*.t*";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
         command.evaluate(System.in, System.out);
         final String standardOutput = myOut.toString();
-        assertEquals("file4.txt" + STRING_NEWLINE + STRING_NEWLINE + "tmp_file1.txt" + STRING_NEWLINE, standardOutput);
+        assertEquals(FILE4 + STRING_NEWLINE + FILE5 + STRING_NEWLINE, standardOutput);
     }
 
     @Test
-    void testGlobbing_specifiedDirectory_shouldReturnCorrectOutput() throws Exception {
+    void testGlobbing_globFilesInSpecifiedDirectory_shouldReturnCorrectOutput() throws Exception {
         String inputString = "ls " + FOLDER1 + CHAR_FILE_SEP + "*.xml";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
         command.evaluate(System.in, System.out);
         final String standardOutput = myOut.toString();
-        assertEquals(FOLDER1 + CHAR_FILE_SEP + FILE1 + STRING_NEWLINE + STRING_NEWLINE +
+        assertEquals(FOLDER1 + CHAR_FILE_SEP + FILE1 + STRING_NEWLINE +
                 FOLDER1 + CHAR_FILE_SEP + FILE2 + STRING_NEWLINE, standardOutput);
     }
 
     @Test
-    void testGlobbing_globSpecifiedDirectoryAndFiles_shouldReturnCorrectOutput() throws Exception {
+    void testGlobbing_globFilesInSpecifiedDirectoryMultipleStars_shouldReturnCorrectOutput() throws Exception {
+        String inputString = "ls " + FOLDER1 + CHAR_FILE_SEP + "*fil*.x*";
+        Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
+
+        command.evaluate(System.in, System.out);
+        final String standardOutput = myOut.toString();
+        assertEquals(FOLDER1 + CHAR_FILE_SEP + FILE1 + STRING_NEWLINE +
+                FOLDER1 + CHAR_FILE_SEP + FILE2 + STRING_NEWLINE, standardOutput);
+    }
+
+    @Test
+    void testGlobbing_globBothSpecifiedDirectoryAndFiles_shouldReturnCorrectOutput() throws Exception {
         String inputString = "ls fol*" + CHAR_FILE_SEP + "*.xml";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
         command.evaluate(System.in, System.out);
         final String standardOutput = myOut.toString();
-        assertEquals(FOLDER1 + CHAR_FILE_SEP + FILE1 + STRING_NEWLINE + STRING_NEWLINE +
+        assertEquals(FOLDER1 + CHAR_FILE_SEP + FILE1 + STRING_NEWLINE +
                 FOLDER1 + CHAR_FILE_SEP + FILE2 + STRING_NEWLINE, standardOutput);
     }
 
@@ -107,5 +150,69 @@ class GlobbingCommandTest {
         command.evaluate(System.in, System.out);
         final String standardOutput = myOut.toString();
         assertEquals(FILE1 + STRING_NEWLINE + FILE2 + STRING_NEWLINE + FILE3 + STRING_NEWLINE, standardOutput);
+    }
+
+    @Test
+    void testGlobbing_globCurrentDirectoryNoPattern_shouldReturnCorrectOutput() throws Exception {
+        String inputString = "ls *";
+        Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
+
+        command.evaluate(System.in, System.out);
+        final String standardOutput = myOut.toString();
+        assertEquals(FILE4 + STRING_NEWLINE + FILE5 + STRING_NEWLINE
+                + FOLDER1 + STRING_COLON + STRING_NEWLINE
+                + FILE1 + STRING_NEWLINE
+                + FILE2 + STRING_NEWLINE
+                + FILE3 + STRING_NEWLINE, standardOutput);
+    }
+
+    @Test
+    void testGlobbing_globMultipleDirectoryLevelsNoPattern_shouldReturnCorrectOutput() throws Exception {
+        String inputString = "ls *" + CHAR_FILE_SEP + "*";
+        String resultPrefix = FOLDER1 + CHAR_FILE_SEP;
+        Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
+
+        command.evaluate(System.in, System.out);
+        final String standardOutput = myOut.toString();
+        assertEquals(resultPrefix + FILE1 + STRING_NEWLINE
+                + resultPrefix + FILE2 + STRING_NEWLINE
+                + resultPrefix + FILE3 + STRING_NEWLINE, standardOutput);
+    }
+
+    @Test
+    void testGlobbing_globbingWithCommandSubstitution_shouldReturnCorrectOutput() throws Exception {
+        String inputString = "echo \"`ls *" + CHAR_FILE_SEP + "*`\"";
+        String resultPrefix = FOLDER1 + CHAR_FILE_SEP;
+        Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
+
+        command.evaluate(System.in, System.out);
+        final String standardOutput = myOut.toString();
+        assertEquals(resultPrefix + FILE1 + CHAR_SPACE
+                + resultPrefix + FILE2 + CHAR_SPACE
+                + resultPrefix + FILE3 + STRING_NEWLINE, standardOutput);
+    }
+
+    @Test
+    void testGlobbing_globbingWithPipe_shouldReturnCorrectOutput() throws Exception {
+        String inputString = "ls *" + CHAR_FILE_SEP + "* | grep \"3\"";
+        String resultPrefix = FOLDER1 + CHAR_FILE_SEP;
+        Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
+
+        command.evaluate(System.in, System.out);
+        final String standardOutput = myOut.toString();
+        assertEquals(resultPrefix + FILE3 + STRING_NEWLINE, standardOutput);
+    }
+
+    @Test
+    void testGlobbing_globbingWithSemicolon_shouldReturnCorrectOutput() throws Exception {
+        String inputString = "ls *" + CHAR_FILE_SEP + "*; sort *.txt";
+        String resultPrefix = FOLDER1 + CHAR_FILE_SEP;
+        Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
+
+        command.evaluate(System.in, System.out);
+        final String standardOutput = myOut.toString();
+        assertEquals(resultPrefix + FILE1 + STRING_NEWLINE
+                + resultPrefix + FILE2 + STRING_NEWLINE
+                + resultPrefix + FILE3 + STRING_NEWLINE, standardOutput);
     }
 }

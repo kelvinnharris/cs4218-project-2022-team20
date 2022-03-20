@@ -128,7 +128,11 @@ public final class RegexArgument {
                 match += File.separator;
             }
             if (!nextNode.isHidden() && regexPattern.matcher(match).matches()) {
-                matches.add(nextNode.getAbsolutePath());
+                if (isAbsolute) {
+                    matches.add(nextNode.getAbsolutePath());
+                } else {
+                    matches.add(match);
+                }
             }
             matches.addAll(traverseAndFilter(regexPattern, nextNode, isAbsolute, onlyDirectories));
         }
