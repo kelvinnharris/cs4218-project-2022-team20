@@ -29,7 +29,7 @@ public class LsCatIntegrationTest {
     private static final String TEST_FOLDER_NAME = "tmpLsCatTestFolder" + CHAR_FILE_SEP + "";
     private static final String TEST_PATH = ROOT_PATH + CHAR_FILE_SEP + TEST_FOLDER_NAME;
 
-    public static final String FOLDER1 = "folder1.txt";
+    public static final String FOLDER1 = "folder1";
     public static final String FOLDER1_PATH = TEST_PATH + FOLDER1;
     public static final String FILE1_NAME = "file1.txt";
     public static final String FILE1_PATH = FOLDER1_PATH + CHAR_FILE_SEP + FILE1_NAME;
@@ -48,7 +48,7 @@ public class LsCatIntegrationTest {
     @BeforeAll
     static void setUp() throws IOException {
         shell = new ShellImpl();
-        Environment.currentDirectory = ROOT_PATH;
+        Environment.currentDirectory = TEST_PATH;
         deleteDir(new File(TEST_PATH));
         Files.createDirectories(Paths.get(TEST_PATH));
         Files.deleteIfExists(Paths.get(FOLDER1_PATH));
@@ -84,7 +84,7 @@ public class LsCatIntegrationTest {
     @Test
     void testLsCatParseAndEvaluate_lsAndCat_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("ls %s ; cat %s", FILE2_PATH, FILE2_PATH);
-        String expected = TEST_FOLDER_NAME + FILE2_NAME + STRING_NEWLINE + SECOND1 + STRING_NEWLINE + SECOND2 + STRING_NEWLINE;
+        String expected = FILE2_NAME + STRING_NEWLINE + SECOND1 + STRING_NEWLINE + SECOND2 + STRING_NEWLINE;
         shell.parseAndEvaluate(commandString, stdOut);
         assertEquals(expected, stdOut.toString());
     }
