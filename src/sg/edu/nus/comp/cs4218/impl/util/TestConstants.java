@@ -4,7 +4,8 @@ public class TestConstants {
     public static final String LS_FOLDER = "tmpLsTestFolder";
     public static final String CD_FOLDER = "tmpCdTestFolder";
     public static final String CMD_SUBS_FOLDER = "tmpCmdSubsTestFolder";
-    public static final String GLOBBING_FOLDER = "tmpCmdSubsTestFolder";
+    public static final String GLOBBING_FOLDER = "tmpGlobbingTestFolder";
+    public static final String QUOTING_FOLDER = "tmpQuotingTestFolder";
     public static final String ECHO_PASTE_FOLDER = "tmpEchoPasteTestFolder";
     public static final String ECHO_GREP_FOLDER = "tmpEchoGrepTestFolder";
     public static final String CUT_PASTE_FOLDER = "tmpCutPasteTestFolder";
