@@ -17,9 +17,10 @@ import java.util.regex.PatternSyntaxException;
 import java.util.stream.Stream;
 
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
-import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.*;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FLAG_PREFIX;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
-public class GrepApplication implements GrepInterface { //NOPMD
+public class GrepApplication implements GrepInterface { //NOPMD - suppressed GodClass - Some of the methods are private to Grep and make more sense to put it inside the class
     public static final String INVALID_PATTERN = "Invalid pattern syntax";
     public static final String EMPTY_PATTERN = "Pattern should not be empty.";
     public static final String IS_DIRECTORY = "Is a directory";
@@ -54,19 +55,20 @@ public class GrepApplication implements GrepInterface { //NOPMD
      * Extract the lines and count number of lines for grep from files and insert them into
      * lineRes and countRes respectively.
      *
-     * @param pattern           pattern supplied by user
+     * @param pattern     pattern supplied by user
      * @param isCaseInsen supplied by user
-     * @param isPrefix supplied by user
-     * @param lineRes       a StringJoiner of the grep line results
-     * @param countRes      a StringJoiner of the grep line count results
-     * @param files         a String Array of file names supplied by user
+     * @param isPrefix    supplied by user
+     * @param lineRes     a StringJoiner of the grep line results
+     * @param countRes    a StringJoiner of the grep line count results
+     * @param files       a String Array of file names supplied by user
      */
-    private void grepResultsFromFiles(String pattern, Boolean isCaseInsen, Boolean isPrefix, // NOPMD
-                                  StringJoiner lineRes, StringJoiner countRes, String... files) throws Exception {
+    private void grepResultsFromFiles(String pattern, Boolean isCaseInsen, Boolean isPrefix, // NOPMD - suppressed ExcessiveMethodLength - Part of functional requirements where Ls needs to handle
+                                      StringJoiner lineRes, StringJoiner countRes, String... files) throws Exception {
         int count;
         boolean isSingleFile = (files.length == 1);
+        Boolean isPrefixCopy = isPrefix;
         if (!isSingleFile) {
-            isPrefix = true; // NOPMD
+            isPrefixCopy = true; // NOPMD
         }
 
         for (String f : files) {
@@ -79,14 +81,15 @@ public class GrepApplication implements GrepInterface { //NOPMD
             try {
                 Path path = IOUtils.resolveFilePath(f);
                 File file = new File(path.toString());
+                String formatString = "grep: %s: %s";
                 if (!file.exists()) {
-                    lineRes.add("grep: " + f + ": " + ERR_FILE_NOT_FOUND); //NOPMD
-                    countRes.add("grep: " + f + ": " + ERR_FILE_NOT_FOUND); //NOPMD
+                    lineRes.add(String.format(formatString, f, ERR_FILE_NOT_FOUND));
+                    countRes.add(String.format(formatString, f, ERR_FILE_NOT_FOUND));
                     continue;
                 }
                 if (file.isDirectory()) { // ignore if it's a directory
-                    lineRes.add("grep: " + f + ": " + IS_DIRECTORY); //NOPMD
-                    countRes.add("grep: " + f + ": " + IS_DIRECTORY); //NOPMD
+                    lineRes.add(String.format(formatString, f, IS_DIRECTORY));
+                    countRes.add(String.format(formatString, f, IS_DIRECTORY));
                     countRes.add(f + ": 0");
                     continue;
                 }
@@ -102,7 +105,7 @@ public class GrepApplication implements GrepInterface { //NOPMD
                 while ((line = reader.readLine()) != null) {
                     Matcher matcher = compiledPattern.matcher(line);
                     if (matcher.find()) { // match
-                        if (isPrefix) {
+                        if (isPrefixCopy) {
                             lineRes.add(f + ":" + line);
                         } else {
                             lineRes.add(line);
@@ -110,14 +113,14 @@ public class GrepApplication implements GrepInterface { //NOPMD
                         count++;
                     }
                 }
-                if (isPrefix) {
+                if (isPrefixCopy) {
                     countRes.add(f + ":" + count);
                 } else {
                     countRes.add(String.valueOf(count));
                 }
                 reader.close();
             } catch (PatternSyntaxException pse) {
-                throw new GrepException(ERR_INVALID_REGEX); //NOPMD
+                throw new GrepException(ERR_INVALID_REGEX); //NOPMD - suppressed PreserveStackTrace - We expect Grep to output custom error message
             } finally {
                 if (reader != null) {
                     reader.close();
@@ -159,9 +162,9 @@ public class GrepApplication implements GrepInterface { //NOPMD
             }
             reader.close();
         } catch (PatternSyntaxException pse) {
-            throw new GrepException(ERR_INVALID_REGEX); //NOPMD
+            throw new GrepException(ERR_INVALID_REGEX); //NOPMD - suppressed PreserveStackTrace - We expect Grep to output custom error message
         } catch (NullPointerException npe) {
-            throw new GrepException(ERR_FILE_NOT_FOUND); //NOPMD
+            throw new GrepException(ERR_FILE_NOT_FOUND); //NOPMD - suppressed PreserveStackTrace - We expect Grep to output custom error message
         }
 
         String results = "";
