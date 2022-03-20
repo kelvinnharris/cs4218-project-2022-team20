@@ -107,6 +107,18 @@ class CallCommandTest {
     }
 
     @Test
+    void testCallCommand_EchoApplicationWithEchoQuoting_testPassed() throws FileNotFoundException, AbstractApplicationException, ShellException {
+        argsList.addAll(Arrays.asList("echo", String.format("\" hello world \"", FILE_NAME_1)));
+        callCommand = new CallCommand(argsList, appRunner, argResolver);
+        callCommand.evaluate(inputStream, outputStream);
+
+        final String standardOutput = outputStream.toString();
+
+        String expected = " hello world ";
+        assertEquals(expected + STRING_NEWLINE, standardOutput);
+    }
+
+    @Test
     void testCallCommand_WcApplicationWithInputRedirectionGetArgsList_shouldReturnSameList() {
         argsList.addAll(Arrays.asList("wc", "<", NON_EXISTENT_FILE));
         callCommand = new CallCommand(argsList, appRunner, argResolver);
