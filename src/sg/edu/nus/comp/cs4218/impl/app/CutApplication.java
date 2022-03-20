@@ -120,12 +120,11 @@ public class CutApplication implements CutInterface { //NOPMD - suppressed GodCl
                 String errorMessage = String.format("'%s': %s", file, ERR_NO_PERM);
                 throw new Exception(errorMessage);
             }
-            InputStream input = IOUtils.openInputStream(file);//NOPMD - suppressed CloseResource - Resource has been closed at line 123
-            try {
+            try (InputStream input = IOUtils.openInputStream(file)) {
                 lines.addAll(IOUtils.getLinesFromInputStream(input));
-            } finally {
                 IOUtils.closeInputStream(input);
             }
+
         }
         return cutInputString(isCharPo, isBytePo, ranges, lines);
     }
