@@ -96,7 +96,7 @@ class CallCommandTest {
 
     @Test
     void testCallCommand_CatApplicationInvalidFileForOutStream_shouldThrowFileNotFoundException() {
-        argsList.addAll(Arrays.asList("cat", FILE_PATH_1, ">", TEST_FOLDER_NAME));
+        argsList.addAll(Arrays.asList("cat", FILE_PATH_1, ">", TEST_PATH));
         callCommand = new CallCommand(argsList, appRunner, argResolver);
         assertThrows(FileNotFoundException.class, () -> callCommand.evaluate(inputStream, outputStream), ERR_FILE_NOT_FOUND);
     }

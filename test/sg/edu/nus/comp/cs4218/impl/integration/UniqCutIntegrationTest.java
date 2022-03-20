@@ -24,7 +24,7 @@ import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 import static sg.edu.nus.comp.cs4218.impl.util.TestConstants.UNIQ_CUT_FOLDER;
 
-public class UniqueCutIntegrationTest {
+public class UniqCutIntegrationTest {
     ByteArrayOutputStream myOut;
     private static final String ROOT_PATH = Environment.currentDirectory;
     private static final String TEST_FOLDER_NAME = UNIQ_CUT_FOLDER + CHAR_FILE_SEP;
@@ -132,28 +132,28 @@ public class UniqueCutIntegrationTest {
     }
 
     @Test
-    void testUniqCutParseCommand_forwardCutWithInvalidFileToUniqWithCount_testPassed() throws Exception {
+    void testUniqCutParseCommand_forwardCutWithInvalidFileToUniqWithCount_throwsException() throws Exception {
         String inputString = "cut -c 1 blabla.txt | uniq -c";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
         assertThrows(CutException.class, () -> command.evaluate(System.in, myOut), CUT_EXCEPTN_MSG);
     }
 
     @Test
-    void testUniqCutParseCommand_forwardCutNoOptionsToUniqWithCount_testPassed() throws Exception {
+    void testUniqCutParseCommand_forwardCutNoOptionsToUniqWithCount_throwsException() throws Exception {
         String inputString = "cut blabla.txt | uniq -c";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
         assertThrows(CutException.class, () -> command.evaluate(System.in, myOut), CUT_EXCEPTN_MSG);
     }
 
     @Test
-    void testUniqCutParseCommand_forwardUniqWithInvalidOptionToCut_testPassed() throws Exception {
+    void testUniqCutParseCommand_forwardUniqWithInvalidOptionToCut_throwsException() throws Exception {
         String inputString = "uniq -z file1.txt | cut -c 1,2";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
         assertThrows(UniqException.class, () -> command.evaluate(System.in, myOut), UNIQ_EXCEPTN_MSG);
     }
 
     @Test
-    void testUniqCutParseCommand_forwardUniqWithInvalidFileToCut_testPassed() throws Exception {
+    void testUniqCutParseCommand_forwardUniqWithInvalidFileToCut_throwsException() throws Exception {
         String inputString = "uniq -D blabla.txt | cut -c 1,2";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
         assertThrows(UniqException.class, () -> command.evaluate(System.in, myOut), UNIQ_EXCEPTN_MSG);

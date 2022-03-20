@@ -44,6 +44,7 @@ public class GrepTeeIntegrationTest {
     private static final String BOB = "Bob";
     private static final String SECOND_BOB = "bOb";
     private static final String HELLO_WORLD = "Hello World";
+    private static final String ALICE = "Alice";
 
     @BeforeAll
     static void setUp() throws IOException {
@@ -51,14 +52,14 @@ public class GrepTeeIntegrationTest {
         Files.createDirectories(Paths.get(TEST_PATH));
         String fileContent = HELLO_WORLD + STRING_NEWLINE
                 + HELLO_WORLD + STRING_NEWLINE
-                + "Alice" + STRING_NEWLINE
-                + "Alice" + STRING_NEWLINE
+                + ALICE + STRING_NEWLINE
+                + ALICE + STRING_NEWLINE
                 + BOB + STRING_NEWLINE
-                + "Alice" + STRING_NEWLINE
+                + ALICE + STRING_NEWLINE
                 + BOB + STRING_NEWLINE
                 + SECOND_BOB;
         TestUtils.createFile(FILE_PATH_1, fileContent);
-        TestUtils.createFile(FILE_PATH_2, "Alice" + STRING_NEWLINE + "Bob" + STRING_NEWLINE + "Alice Bob");
+        TestUtils.createFile(FILE_PATH_2, ALICE + STRING_NEWLINE + "Bob" + STRING_NEWLINE + "Alice Bob");
     }
 
     @BeforeEach
@@ -105,7 +106,10 @@ public class GrepTeeIntegrationTest {
         command.evaluate(System.in, myOut);
         final String standardOutput = myOut.toString();
 
-        String sbExpected = BOB + STRING_NEWLINE + BOB;
+        String sbExpected = FILE_NAME_1 + ": " + BOB +
+                STRING_NEWLINE + FILE_NAME_1 + ": " + BOB +
+                STRING_NEWLINE + FILE_NAME_2 + ": " + BOB +
+                STRING_NEWLINE + FILE_NAME_2 + ": " + String.format("%s %s", ALICE, BOB);
         assertEquals(sbExpected + STRING_NEWLINE, standardOutput);
     }
 
