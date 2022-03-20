@@ -152,13 +152,13 @@ class CallCommandTest {
     }
 
     @Test
-    void testCallCommand_WcApplicationNullArgsList_shouldThrowShellException() {
+    void testCallCommand_NullArgsList_shouldThrowShellException() {
         callCommand = new CallCommand(null, appRunner, argResolver);
         assertThrows(ShellException.class, () -> callCommand.evaluate(inputStream, outputStream), ERR_SYNTAX);
     }
 
     @Test
-    void testCallCommand_WcApplicationEmptyArgsList_shouldThrowShellException() {
+    void testCallCommand_EmptyArgsList_shouldThrowShellException() {
         callCommand = new CallCommand(argsList, appRunner, argResolver);
         assertThrows(ShellException.class, () -> callCommand.evaluate(inputStream, outputStream), ERR_SYNTAX);
     }
