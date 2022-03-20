@@ -115,8 +115,8 @@ public class GrepSortIntegrationTest {
         String commandString = String.format("grep \"1\" %s %s - | sort", FILE1_NAME, FILE2_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         command.evaluate(inputStream, stdOut);
-        String expectedOutput = "(standard input): 1000" + STRING_NEWLINE + "file1.txt: 123" + STRING_NEWLINE
-                + "file2.txt: 123" + STRING_NEWLINE;
+        String expectedOutput = "(standard input):1000" + STRING_NEWLINE + "file1.txt:123" + STRING_NEWLINE
+                + "file2.txt:123" + STRING_NEWLINE;
         assertEquals(expectedOutput, stdOut.toString());
     }
 

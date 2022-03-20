@@ -142,7 +142,7 @@ public class EchoGrepIntegrationTest {
     @Test
     void testEchoGrepParseAndEvaluate_grepParamFromInputRedirectionEcho_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("grep -icH \"tH*\" %s < echo %s", FILE1_PATH, FILE2_PATH);
-        String expectedOutput = FILE1_PATH + CHAR_COLON + " 2" + STRING_NEWLINE + FILE2_PATH + CHAR_COLON + " 2" + STRING_NEWLINE;
+        String expectedOutput = FILE1_PATH + CHAR_COLON + "2" + STRING_NEWLINE + FILE2_PATH + CHAR_COLON + "2" + STRING_NEWLINE;
         shell.parseAndEvaluate(commandString, stdOut);
         assertEquals(expectedOutput, stdOut.toString());
     }
