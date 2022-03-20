@@ -30,8 +30,17 @@ class IORedirectionTest {
     private static final String FILE_PATH_1 = TEST_PATH + FILE_NAME_1;
     private static final String FILE_NAME_2 = "test2.txt";
     private static final String FILE_PATH_2 = TEST_PATH + FILE_NAME_2;
+    private static final String FILE_NAME_3 = "test3.txt";
+    private static final String FILE_PATH_3 = TEST_PATH + FILE_NAME_3;
 
     private static final String NONEXISTENTFILE = "IORedir.txt";
+
+    private static final String FILE_CONTENT_1 = "This is WC Test file 1";
+    private static final String FILE_CONTENT_3 = "This file contains z";
+
+    private static final String LIST_EQUAL_MSG = "List from both should be equal";
+    private static final String CAT = "cat";
+    private static final String STRING_WC = "wc";
 
     private IORedirectionHandler ioRedirectionHandler; //NOPMD - suppressed LongVariable - long variable to preserve meaningful variable naming
     List<String> argsList;
@@ -41,10 +50,12 @@ class IORedirectionTest {
 
     @BeforeAll
     static void setUp() throws IOException {
+        Environment.currentDirectory = TEST_PATH;
         TestUtils.deleteDir(new File(TEST_PATH));
         Files.createDirectories(Paths.get(TEST_PATH));
 
-        TestUtils.createFile(FILE_PATH_1, "This is WC Test file 1" + StringUtils.STRING_NEWLINE);
+        TestUtils.createFile(FILE_PATH_1, FILE_CONTENT_1 + StringUtils.STRING_NEWLINE);
+        TestUtils.createFile(FILE_PATH_3, FILE_CONTENT_3);
     }
 
     @BeforeEach
@@ -72,8 +83,20 @@ class IORedirectionTest {
     }
 
     @Test
+    void testIoRedirectionExtractRedirOptions_NoInpuTredirection_shouldReturnCorrectNoRedirArgsList() throws Exception {
+        argsList.addAll(Arrays.asList("paste", "abc", FILE_PATH_1, FILE_PATH_2, FILE_PATH_3));
+        ioRedirectionHandler = new IORedirectionHandler(argsList, inputStream, outputStream, argumentResolver);
+        ioRedirectionHandler.extractRedirOptions();
+
+        List<String> noRedirExpected = Arrays.asList("paste", "abc", FILE_PATH_1, FILE_PATH_2, FILE_PATH_3);
+        List<String> noRedirActual = ioRedirectionHandler.getNoRedirArgsList();
+
+        assertIterableEquals(noRedirExpected, noRedirActual, "Input stream from both should have same content");
+    }
+
+    @Test
     void testIORedirectionExtractRedirOptions_InputRedirectionWithMultipleArguments_shouldHaveSameInputStreamAsFile() throws Exception {
-        argsList.addAll(Arrays.asList("wc", "-", FILE_PATH_1, "<", FILE_PATH_1));
+        argsList.addAll(Arrays.asList(STRING_WC, "-", FILE_PATH_1, "<", FILE_PATH_1));
         ioRedirectionHandler = new IORedirectionHandler(argsList, inputStream, outputStream, argumentResolver);
         ioRedirectionHandler.extractRedirOptions();
 
@@ -89,22 +112,22 @@ class IORedirectionTest {
 
         assertIterableEquals(dataExpected, dataActual, "Input stream from both should have same content");
 
-        List<String> noRedirExpected = Arrays.asList("wc", "-", FILE_PATH_1);
+        List<String> noRedirExpected = Arrays.asList(STRING_WC, "-", FILE_PATH_1);
         List<String> noRedirActual = ioRedirectionHandler.getNoRedirArgsList();
 
-        assertIterableEquals(noRedirExpected, noRedirActual, "List from both should be equal");
+        assertIterableEquals(noRedirExpected, noRedirActual, LIST_EQUAL_MSG);
     }
 
     @Test
-    void testIORedirectionExtractRedirOptions_InputRedirectionWithMultipleArguments_shouldHaveSameOutputStreamAsFile() throws Exception {
-        argsList.addAll(Arrays.asList("wc", "-", FILE_PATH_1, ">", FILE_PATH_2));
+    void testIORedirectionExtractRedirOptions_InputRedirectionWithMultipleArguments_shouldHaveCorrectNoRedirListAndSameOutputStreamAsFile() throws Exception {
+        argsList.addAll(Arrays.asList(STRING_WC, "-", FILE_PATH_1, ">", FILE_PATH_2));
         ioRedirectionHandler = new IORedirectionHandler(argsList, inputStream, outputStream, argumentResolver);
         ioRedirectionHandler.extractRedirOptions();
 
-        List<String> noRedirExpected = Arrays.asList("wc", "-", FILE_PATH_1);
+        List<String> noRedirExpected = Arrays.asList(STRING_WC, "-", FILE_PATH_1);
         List<String> noRedirActual = ioRedirectionHandler.getNoRedirArgsList();
 
-        assertIterableEquals(noRedirExpected, noRedirActual, "List from both should be equal");
+        assertIterableEquals(noRedirExpected, noRedirActual, LIST_EQUAL_MSG);
 
         OutputStream outStrmExpected = ioRedirectionHandler.getOutputStream();
         String sampleData = "This result is to be appended to filePath2";
@@ -130,7 +153,7 @@ class IORedirectionTest {
 
     @Test
     void testIORedirectionExtractRedirOptions_InputRedirection_shouldHaveSameInputStreamAsFile() throws Exception {
-        argsList.addAll(Arrays.asList("wc", "<", FILE_PATH_1));
+        argsList.addAll(Arrays.asList(STRING_WC, "<", FILE_PATH_1));
         ioRedirectionHandler = new IORedirectionHandler(argsList, inputStream, outputStream, argumentResolver);
         ioRedirectionHandler.extractRedirOptions();
 
@@ -148,36 +171,92 @@ class IORedirectionTest {
     }
 
     @Test
-    void testIORedirectionExtractRedirOptions_InputAndOutputRedirection_shouldHaveSameOutputStreamAsFile() throws Exception {
-        argsList.addAll(Arrays.asList("wc", "-", "<", FILE_PATH_1, ">", FILE_PATH_2));
+    void testIORedirectionExtractRedirOptions_InputAndOutputRedirection_shouldReturnCorrectNoRedirArgsList() throws Exception {
+        argsList.addAll(Arrays.asList(STRING_WC, "-", "<", FILE_PATH_1, ">", FILE_PATH_2));
         ioRedirectionHandler = new IORedirectionHandler(argsList, inputStream, outputStream, argumentResolver);
         ioRedirectionHandler.extractRedirOptions();
 
-        List<String> noRedirExpected = Arrays.asList("wc", "-");
+        List<String> noRedirExpected = Arrays.asList(STRING_WC, "-");
         List<String> noRedirActual = ioRedirectionHandler.getNoRedirArgsList();
 
-        assertIterableEquals(noRedirExpected, noRedirActual, "List from both should be equal");
+        assertIterableEquals(noRedirExpected, noRedirActual, LIST_EQUAL_MSG);
+    }
+
+    @Test
+    void testIORedirectionExtractRedirOptions_InputAndOutputRedirection_shouldHaveCorrectNoRedirArgsList() throws Exception {
+        argsList.addAll(Arrays.asList(CAT, "<", FILE_PATH_1, ">", FILE_PATH_2));
+        ioRedirectionHandler = new IORedirectionHandler(argsList, inputStream, outputStream, argumentResolver);
+        ioRedirectionHandler.extractRedirOptions();
+
+        List<String> noRedirExpected = Arrays.asList(CAT);
+        List<String> noRedirActual = ioRedirectionHandler.getNoRedirArgsList();
+
+        assertIterableEquals(noRedirExpected, noRedirActual, LIST_EQUAL_MSG);
+    }
+
+    @Test
+    void testIORedirectionExtractRedirOptions_InputAndOutputRedirectionReversedOrder_shouldHaveSameOutputStreamAsFile() throws Exception {
+        argsList.addAll(Arrays.asList(CAT, "-", ">", FILE_PATH_2, "<", FILE_PATH_1));
+        ioRedirectionHandler = new IORedirectionHandler(argsList, inputStream, outputStream, argumentResolver);
+        ioRedirectionHandler.extractRedirOptions();
+
+        List<String> noRedirExpected = Arrays.asList(CAT, "-");
+        List<String> noRedirActual = ioRedirectionHandler.getNoRedirArgsList();
+
+        assertIterableEquals(noRedirExpected, noRedirActual, LIST_EQUAL_MSG);
     }
 
     @Test
     void testIORedirectionExtractRedirOptions_nonExistentInputFile_shouldThrowShellException() {
-        argsList.addAll(Arrays.asList("wc", "<", NONEXISTENTFILE));
+        argsList.addAll(Arrays.asList(STRING_WC, "<", NONEXISTENTFILE));
 
         ioRedirectionHandler = new IORedirectionHandler(argsList, inputStream, outputStream, argumentResolver);
         assertThrows(ShellException.class, () -> ioRedirectionHandler.extractRedirOptions(), ERR_FILE_NOT_FOUND);
     }
 
     @Test
-    void testIORedirectionExtractRedirOptions_nonValidOutputFile_shouldThrowFileNotFoundException() {
-        argsList.addAll(Arrays.asList("wc", ">", TEST_FOLDER_NAME));
+    void testIORedirectionExtractRedirOptions_nonValidOutputFile_shouldThrowShellNotFoundException() {
+        argsList.addAll(Arrays.asList(STRING_WC, ">", TEST_PATH));
 
         ioRedirectionHandler = new IORedirectionHandler(argsList, inputStream, outputStream, argumentResolver);
-        assertThrows(FileNotFoundException.class, () -> ioRedirectionHandler.extractRedirOptions(), ERR_FILE_NOT_FOUND);
+        assertThrows(ShellException.class, () -> ioRedirectionHandler.extractRedirOptions(), ERR_FILE_NOT_FOUND);
     }
 
     @Test
     void testIORedirectionExtractRedirOptions_nullArgsList_shouldThrowException() {
         ioRedirectionHandler = new IORedirectionHandler(null, inputStream, outputStream, argumentResolver);
         assertThrows(ShellException.class, () -> ioRedirectionHandler.extractRedirOptions(), ERR_SYNTAX);
+    }
+
+    @Test
+    void testIORedirectionExtractRedirOptions_inputRedirWithInvalidFileWithValidOutputRedir_shouldThrowShellException() {
+        argsList.addAll(Arrays.asList(STRING_WC, "<", NONEXISTENTFILE, ">", FILE_NAME_2));
+
+        ioRedirectionHandler = new IORedirectionHandler(argsList, inputStream, outputStream, argumentResolver);
+        assertThrows(ShellException.class, () -> ioRedirectionHandler.extractRedirOptions(), ERR_FILE_NOT_FOUND);
+    }
+
+    @Test
+    void testIORedirectionExtractRedirOptions_inputRedirWithValidFileWithInvalidFileOutputRedir_shouldThrowShellException() {
+        argsList.addAll(Arrays.asList("grep", "B", "<", FILE_PATH_1, ">", TEST_PATH));
+        ioRedirectionHandler = new IORedirectionHandler(argsList, inputStream, outputStream, argumentResolver);
+
+        assertThrows(ShellException.class, () -> ioRedirectionHandler.extractRedirOptions(), ERR_FILE_NOT_FOUND);
+    }
+
+    @Test
+    void testIORedirectionExtractRedirOptions_doubleInputRedirection_shouldThrowShellException() throws Exception {
+        argsList.addAll(Arrays.asList("grep", "z", "<", FILE_PATH_1, "<", FILE_PATH_3));
+        ioRedirectionHandler = new IORedirectionHandler(argsList, inputStream, outputStream, argumentResolver);
+
+        assertThrows(ShellException.class, () -> ioRedirectionHandler.extractRedirOptions(), ERR_FILE_NOT_FOUND);
+    }
+
+    @Test
+    void testIORedirectionExtractRedirOptions_doubleOutRedirection_shouldThrowShellException() throws Exception {
+        argsList.addAll(Arrays.asList("paste", FILE_PATH_1, ">", FILE_PATH_2, ">", FILE_PATH_3 + "4"));
+        ioRedirectionHandler = new IORedirectionHandler(argsList, inputStream, outputStream, argumentResolver);
+
+        assertThrows(ShellException.class, () -> ioRedirectionHandler.extractRedirOptions(), ERR_FILE_NOT_FOUND);
     }
 }
