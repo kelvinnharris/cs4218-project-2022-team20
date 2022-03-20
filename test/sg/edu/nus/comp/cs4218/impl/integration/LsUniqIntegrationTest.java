@@ -87,7 +87,7 @@ public class LsUniqIntegrationTest {
         String commandString = String.format("uniq `ls %s`", FILE1_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         command.evaluate(inputStream, stdOut);
-        String uniqResult1 = "abc" + STRING_NEWLINE + "def" + STRING_NEWLINE + "abc" + STRING_NEWLINE;
+        String uniqResult1 = ABC + STRING_NEWLINE + DEF + STRING_NEWLINE + ABC + STRING_NEWLINE;
         assertEquals(uniqResult1, stdOut.toString());
     }
 
@@ -96,7 +96,7 @@ public class LsUniqIntegrationTest {
         String commandString = String.format("uniq -d `ls %s`", FILE1_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         command.evaluate(inputStream, stdOut);
-        String uniqResult1 = "abc" + STRING_NEWLINE + "abc" + STRING_NEWLINE;
+        String uniqResult1 = ABC + STRING_NEWLINE + ABC + STRING_NEWLINE;
         assertEquals(uniqResult1, stdOut.toString());
     }
 
@@ -105,7 +105,7 @@ public class LsUniqIntegrationTest {
         String commandString = String.format("ls %s | uniq -d", FILE1_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         command.evaluate(inputStream, stdOut);
-        assertEquals("", stdOut.toString());
+        assertEquals(EMPTY_STRING, stdOut.toString());
     }
 
     @Test
