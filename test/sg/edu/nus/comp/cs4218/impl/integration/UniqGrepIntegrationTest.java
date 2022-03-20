@@ -113,7 +113,7 @@ public class UniqGrepIntegrationTest {
         command.evaluate(System.in, myOut);
         final String standardOutput = myOut.toString();
 
-        String sbExpected = "2 file1.txt: Bob" + STRING_NEWLINE + "1 file1.txt: bOb";
+        String sbExpected = "2 file1.txt:Bob" + STRING_NEWLINE + "1 file1.txt:bOb";
         assertEquals(sbExpected + STRING_NEWLINE, standardOutput);
     }
 
@@ -125,10 +125,10 @@ public class UniqGrepIntegrationTest {
         command.evaluate(System.in, myOut);
         final String standardOutput = myOut.toString();
 
-        String sbExpected = "2 file1.txt: Bob" + STRING_NEWLINE +
-                "1 file1.txt: bOb" + STRING_NEWLINE +
-                "1 file2.txt: B" + STRING_NEWLINE +
-                "1 file2.txt: b";
+        String sbExpected = "2 file1.txt:Bob" + STRING_NEWLINE +
+                "1 file1.txt:bOb" + STRING_NEWLINE +
+                "1 file2.txt:B" + STRING_NEWLINE +
+                "1 file2.txt:b";
         assertEquals(sbExpected + STRING_NEWLINE, standardOutput);
     }
 

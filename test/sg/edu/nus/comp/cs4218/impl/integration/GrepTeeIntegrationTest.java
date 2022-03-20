@@ -23,8 +23,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
-import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.*;
 import static sg.edu.nus.comp.cs4218.impl.util.TestConstants.GREP_TEE_FOLDER;
 
 public class GrepTeeIntegrationTest {
@@ -106,10 +105,10 @@ public class GrepTeeIntegrationTest {
         command.evaluate(System.in, myOut);
         final String standardOutput = myOut.toString();
 
-        String sbExpected = FILE_NAME_1 + ": " + BOB +
-                STRING_NEWLINE + FILE_NAME_1 + ": " + BOB +
-                STRING_NEWLINE + FILE_NAME_2 + ": " + BOB +
-                STRING_NEWLINE + FILE_NAME_2 + ": " + String.format("%s %s", ALICE, BOB);
+        String sbExpected = FILE_NAME_1 + STRING_COLON + BOB +
+                STRING_NEWLINE + FILE_NAME_1 + STRING_COLON + BOB +
+                STRING_NEWLINE + FILE_NAME_2 + STRING_COLON + BOB +
+                STRING_NEWLINE + FILE_NAME_2 + STRING_COLON + String.format("%s %s", ALICE, BOB);
         assertEquals(sbExpected + STRING_NEWLINE, standardOutput);
     }
 
@@ -121,7 +120,7 @@ public class GrepTeeIntegrationTest {
         command.evaluate(System.in, myOut);
         final String standardOutput = myOut.toString();
 
-        String expected = "(standard input): 5";
+        String expected = "(standard input):5";
         assertEquals(expected + STRING_NEWLINE, standardOutput);
     }
 
@@ -161,12 +160,12 @@ public class GrepTeeIntegrationTest {
         command.evaluate(System.in, myOut);
         final String standardOutput = myOut.toString();
 
-        String expected = String.format("file3.txt: %s", BOB) + STRING_NEWLINE +
-                String.format("file3.txt: %s", BOB) + STRING_NEWLINE +
-                String.format("file3.txt: %s", SECOND_BOB) + STRING_NEWLINE +
-                String.format("(standard input): %s", BOB) + STRING_NEWLINE +
-                String.format("(standard input): %s", BOB) + STRING_NEWLINE +
-                String.format("(standard input): %s", SECOND_BOB);
+        String expected = String.format("file3.txt:%s", BOB) + STRING_NEWLINE +
+                String.format("file3.txt:%s", BOB) + STRING_NEWLINE +
+                String.format("file3.txt:%s", SECOND_BOB) + STRING_NEWLINE +
+                String.format("(standard input):%s", BOB) + STRING_NEWLINE +
+                String.format("(standard input):%s", BOB) + STRING_NEWLINE +
+                String.format("(standard input):%s", SECOND_BOB);
         assertEquals(expected + STRING_NEWLINE, standardOutput);
 
         TestUtils.deleteDir(new File("file3.txt"));

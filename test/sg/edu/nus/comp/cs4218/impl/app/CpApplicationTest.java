@@ -32,7 +32,8 @@ public class CpApplicationTest {
         > destFolder
      */
 
-    private static final String TEST_PATH = Environment.currentDirectory + CHAR_FILE_SEP + CP_FOLDER;
+    private static final String ROOT_PATH = Environment.currentDirectory;
+    private static final String TEST_PATH = ROOT_PATH + CHAR_FILE_SEP + CP_FOLDER;
     private static final String SRC_FOLDER_NAME = "srcFolder";
     private static final String SRC_FOLDER1_NAME = "srcFolder1";
     private static final String SRC_FOLDER2_NAME = "srcFolder2";
@@ -61,6 +62,7 @@ public class CpApplicationTest {
 
     @BeforeEach
     void setUpEach() throws IOException {
+        Environment.currentDirectory = ROOT_PATH;
         deleteDir(new File(TEST_PATH));
         Files.createDirectories(Paths.get(TEST_PATH));
         Files.createDirectories(Paths.get(SRC_FOLDER_PATH));

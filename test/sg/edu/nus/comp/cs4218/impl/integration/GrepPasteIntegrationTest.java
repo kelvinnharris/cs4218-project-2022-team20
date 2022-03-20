@@ -84,7 +84,7 @@ public class GrepPasteIntegrationTest {
     @Test
     void testGrepPasteParseAndEvaluate_grepPasteOutputssAndCountOccurences_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("paste %s | grep -H \"file1\"", FILE1_PATH);
-        String expectedOutput = "(standard input): file1.txt" + STRING_NEWLINE + "(standard input): file1" + STRING_NEWLINE;
+        String expectedOutput = "(standard input):file1.txt" + STRING_NEWLINE + "(standard input):file1" + STRING_NEWLINE;
         shell.parseAndEvaluate(commandString, stdOut);
         assertEquals(expectedOutput, stdOut.toString());
     }

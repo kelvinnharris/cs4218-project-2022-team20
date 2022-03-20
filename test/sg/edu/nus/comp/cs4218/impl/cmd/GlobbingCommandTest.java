@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Command;
 import sg.edu.nus.comp.cs4218.Environment;
+import sg.edu.nus.comp.cs4218.exception.LsException;
 import sg.edu.nus.comp.cs4218.impl.util.ApplicationRunner;
 import sg.edu.nus.comp.cs4218.impl.util.CommandBuilder;
 
@@ -21,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.*;
 import static sg.edu.nus.comp.cs4218.impl.util.TestConstants.GLOBBING_FOLDER;
 import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
+import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.isWindowsSystem;
 
 class GlobbingCommandTest {
     private static final String ROOT_PATH = Environment.currentDirectory;
@@ -73,7 +75,13 @@ class GlobbingCommandTest {
         String inputString = "ls abc*";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
-        assertThrows(Exception.class, () -> command.evaluate(System.in, System.out));
+        if (isWindowsSystem()) {
+            assertThrows(LsException.class, () -> command.evaluate(System.in, System.out));
+        } else {
+            command.evaluate(System.in, System.out);
+            final String standardOutput = myOut.toString();
+            assertEquals("ls: cannot access 'abc*': No such file or directory" + STRING_NEWLINE, standardOutput);
+        }
     }
 
     @Test
