@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Command;
 import sg.edu.nus.comp.cs4218.Environment;
+import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 import sg.edu.nus.comp.cs4218.impl.util.ApplicationRunner;
 import sg.edu.nus.comp.cs4218.impl.util.CommandBuilder;
@@ -162,13 +163,13 @@ class SemicolonCommandTest {
     @Test
     void testSemicolonParseCommand_semicolonAtStartOneCommand_returnException() {
         String inputString = String.format(";echo %s", FIRST_OUTPUT);
-        assertThrows(Exception.class, () -> CommandBuilder.parseCommand(inputString, new ApplicationRunner()));
+        assertThrows(ShellException.class, () -> CommandBuilder.parseCommand(inputString, new ApplicationRunner()));
     }
 
     @Test
     void testSemicolonParseCommand_semicolonAtStartTwoCommand_returnException() {
         String inputString = String.format(";echo %s; echo", FIRST_OUTPUT);
-        assertThrows(Exception.class, () -> CommandBuilder.parseCommand(inputString, new ApplicationRunner()));
+        assertThrows(ShellException.class, () -> CommandBuilder.parseCommand(inputString, new ApplicationRunner()));
     }
 
     @Test
@@ -196,13 +197,13 @@ class SemicolonCommandTest {
     @Test
     void testSemicolonParseCommand_semicolonAtStartAtEnd_returnException() {
         String inputString = String.format(";echo %s; echo;", FIRST_OUTPUT);
-        assertThrows(Exception.class, () -> CommandBuilder.parseCommand(inputString, new ApplicationRunner()));
+        assertThrows(ShellException.class, () -> CommandBuilder.parseCommand(inputString, new ApplicationRunner()));
     }
 
     @Test
     void testSemicolonParseCommand_doubleSemicolon_returnException() {
         String inputString = String.format("echo %s;; echo", FIRST_OUTPUT);
-        assertThrows(Exception.class, () -> CommandBuilder.parseCommand(inputString, new ApplicationRunner()));
+        assertThrows(ShellException.class, () -> CommandBuilder.parseCommand(inputString, new ApplicationRunner()));
     }
 
     @Test
@@ -252,7 +253,7 @@ class SemicolonCommandTest {
     @Test
     void testSemicolonParseCommand_threeCommandsSemicolonAtEnd_returnException() {
         String inputString = String.format(";echo %s; echo; echo", FIRST_OUTPUT);
-        assertThrows(Exception.class, () -> CommandBuilder.parseCommand(inputString, new ApplicationRunner()));
+        assertThrows(ShellException.class, () -> CommandBuilder.parseCommand(inputString, new ApplicationRunner()));
     }
 
 }

@@ -30,8 +30,8 @@ public class PipeCommandTest {
     private static final String ROOT_PATH = Environment.currentDirectory;
     private static final String TEST_FOLDER_NAME = "tmpPipeTestFolder" + CHAR_FILE_SEP + "";
     private static final String TEST_PATH = ROOT_PATH + CHAR_FILE_SEP + TEST_FOLDER_NAME;
-    public static final String LSA_ERR = String.format("shell: lsa: Invalid app");
-    public static final String SHELL_ERR = String.format("shell: Invalid syntax");
+    public static final String LSA_ERR = "shell: lsa: Invalid app";
+    public static final String SHELL_ERR = "shell: Invalid syntax";
     private static final String FIRST_OUTPUT = "first output";
     private static final String SECOND_OUTPUT = "second output";
     private static final String THIRD_OUTPUT = "third output";
