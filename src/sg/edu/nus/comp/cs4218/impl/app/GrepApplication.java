@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.*;
 
-public class GrepApplication implements GrepInterface { //NOPMD
+public class GrepApplication implements GrepInterface {
     public static final String INVALID_PATTERN = "Invalid pattern syntax";
     public static final String EMPTY_PATTERN = "Pattern should not be empty.";
     public static final String IS_DIRECTORY = "Is a directory";
@@ -61,12 +61,12 @@ public class GrepApplication implements GrepInterface { //NOPMD
      * @param countRes      a StringJoiner of the grep line count results
      * @param files         a String Array of file names supplied by user
      */
-    private void grepResultsFromFiles(String pattern, Boolean isCaseInsen, Boolean isPrefix, // NOPMD
+    private void grepResultsFromFiles(String pattern, Boolean isCaseInsen, Boolean isPrefix,
                                   StringJoiner lineRes, StringJoiner countRes, String... files) throws Exception {
         int count;
         boolean isSingleFile = (files.length == 1);
         if (!isSingleFile) {
-            isPrefix = true; // NOPMD
+            isPrefix = true;
         }
 
         for (String f : files) {
@@ -80,13 +80,13 @@ public class GrepApplication implements GrepInterface { //NOPMD
                 Path path = IOUtils.resolveFilePath(f);
                 File file = new File(path.toString());
                 if (!file.exists()) {
-                    lineRes.add("grep: " + f + ": " + ERR_FILE_NOT_FOUND); //NOPMD
-                    countRes.add("grep: " + f + ": " + ERR_FILE_NOT_FOUND); //NOPMD
+                    lineRes.add("grep: " + f + ": " + ERR_FILE_NOT_FOUND);
+                    countRes.add("grep: " + f + ": " + ERR_FILE_NOT_FOUND);
                     continue;
                 }
                 if (file.isDirectory()) { // ignore if it's a directory
-                    lineRes.add("grep: " + f + ": " + IS_DIRECTORY); //NOPMD
-                    countRes.add("grep: " + f + ": " + IS_DIRECTORY); //NOPMD
+                    lineRes.add("grep: " + f + ": " + IS_DIRECTORY);
+                    countRes.add("grep: " + f + ": " + IS_DIRECTORY);
                     countRes.add(f + ": 0");
                     continue;
                 }
@@ -117,7 +117,7 @@ public class GrepApplication implements GrepInterface { //NOPMD
                 }
                 reader.close();
             } catch (PatternSyntaxException pse) {
-                throw new GrepException(ERR_INVALID_REGEX); //NOPMD
+                throw new GrepException(ERR_INVALID_REGEX);
             } finally {
                 if (reader != null) {
                     reader.close();
@@ -159,9 +159,9 @@ public class GrepApplication implements GrepInterface { //NOPMD
             }
             reader.close();
         } catch (PatternSyntaxException pse) {
-            throw new GrepException(ERR_INVALID_REGEX); //NOPMD
+            throw new GrepException(ERR_INVALID_REGEX);
         } catch (NullPointerException npe) {
-            throw new GrepException(ERR_FILE_NOT_FOUND); //NOPMD
+            throw new GrepException(ERR_FILE_NOT_FOUND);
         }
 
         String results = "";

@@ -10,7 +10,9 @@ import java.util.Locale;
 import static java.nio.file.StandardOpenOption.APPEND;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
-public class TestUtils { // NOPMD
+public final class TestUtils {
+    private TestUtils() {
+    }
 
     public static void deleteDir(File file) {
         File[] contents = file.listFiles();
@@ -40,16 +42,6 @@ public class TestUtils { // NOPMD
             if (myWriter != null) {
                 myWriter.close();
             }
-        }
-    }
-
-    public static void deleteFile(String filePath) {
-        File newFile = new File(filePath);
-
-        try {
-            boolean result = Files.deleteIfExists(newFile.toPath());
-        } catch (IOException e) {
-            System.out.println("Failed to delete file");
         }
     }
 

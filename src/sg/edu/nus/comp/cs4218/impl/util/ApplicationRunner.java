@@ -42,7 +42,7 @@ public class ApplicationRunner {
      * @throws ShellException               If an unsupported or invalid application command is
      *                                      detected.
      */
-    public void runApp(String app, String[] argsArray, InputStream inputStream,
+    public void runApp(String app, String[] argsArray, InputStream inputStream, //NOPMD - suppressed ExcessiveMethodLength - preserve readability
                        OutputStream outputStream)
             throws AbstractApplicationException, ShellException {
         Application application;
