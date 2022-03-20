@@ -62,17 +62,8 @@ class IORedirectionTest {
     void setUpEach() throws IOException {
         argsList = new ArrayList<>();
         argumentResolver = new ArgumentResolver();
-        inputStream = new InputStream() {
-            @Override
-            public int read() throws IOException {
-                return 0;
-            }
-        };
-        outputStream = new OutputStream() {
-            @Override
-            public void write(int num) throws IOException { // NOPMD
-            }
-        };
+        inputStream = System.in;
+        outputStream = System.out;
     }
 
     @AfterAll
