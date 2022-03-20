@@ -200,23 +200,19 @@ public class GrepApplication implements GrepInterface { //NOPMD - suppressed God
                 throw new Exception(ERR_SYNTAX);
             }
 
-            if (pattern.isEmpty()) {
-                throw new Exception(EMPTY_PATTERN);
+            if (inputFiles == null || inputFiles.length == 0) {
+                result = grepFromStdin(pattern, isCaseInsensitive, isCountOnly, isPrintFilename, stdin);
             } else {
-                if (inputFiles == null || inputFiles.length == 0) {
+
+                Boolean toReadFromStdin = Stream.of(inputFiles).anyMatch(fileName -> Objects.equals(fileName, String.valueOf(CHAR_FLAG_PREFIX)));
+                Boolean toReadFromFiles = Stream.of(inputFiles).anyMatch(fileName -> !Objects.equals(fileName, String.valueOf(CHAR_FLAG_PREFIX)));
+
+                if (toReadFromFiles && toReadFromStdin) {
+                    result = grepFromFileAndStdin(pattern, isCaseInsensitive, isCountOnly, isPrintFilename, stdin, inputFiles);
+                } else if (toReadFromFiles) {
+                    result = grepFromFiles(pattern, isCaseInsensitive, isCountOnly, isPrintFilename, inputFiles);
+                } else if (toReadFromStdin) {
                     result = grepFromStdin(pattern, isCaseInsensitive, isCountOnly, isPrintFilename, stdin);
-                } else {
-
-                    Boolean toReadFromStdin = Stream.of(inputFiles).anyMatch(fileName -> Objects.equals(fileName, String.valueOf(CHAR_FLAG_PREFIX)));
-                    Boolean toReadFromFiles = Stream.of(inputFiles).anyMatch(fileName -> !Objects.equals(fileName, String.valueOf(CHAR_FLAG_PREFIX)));
-
-                    if (toReadFromFiles && toReadFromStdin) {
-                        result = grepFromFileAndStdin(pattern, isCaseInsensitive, isCountOnly, isPrintFilename, stdin, inputFiles);
-                    } else if (toReadFromFiles) {
-                        result = grepFromFiles(pattern, isCaseInsensitive, isCountOnly, isPrintFilename, inputFiles);
-                    } else if (toReadFromStdin) {
-                        result = grepFromStdin(pattern, isCaseInsensitive, isCountOnly, isPrintFilename, stdin);
-                    }
                 }
             }
             stdout.write(result.getBytes());
