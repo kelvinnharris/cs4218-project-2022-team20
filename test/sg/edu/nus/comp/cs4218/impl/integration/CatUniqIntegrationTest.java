@@ -83,7 +83,7 @@ public class CatUniqIntegrationTest {
     }
 
     @Test
-    void testCatUniqParseCommand_uniqDuplicateFromCatFiles_shouldReturnCorrectDuplicateLines() throws Exception {
+    void testCatUniqParseCommand_uniqOneDuplicateFromCatFiles_shouldReturnCorrectDuplicateLines() throws Exception {
         String commandString = String.format("cat %s | uniq -d", FILE1_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         command.evaluate(inputStream, stdOut);
@@ -92,7 +92,7 @@ public class CatUniqIntegrationTest {
     }
 
     @Test
-    void testCatUniqParseCommand_uniqDuplicateDupFromCatFiles_shouldReturnCorrectDuplicateLines() throws Exception {
+    void testCatUniqParseCommand_uniqAllDuplicateFromCatFiles_shouldReturnCorrectDuplicateLines() throws Exception {
         String commandString = String.format("cat %s | uniq -D", FILE1_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         command.evaluate(inputStream, stdOut);
@@ -111,7 +111,7 @@ public class CatUniqIntegrationTest {
     }
 
     @Test
-    void testLsUniqParseCommand_UniqOutputOfLsFromUniq_shouldReturnCorrectOutput() throws Exception {
+    void testCatUniqParseCommand_UniqOutputOfCatFromUniq_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("cat %s %s | uniq -c", FILE1_NAME, FILE1_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         command.evaluate(inputStream, stdOut);
@@ -124,8 +124,15 @@ public class CatUniqIntegrationTest {
     }
 
     @Test
-    void testLsUniq_UniqDirOutputOfLs_shouldThrowUniqException() throws Exception {
+    void testCatUniq_UniqDirOutputOfCat_shouldThrowUniqException() throws Exception {
         String commandString = String.format("cat `uniq %s`", FOLDER1_PATH);
+        Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
+        assertThrows(UniqException.class, () -> command.evaluate(inputStream, stdOut));
+    }
+
+    @Test
+    void testCatUniq_UniqDirInvalidPathOutputOfCat_shouldThrowUniqException() throws Exception {
+        String commandString = String.format("cat `uniq %s`", NE_FILE_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         assertThrows(UniqException.class, () -> command.evaluate(inputStream, stdOut));
     }

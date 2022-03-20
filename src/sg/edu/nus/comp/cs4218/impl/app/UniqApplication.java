@@ -73,15 +73,15 @@ public class UniqApplication implements UniqInterface {
         }
         File node = IOUtils.resolveFilePath(inputFileName).toFile();
         if (!node.exists()) {
-            String errorMessage = inputFileName + "': " + ERR_FILE_NOT_FOUND;
+            String errorMessage = inputFileName + ": " + ERR_FILE_NOT_FOUND;
             throw new Exception(errorMessage);
         }
         if (node.isDirectory()) {
-            String errorMessage = inputFileName + "': " + ERR_IS_DIR;
+            String errorMessage = inputFileName + ": " + ERR_IS_DIR;
             throw new Exception(errorMessage);
         }
         if (!node.canRead()) {
-            String errorMessage = inputFileName + "': " + ERR_NO_PERM;
+            String errorMessage = inputFileName + ": " + ERR_NO_PERM;
             throw new Exception(errorMessage);
         }
 
