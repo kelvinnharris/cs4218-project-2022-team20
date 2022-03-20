@@ -17,7 +17,8 @@ import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.*;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 import static sg.edu.nus.comp.cs4218.impl.util.TestConstants.WC_CUT_FOLDER;
 import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.*;
 
@@ -29,8 +30,14 @@ public class WcCutIntegrationTest {
     public static final String FILE3_NAME = "file3.txt";
     public static final String FOLDER1_NAME = "folder1";
     public static final String NE_FILE_NAME = "nonExistent.txt";
-    public static final String[] LINES1 = {"abc", "abc", "def", "abc", "abc", "abc"}; // NOPMD - duplicate literals are used once for definition
-    public static final String[] LINES2 = {"123", "123", "", ""};
+
+    public static final String ABC = "abc";
+    public static final String DEF = "def";
+    public static final String WORD123 = "123";
+    public static final String EMPTY_STRING = "";
+
+    public static final String[] LINES1 = {ABC, ABC, DEF, ABC, ABC, ABC};
+    public static final String[] LINES2 = {WORD123, WORD123, EMPTY_STRING, EMPTY_STRING};
     public static final String[] LINES3 = {FILE1_NAME, FILE1_NAME, FILE2_NAME, FILE1_NAME, FILE1_NAME};
 
 
