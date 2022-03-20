@@ -115,7 +115,12 @@ public class PasteApplication implements PasteInterface {
 
         for (String file : fileName) {
             File node = IOUtils.resolveFilePath(file).toFile();
-            if ("".equals(file) || !node.exists()) {
+            if ("".equals(file)) {
+                fileNotExist = true;
+                fileNotExistName = file;
+                throw new PasteException("paste: " + "''" + ERR_NOT_FOUND);
+            }
+            if (!node.exists()) {
                 fileNotExist = true;
                 fileNotExistName = file;
                 throw new PasteException("paste: " + file + ERR_NOT_FOUND);
