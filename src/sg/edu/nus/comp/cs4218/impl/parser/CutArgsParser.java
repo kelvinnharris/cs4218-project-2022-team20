@@ -1,6 +1,7 @@
 package sg.edu.nus.comp.cs4218.impl.parser;
 
 import javafx.util.Pair;
+import sg.edu.nus.comp.cs4218.exception.CutException;
 import sg.edu.nus.comp.cs4218.exception.InvalidArgsException;
 
 import java.util.ArrayList;
@@ -60,11 +61,10 @@ public class CutArgsParser extends ArgsParser {
                         startIdx = Integer.parseInt(currString) - 1;
                         endIdx = startIdx;
                     } else {
-                        // throw cut: [-cf] list: illegal list value
+                        throw new CutException("invalid byte, character or field list");
                     }
                     pair = new Pair<>(startIdx, endIdx);
                     ranges.add(pair);
-                    //index[j] = Integer.parseInt(indexString[j]) - 1;
                 }
             } else if (arg.contains("-")) {
                 indexString = arg.split("-");
@@ -73,7 +73,7 @@ public class CutArgsParser extends ArgsParser {
                     startIdx = Integer.parseInt(indexString[0]) - 1;
                     endIdx = Integer.parseInt(indexString[1]) - 1;
                 } else {
-                    // throw cut: [-cf] list: illegal list value
+                    throw new CutException("invalid byte, character or field list");
                 }
                 Pair<Integer, Integer> pair = new Pair<>(startIdx, endIdx);
                 ranges.add(pair);
@@ -84,9 +84,11 @@ public class CutArgsParser extends ArgsParser {
                 ranges.add(pair);
             }
         } catch (IndexOutOfBoundsException e) {
-            throw new IndexOutOfBoundsException(e.getMessage());//NOPMD
+            throw e;
+        } catch (NumberFormatException e) {
+            throw new InvalidArgsException("invalid byte, character or field list"); //NOPMD - suppressed PreserveStackTrace - Exception message should be different
         } catch (Exception e) {
-            throw new InvalidArgsException(e.getMessage());//NOPMD
+            throw new InvalidArgsException(e.getMessage());//NOPMD - suppressed PreserveStackTrace - No reason to preserve stackTrace as reason is contained in message
         }
     }
 

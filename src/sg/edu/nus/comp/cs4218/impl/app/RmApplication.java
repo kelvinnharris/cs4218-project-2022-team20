@@ -67,9 +67,14 @@ public class RmApplication implements RmInterface {
             String errorMessage = "cannot remove '" + file + "': ";
             File node = IOUtils.resolveFilePath(file).toFile();
             if (!node.exists()) {
-                throw new Exception(ERR_FILE_NOT_FOUND);
+                errorMessage += ERR_FILE_NOT_FOUND;
+                throw new Exception(errorMessage);
             }
 
+            if ("".equals(file)) {
+                errorMessage += ERR_FILE_NOT_FOUND;
+                throw new Exception(errorMessage);
+            }
             if (isRecursive) {
                 checkRemove = removeFile(node);
             } else if (isEmptyFolder) {
