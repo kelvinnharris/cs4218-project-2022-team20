@@ -169,7 +169,10 @@ public class PasteApplication implements PasteInterface {
                 numOfStdin++;
             }
         }
-        maxFileLength = Math.max(maxFileLength, (int) (stdInData.size() / numOfStdin));
+
+        if (numOfStdin != 0) {
+            maxFileLength = Math.max(maxFileLength, (int) (stdInData.size() / numOfStdin));
+        }
 
         // If serial, the stdIn will all come out in the first "-"
         if (isSerial) {
