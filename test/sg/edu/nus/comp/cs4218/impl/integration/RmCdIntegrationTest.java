@@ -105,7 +105,7 @@ public class RmCdIntegrationTest {
     @Test
     void testRmCdParseAndEvaluate_removeNonEmptyFolderSemicolonCdFolder_shouldReturnRmErrorAndChangeDirectorySuccessfully() throws Exception {
         String commandString = "rm " + FOLDER_1 + "; cd " + FOLDER_1;
-        String expectedOutput = "rm: cannot remove '"+ FOLDER_1 +"': Is a directory" + STRING_NEWLINE;
+        String expectedOutput = "rm: cannot remove '" + FOLDER_1 + "': Is a directory" + STRING_NEWLINE;
         shell.parseAndEvaluate(commandString, stdOut);
         assertEquals(expectedOutput, stdOut.toString());
 
