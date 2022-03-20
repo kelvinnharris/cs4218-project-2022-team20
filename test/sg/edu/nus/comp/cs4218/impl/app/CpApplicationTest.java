@@ -230,10 +230,10 @@ public class CpApplicationTest {
 
     @Test
     void run_copyFileToNonExistentFile_shouldCreateANewFile() throws Exception {
-        cpApplication.run(new String[]{FILE1_PATH, NEW_FILE_NAME}, System.in, System.out);
+        cpApplication.run(new String[]{FILE1_PATH, NE_FILE_PATH}, System.in, System.out);
         assertTrue(Files.exists(Paths.get(FILE1_PATH)));
-        assertTrue(Files.exists(Paths.get(NEW_FILE_NAME)));
-        Files.delete(Paths.get(NEW_FILE_NAME));
+        assertTrue(Files.exists(Paths.get(NE_FILE_PATH)));
+        Files.delete(Paths.get(NE_FILE_PATH));
     }
 
     @Test
