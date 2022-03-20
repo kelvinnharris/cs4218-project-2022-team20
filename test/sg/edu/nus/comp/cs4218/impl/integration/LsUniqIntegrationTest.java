@@ -71,7 +71,7 @@ public class LsUniqIntegrationTest {
     }
 
     @AfterEach
-    void tearDown() {
+    void tearDownEach() {
         Environment.currentDirectory = ROOT_PATH;
         deleteDir(new File(TEST_PATH));
     }

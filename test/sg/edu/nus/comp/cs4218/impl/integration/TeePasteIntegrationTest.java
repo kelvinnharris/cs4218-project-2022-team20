@@ -55,7 +55,6 @@ public class TeePasteIntegrationTest {
     public static final String FROM_TEE = "FROM TEE";
 
 
-
     public static final String[] LINES = {FIRST, SECOND};
 
     @BeforeAll
@@ -125,7 +124,7 @@ public class TeePasteIntegrationTest {
     void testTeePasteParseAndEvaluate_pasteThenTeeAppend_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("paste %s %s > %s; echo %s | tee -a %s;", FILE2_PATH, FILE2_PATH, OUTPUT4_PATH, THIRD, OUTPUT4_PATH);
         String expectedStdOut = THIRD + STRING_NEWLINE;
-        String expectedContent = FIRST  + STRING_TAB + FIRST + STRING_NEWLINE +
+        String expectedContent = FIRST + STRING_TAB + FIRST + STRING_NEWLINE +
                 SECOND + STRING_TAB + SECOND + STRING_NEWLINE +
                 THIRD + STRING_NEWLINE;
         shell.parseAndEvaluate(commandString, stdOut);
@@ -149,7 +148,7 @@ public class TeePasteIntegrationTest {
     void testTeePasteParseAndEvaluate_pasteWithStdinAsFileThenTeeAppend_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("paste - %s < %s > %s; echo %s | tee -a %s;", FILE2_PATH, FILE2_PATH, OUTPUT6_PATH, THIRD, OUTPUT6_PATH);
         String expectedStdOut = THIRD + STRING_NEWLINE;
-        String expectedContent = FIRST  + STRING_TAB + FIRST + STRING_NEWLINE +
+        String expectedContent = FIRST + STRING_TAB + FIRST + STRING_NEWLINE +
                 SECOND + STRING_TAB + SECOND + STRING_NEWLINE +
                 THIRD + STRING_NEWLINE;
         shell.parseAndEvaluate(commandString, stdOut);

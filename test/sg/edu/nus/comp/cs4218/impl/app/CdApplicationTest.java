@@ -118,13 +118,13 @@ class CdApplicationTest {
 
     @Test
     void run_oneArgs_shouldNotReturnError() {
-        String[] oneArg = new String[]{ TEST_PATH + FOLDER_1 };
+        String[] oneArg = new String[]{TEST_PATH + FOLDER_1};
         assertDoesNotThrow(() -> cdApplication.run(oneArg, System.in, System.out));
     }
 
     @Test
     void run_multipleArgs_shouldReturnCdError() {
-        String[] multipleArgs = new String[]{ FOLDER_1, FOLDER_2 };
+        String[] multipleArgs = new String[]{FOLDER_1, FOLDER_2};
         assertThrows(CdException.class, () -> cdApplication.run(multipleArgs, System.in, System.out));
     }
 }

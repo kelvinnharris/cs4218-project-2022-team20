@@ -9,7 +9,6 @@ import sg.edu.nus.comp.cs4218.exception.CatException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 import sg.edu.nus.comp.cs4218.impl.util.StringUtils;
-import sg.edu.nus.comp.cs4218.impl.util.TestUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,6 +22,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_NULL_FILES;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_NULL_STREAMS;
+import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.createFile;
+import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
 
 public class CatApplicationTest {
     private static CatApplication catApplication;
@@ -50,10 +51,10 @@ public class CatApplicationTest {
 
     @BeforeAll
     static void setUp() throws IOException {
-        TestUtils.deleteDir(new File(TEST_PATH));
+        deleteDir(new File(TEST_PATH));
         Files.createDirectories(Paths.get(TEST_PATH));
 
-        TestUtils.createFile(FILE_PATH_1, WC_FILE_ONE);
+        createFile(FILE_PATH_1, WC_FILE_ONE);
 
         String sbContentFile2 = WC_FILE_TWO +
                 StringUtils.STRING_NEWLINE +
@@ -61,11 +62,11 @@ public class CatApplicationTest {
                 StringUtils.STRING_NEWLINE +
                 "a" + StringUtils.STRING_NEWLINE + "b" + StringUtils.STRING_NEWLINE +
                 "c" + StringUtils.STRING_NEWLINE + "d";
-        TestUtils.createFile(FILE_PATH_2, sbContentFile2);
+        createFile(FILE_PATH_2, sbContentFile2);
 
         String sbContentStdin = "This is from stdIn" + StringUtils.STRING_NEWLINE +
                 "This is from stdIn line 2" + StringUtils.STRING_NEWLINE;
-        TestUtils.createFile(FILE_PATH_STDIN, sbContentStdin);
+        createFile(FILE_PATH_STDIN, sbContentStdin);
 
     }
 
@@ -79,7 +80,7 @@ public class CatApplicationTest {
     @AfterAll
     static void tearDown() {
         Environment.currentDirectory = ROOT_PATH;
-        TestUtils.deleteDir(new File(TEST_PATH));
+        deleteDir(new File(TEST_PATH));
     }
 
     // command: cat tmpCatTestFolder/test1.txt

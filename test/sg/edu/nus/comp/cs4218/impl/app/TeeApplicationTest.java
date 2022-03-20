@@ -48,7 +48,7 @@ public class TeeApplicationTest {
     }
 
     @AfterEach
-    void tearDown() {
+    void tearDownEach() {
         Environment.currentDirectory = ROOT_PATH;
         deleteDir(new File(TEST_PATH));
     }
@@ -168,7 +168,7 @@ public class TeeApplicationTest {
 
     @Test
     void run_teeWithUnwritableFile_shouldThrowException() throws AbstractApplicationException {
-        String[] args = { TEE_FOLDER + CHAR_FILE_SEP + UNWR_FILE_NAME };
+        String[] args = {TEE_FOLDER + CHAR_FILE_SEP + UNWR_FILE_NAME};
         teeApplication.run(args, inputStream, outputStream);
         assertFalse(Files.isWritable(Paths.get(UNWR_FILE_PATH)));
         assertEquals(String.format("%s: Permission denied", TEE_FOLDER + CHAR_FILE_SEP + UNWR_FILE_NAME) + STRING_NEWLINE + INPUT, outputStream.toString());

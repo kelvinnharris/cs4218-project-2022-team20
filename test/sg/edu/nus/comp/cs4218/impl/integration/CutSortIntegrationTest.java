@@ -118,7 +118,7 @@ public class CutSortIntegrationTest {
                 "A" + STRING_NEWLINE +
                 "AB" + STRING_NEWLINE +
                 "a" + STRING_NEWLINE +
-                "ab" + STRING_NEWLINE  +
+                "ab" + STRING_NEWLINE +
                 "1" + STRING_NEWLINE +
                 "2" + STRING_NEWLINE +
                 "1" + STRING_NEWLINE +
