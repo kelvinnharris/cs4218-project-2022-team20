@@ -30,7 +30,9 @@ public class TeeApplicationTest {
     private static final String UNWR_FILE_NAME = "unwritable.txt";
     private static final String[] LINES1 = {"The first file", "The second line"};
     private static final String[] LINES2 = {"The second file", "The second line"};
-    private static final String TEST_PATH = Environment.currentDirectory + CHAR_FILE_SEP + TEE_FOLDER;
+
+    private static final String ROOT_PATH = Environment.currentDirectory;
+    private static final String TEST_PATH = ROOT_PATH + CHAR_FILE_SEP + TEE_FOLDER;
     private static final String FILE1_PATH = TEST_PATH + CHAR_FILE_SEP + FILE1_NAME;
     private static final String FILE2_PATH = TEST_PATH + CHAR_FILE_SEP + FILE2_NAME;
     private static final String FOLDER1_PATH = TEST_PATH + CHAR_FILE_SEP + FOLDER1_NAME;
@@ -46,7 +48,8 @@ public class TeeApplicationTest {
     }
 
     @AfterEach
-    void tearDown() throws IOException {
+    void tearDown() {
+        Environment.currentDirectory = ROOT_PATH;
         deleteDir(new File(TEST_PATH));
     }
 

@@ -4,6 +4,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.junit.jupiter.api.parallel.Isolated;
 import sg.edu.nus.comp.cs4218.Command;
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.exception.SortException;
@@ -25,6 +28,7 @@ import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
 
 public class GrepSortIntegrationTest {
 
+    private static final String ROOT_PATH = Environment.currentDirectory;
     public static final String INPUT = "25600" + STRING_NEWLINE + "1000" + STRING_NEWLINE;
     public static final String FILE1_NAME = "file1.txt";
     public static final String FILE2_NAME = "file2.txt";
@@ -35,7 +39,7 @@ public class GrepSortIntegrationTest {
     public static final String[] LINES2 = {"123", "789", "456", "45"};
     public static final String[] LINES3 = {FILE1_NAME, FILE2_NAME};
 
-    private static final String TEST_PATH = Environment.currentDirectory + CHAR_FILE_SEP + GREP_SORT_FOLDER;
+    private static final String TEST_PATH = ROOT_PATH + CHAR_FILE_SEP + GREP_SORT_FOLDER;
     public static final String FILE1_PATH = TEST_PATH + CHAR_FILE_SEP + FILE1_NAME;
     public static final String FILE2_PATH = TEST_PATH + CHAR_FILE_SEP + FILE2_NAME;
     public static final String FILE3_PATH = TEST_PATH + CHAR_FILE_SEP + FILE3_NAME;
@@ -72,6 +76,7 @@ public class GrepSortIntegrationTest {
 
     @AfterEach
     void tearDown() {
+        Environment.currentDirectory = ROOT_PATH;
         deleteDir(new File(TEST_PATH));
     }
 

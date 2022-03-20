@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.*;
 import static sg.edu.nus.comp.cs4218.impl.util.TestConstants.PASTE_WC_FOLDER;
+import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
 
 public class PasteWcIntegrationTest {
 
@@ -61,7 +62,7 @@ public class PasteWcIntegrationTest {
     @AfterAll
     static void tearDown() {
         Environment.currentDirectory = ROOT_PATH;
-        TestUtils.deleteDir(new File(TEST_PATH));
+        deleteDir(new File(TEST_PATH));
     }
 
     @Test

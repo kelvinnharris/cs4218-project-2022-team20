@@ -4,6 +4,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 import sg.edu.nus.comp.cs4218.Command;
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.impl.ShellImpl;
@@ -23,8 +24,8 @@ import static sg.edu.nus.comp.cs4218.impl.util.TestConstants.TEE_UNIQ_FOLDER;
 import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.appendToFile;
 import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
 
+@Isolated("ResourceSharing")
 public class TeeUniqIntegrationTest {
-
 
     public static final String WORD1 = "word1";
     public static final String WORD2 = "word2";
@@ -47,7 +48,8 @@ public class TeeUniqIntegrationTest {
     public static final String INPUT2 = FILE1_NAME + STRING_NEWLINE + FILE1_NAME + STRING_NEWLINE + FILE2_NAME + STRING_NEWLINE
             + FILE1_NAME + STRING_NEWLINE + FILE1_NAME + STRING_NEWLINE;
 
-    private static final String TEST_PATH = Environment.currentDirectory + CHAR_FILE_SEP + TEE_UNIQ_FOLDER;
+    private static final String ROOT_PATH = Environment.currentDirectory;
+    private static final String TEST_PATH = ROOT_PATH + CHAR_FILE_SEP + TEE_UNIQ_FOLDER;
     public static final String FILE1_PATH = TEST_PATH + CHAR_FILE_SEP + FILE1_NAME;
     public static final String FILE2_PATH = TEST_PATH + CHAR_FILE_SEP + FILE2_NAME;
     public static final String FILE3_PATH = TEST_PATH + CHAR_FILE_SEP + FILE3_NAME;
@@ -90,6 +92,7 @@ public class TeeUniqIntegrationTest {
 
     @AfterEach
     void tearDown() {
+        Environment.currentDirectory = ROOT_PATH;
         deleteDir(new File(TEST_PATH));
     }
 

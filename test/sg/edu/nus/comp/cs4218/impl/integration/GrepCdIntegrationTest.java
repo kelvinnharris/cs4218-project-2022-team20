@@ -36,7 +36,8 @@ public class GrepCdIntegrationTest {
     public static final String[] LINES2 = {"123", "789", "456", "45"};
     public static final String[] LINES3 = {FILE1_NAME, FILE2_NAME};
 
-    private static final String TEST_PATH = Environment.currentDirectory + CHAR_FILE_SEP + GREP_CD_FOLDER;
+    private static final String ROOT_PATH = Environment.currentDirectory;
+    private static final String TEST_PATH = ROOT_PATH + CHAR_FILE_SEP + GREP_CD_FOLDER;
     public static final String FILE1_PATH = TEST_PATH + CHAR_FILE_SEP + FILE1_NAME;
     public static final String FILE2_PATH = TEST_PATH + CHAR_FILE_SEP + FILE2_NAME;
     public static final String FILE3_PATH = TEST_PATH + CHAR_FILE_SEP + FOLDER1_NAME + CHAR_FILE_SEP + FILE3_NAME;
@@ -73,6 +74,7 @@ public class GrepCdIntegrationTest {
 
     @AfterEach
     void tearDown() {
+        Environment.currentDirectory = ROOT_PATH;
         deleteDir(new File(TEST_PATH));
     }
 

@@ -75,6 +75,7 @@ public class WcApplicationTest {
 
     @AfterAll
     static void tearDown() {
+        Environment.currentDirectory = ROOT_PATH;
         TestUtils.deleteDir(new File(TEST_PATH));
     }
 

@@ -68,6 +68,7 @@ class IORedirectionTest {
 
     @AfterAll
     static void tearDown() {
+        Environment.currentDirectory = ROOT_PATH;
         TestUtils.deleteDir(new File(FILE_PATH_1));
         TestUtils.deleteDir(new File(FILE_PATH_2));
         TestUtils.deleteDir(new File(TEST_PATH));

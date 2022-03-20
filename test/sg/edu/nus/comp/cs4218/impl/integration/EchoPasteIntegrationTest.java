@@ -17,6 +17,7 @@ import java.nio.file.Paths;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 import static sg.edu.nus.comp.cs4218.impl.util.TestConstants.ECHO_PASTE_FOLDER;
+import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
 
 class EchoPasteIntegrationTest {
     ByteArrayOutputStream myOut;
@@ -37,7 +38,7 @@ class EchoPasteIntegrationTest {
     }
 
     @AfterAll
-    static void tearDown() throws IOException {
+    static void tearDown() {
         Environment.currentDirectory = ROOT_PATH;
         deleteDir(new File(TEST_PATH));
     }

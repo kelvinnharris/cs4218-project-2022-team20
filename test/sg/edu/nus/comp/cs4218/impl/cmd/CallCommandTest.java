@@ -22,6 +22,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
+import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
 
 class CallCommandTest {
 
@@ -65,6 +66,7 @@ class CallCommandTest {
 
     @AfterAll
     static void tearDown() {
+        Environment.currentDirectory = ROOT_PATH;
         TestUtils.deleteDir(new File(FILE_PATH_1));
         TestUtils.deleteDir(new File(FILE_PATH_2));
         TestUtils.deleteDir(new File(TEST_PATH));
