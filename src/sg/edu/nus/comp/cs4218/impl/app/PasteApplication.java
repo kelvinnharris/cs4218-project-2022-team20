@@ -13,8 +13,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_NO_ISTREAM;
-import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_NO_PERM;
+import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_TAB;
 
@@ -116,7 +115,7 @@ public class PasteApplication implements PasteInterface {
 
         for (String file : fileName) {
             File node = IOUtils.resolveFilePath(file).toFile();
-            if (!node.exists()) {
+            if ("".equals(file) || !node.exists()) {
                 fileNotExist = true;
                 fileNotExistName = file;
                 throw new PasteException("paste: " + file + ERR_NOT_FOUND);
@@ -126,6 +125,7 @@ public class PasteApplication implements PasteInterface {
                 List<String> errList = new ArrayList<>();
                 errList.add(error);
                 tempListResult.add(errList);
+                maxFileLength = Math.max(maxFileLength, 1);
                 continue;
             }
             if (!node.canRead()) {

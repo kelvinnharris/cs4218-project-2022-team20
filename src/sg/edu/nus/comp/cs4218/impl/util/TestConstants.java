@@ -4,7 +4,8 @@ public class TestConstants {
     public static final String LS_FOLDER = "tmpLsTestFolder";
     public static final String CD_FOLDER = "tmpCdTestFolder";
     public static final String CMD_SUBS_FOLDER = "tmpCmdSubsTestFolder";
-    public static final String GLOBBING_FOLDER = "tmpCmdSubsTestFolder";
+    public static final String GLOBBING_FOLDER = "tmpGlobbingTestFolder";
+    public static final String QUOTING_FOLDER = "tmpQuotingTestFolder";
     public static final String ECHO_PASTE_FOLDER = "tmpEchoPasteTestFolder";
     public static final String ECHO_GREP_FOLDER = "tmpEchoGrepTestFolder";
     public static final String CUT_PASTE_FOLDER = "tmpCutPasteTestFolder";
@@ -17,6 +18,10 @@ public class TestConstants {
     public static final String CAT_UNIQ_FOLDER = "tmpCatUniqTestFolder";
     public static final String GREP_PASTE_FOLDER = "tmpGrepPasteFolder";
     public static final String SORT_UNIQ_FOLDER = "tmpSortUniqFolder";
+    public static final String UNIQ_GREP_FOLDER = "tmpUniqGrepTestFolder";
+    public static final String UNIQ_CUT_FOLDER = "tmpUniqCutTestFolder";
+    public static final String GREP_TEE_FOLDER = "tmpGrepTeeTestFolder";
+
 
     public static final String CP_FOLDER = "tmpCpTestFolder";
     public static final String GREP_FOLDER = "tmpGrepTestFolder";
@@ -28,4 +33,6 @@ public class TestConstants {
     public static final String LS_UNIQ_FOLDER = "tmpLsUniqTestFolder";
     public static final String WC_CUT_FOLDER = "tmpWcCutTestFolder";
     public static final String GREP_SORT_FOLDER = "tmpGrepSortTestFolder";
+    public static final String TEE_UNIQ_FOLDER = "tmpTeeUniqTestFolder";
+    public static final String GREP_CD_FOLDER = "tmpGrepCdTestFolder";
 }
