@@ -7,6 +7,7 @@ public class RmException extends AbstractApplicationException {
     public RmException(String message) {
         super("rm: " + message);
     }
+
     public RmException(Exception exception, String message) {
         super("rm: " + message);
     }

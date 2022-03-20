@@ -57,7 +57,7 @@ public class CutArgsParser extends ArgsParser {
                         tempIndexString = currString.split("-");
                         startIdx = Integer.parseInt(tempIndexString[0]) - 1;
                         endIdx = Integer.parseInt(tempIndexString[1]) - 1;
-                    } else if (count == 0){
+                    } else if (count == 0) {
                         startIdx = Integer.parseInt(currString) - 1;
                         endIdx = startIdx;
                     } else {

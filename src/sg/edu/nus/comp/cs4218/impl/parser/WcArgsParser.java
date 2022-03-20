@@ -2,7 +2,7 @@ package sg.edu.nus.comp.cs4218.impl.parser;
 
 import java.util.List;
 
-public class WcArgsParser extends ArgsParser{
+public class WcArgsParser extends ArgsParser {
     private final static char FLAG_LINES = 'l';
     private final static char FLAG_BYTES = 'c';
     private final static char FLAG_WORDS = 'w';

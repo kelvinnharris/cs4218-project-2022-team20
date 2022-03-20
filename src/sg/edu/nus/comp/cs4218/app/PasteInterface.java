@@ -10,7 +10,7 @@ public interface PasteInterface extends Application {
      * arg is specified, echo back the Stdin.
      *
      * @param isSerial Paste one file at a time instead of in parallel
-     * @param stdin InputStream containing arguments from Stdin
+     * @param stdin    InputStream containing arguments from Stdin
      * @throws Exception
      */
     String mergeStdin(Boolean isSerial, InputStream stdin) throws Exception;
