@@ -81,7 +81,7 @@ public class UniqApplication implements UniqInterface {
             throw new Exception(errorMessage);
         }
         if (node.isDirectory()) {
-            String errorMessage = "'" + inputFileName + "': " + ERR_IS_DIR;
+            String errorMessage = "error reading '" + inputFileName + "'";
             throw new Exception(errorMessage);
         }
         if (!node.canRead()) {
