@@ -25,6 +25,7 @@ public class CatApplication implements CatInterface {
     private static final String ERR_NOT_FOUND = ": No such file or directory";
 
     private static final String NUMBER_FORMAT = "%6d ";
+    private static final String CAT = "cat: ";
 
     List<String> listResult = new ArrayList<>();
     private int numOfErrors = 0;
@@ -85,8 +86,14 @@ public class CatApplication implements CatInterface {
 
         for (String file : fileName) {
             File node = IOUtils.resolveFilePath(file).toFile();
-            if ("".equals(file) || !node.exists()) {
-                String error = (new StringBuilder()).append("cat: ").append(file).append(ERR_NOT_FOUND).toString();
+            if ("".equals(file)) {
+                String error = CAT + "''" + ERR_NOT_FOUND;
+                listResult.add(error);
+                numOfErrors++;
+                continue;
+            }
+            if (!node.exists()) {
+                String error = CAT + file + ERR_NOT_FOUND;
                 listResult.add(error);
                 numOfErrors++;
                 continue;

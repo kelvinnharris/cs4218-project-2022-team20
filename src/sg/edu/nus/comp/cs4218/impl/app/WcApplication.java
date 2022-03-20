@@ -27,6 +27,7 @@ public class WcApplication implements WcInterface {
     private static final String ERR_NOT_FOUND = "" + CHAR_COLON + CHAR_SPACE + ERR_FILE_NOT_FOUND;
 
     static final Character ERR_CODE_DIR = 'd';
+    private static final String STRING_WC = "wc: ";
 
     List<Result> listResult = new ArrayList<>();
 
@@ -101,8 +102,15 @@ public class WcApplication implements WcInterface {
             Result res = new Result();
             res.setFileName(file);
             File node = IOUtils.resolveFilePath(file).toFile();
-            if ("".equals(file) || !node.exists()) {
-                String error = (new StringBuilder()).append("wc: ").append(file).append(ERR_NOT_FOUND).toString();
+            if ("".equals(file)) {
+                String error = STRING_WC + "''" + ERR_NOT_FOUND;
+                res.setIsErroneous(error, 'n');
+                listRes.add(res);
+                result.add(error);
+                continue;
+            }
+            if (!node.exists()) {
+                String error = STRING_WC + file + ERR_NOT_FOUND;
                 res.setIsErroneous(error, 'n');
                 listRes.add(res);
                 result.add(error);
