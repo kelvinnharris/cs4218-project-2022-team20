@@ -48,7 +48,7 @@ public final class IOUtils {
 
         File node = IOUtils.resolveFilePath(resolvedFileName).toFile();
         if (node.isDirectory()) {
-            throw new ShellException(fileName + ": Is a directory");
+            throw new ShellException(fileName + ": " + ERR_IS_DIRECTORY);
         }
 
         FileOutputStream fileOutputStream;

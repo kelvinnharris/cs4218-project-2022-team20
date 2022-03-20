@@ -3,6 +3,7 @@ package sg.edu.nus.comp.cs4218.impl.util;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -10,8 +11,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
-import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_MULTIPLE_STREAMS;
-import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_SYNTAX;
+import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
+import static sg.edu.nus.comp.cs4218.impl.util.IOUtils.resolveFilePath;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_REDIR_INPUT;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_REDIR_OUTPUT;
 
@@ -34,7 +35,7 @@ public class IORedirectionHandler {
         this.argumentResolver = argumentResolver;
     }
 
-    public void extractRedirOptions() throws AbstractApplicationException, ShellException, FileNotFoundException {
+    public void extractRedirOptions() throws AbstractApplicationException, ShellException, FileNotFoundException {  //NOPMD - suppressed ExcessiveMethodLength - Suppressed to preserve readability of the code
         if (argsList == null || argsList.isEmpty()) {
             throw new ShellException(ERR_SYNTAX);
         }
@@ -70,7 +71,19 @@ public class IORedirectionHandler {
                 if (!inputStream.equals(origInputStream)) { // Already have a stream
                     throw new ShellException(ERR_MULTIPLE_STREAMS);
                 }
-                inputStream = IOUtils.openInputStream(file);
+                try {
+                    inputStream = IOUtils.openInputStream(file);
+                } catch (ShellException e) {
+                    String resolvedFileName = resolveFilePath(file).toString();
+                    File node = resolveFilePath(resolvedFileName).toFile();
+                    if (!node.exists()) {
+                        throw new ShellException(file + ": " + ERR_FILE_NOT_FOUND); //NOPMD - suppressed PreserveStackTrace - No reason to preserve stackTrace as reason is contained in message
+                    }
+                    if (node.isDirectory()) {
+                        throw new ShellException(file + ": " + ERR_IS_DIRECTORY); //NOPMD - suppressed PreserveStackTrace - No reason to preserve stackTrace as reason is contained in message
+                    }
+                    throw e;
+                }
             } else if (arg.equals(String.valueOf(CHAR_REDIR_OUTPUT))) {
                 IOUtils.closeOutputStream(outputStream);
                 if (!outputStream.equals(origOutputStream)) { // Already have a stream
