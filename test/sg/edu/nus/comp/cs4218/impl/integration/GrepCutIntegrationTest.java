@@ -103,10 +103,10 @@ public class GrepCutIntegrationTest {
     @Test
     void testGrepCutParseAndEvaluate_grepWithFileNameThenCut_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("grep -H line %s | cut -c 1-1000", FILE1_PATH);
-        String expected = FILE1_PATH + ": " + FIRST_LINE + STRING_NEWLINE +
-                FILE1_PATH + ": " + SECOND_LINE + STRING_NEWLINE +
-                FILE1_PATH + ": " + LINE + STRING_NEWLINE +
-                FILE1_PATH + ": " + LINES + STRING_NEWLINE;
+        String expected = FILE1_PATH + ":" + FIRST_LINE + STRING_NEWLINE +
+                FILE1_PATH + ":" + SECOND_LINE + STRING_NEWLINE +
+                FILE1_PATH + ":" + LINE + STRING_NEWLINE +
+                FILE1_PATH + ":" + LINES + STRING_NEWLINE;
         shell.parseAndEvaluate(commandString, stdOut);
         assertEquals(expected, stdOut.toString());
     }

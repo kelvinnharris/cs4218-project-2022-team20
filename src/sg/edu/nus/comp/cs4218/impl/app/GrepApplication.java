@@ -103,7 +103,7 @@ public class GrepApplication implements GrepInterface { //NOPMD
                     Matcher matcher = compiledPattern.matcher(line);
                     if (matcher.find()) { // match
                         if (isPrefix) {
-                            lineRes.add(f + ": " + line);
+                            lineRes.add(f + ":" + line);
                         } else {
                             lineRes.add(line);
                         }
@@ -111,7 +111,7 @@ public class GrepApplication implements GrepInterface { //NOPMD
                     }
                 }
                 if (isPrefix) {
-                    countRes.add(f + ": " + count);
+                    countRes.add(f + ":" + count);
                 } else {
                     countRes.add(String.valueOf(count));
                 }
@@ -145,7 +145,7 @@ public class GrepApplication implements GrepInterface { //NOPMD
                 Matcher matcher = compiledPattern.matcher(line);
                 if (matcher.find()) { // match
                     if (isPrefixFileName) {
-                        lineResults.add(STDIN_NAME + ": " + line);
+                        lineResults.add(STDIN_NAME + ":" + line);
                     } else {
                         lineResults.add(line);
                     }
@@ -153,7 +153,7 @@ public class GrepApplication implements GrepInterface { //NOPMD
                 }
             }
             if (isPrefixFileName) {
-                countResults.add(STDIN_NAME + ": " + count);
+                countResults.add(STDIN_NAME + ":" + count);
             } else {
                 countResults.add(String.valueOf(count));
             }

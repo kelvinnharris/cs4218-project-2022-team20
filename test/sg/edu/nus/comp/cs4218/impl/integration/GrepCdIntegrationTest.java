@@ -99,8 +99,8 @@ public class GrepCdIntegrationTest {
         String commandString = String.format("cd %s; cd ..; grep \"a\" %s %s", FOLDER1_NAME, FILE1_NAME, FILE2_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         command.evaluate(inputStream, stdOut);
-        String expectedOutput = String.format("%s: abc", FILE1_NAME) + STRING_NEWLINE
-                + String.format("%s: abc", FILE1_NAME) + STRING_NEWLINE;
+        String expectedOutput = String.format("%s:abc", FILE1_NAME) + STRING_NEWLINE
+                + String.format("%s:abc", FILE1_NAME) + STRING_NEWLINE;
         assertEquals(expectedOutput, stdOut.toString());
     }
 

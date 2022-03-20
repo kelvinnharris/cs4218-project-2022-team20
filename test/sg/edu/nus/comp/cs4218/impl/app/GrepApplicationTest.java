@@ -90,14 +90,14 @@ public class GrepApplicationTest {
             String[] lines1 = fileContent1.split(STRING_NEWLINE);
             for (String line : lines1) {
                 if (line.contains(PATTERN1)) {
-                    stringBuilder.append(FILE1_PATH).append(": ").append(line).append(STRING_NEWLINE);
+                    stringBuilder.append(FILE1_PATH).append(":").append(line).append(STRING_NEWLINE);
                 }
             }
             String fileContent2 = readString(Paths.get(FILE2_PATH));
             String[] lines2 = fileContent2.split(STRING_NEWLINE);
             for (String line : lines2) {
                 if (line.contains(PATTERN1)) {
-                    stringBuilder.append(FILE2_PATH).append(": ").append(line).append(STRING_NEWLINE);
+                    stringBuilder.append(FILE2_PATH).append(":").append(line).append(STRING_NEWLINE);
                 }
             }
             String errorMsg = String.format("grep: %s: No such file or directory" + STRING_NEWLINE, NE_FILE_PATH);
@@ -148,7 +148,7 @@ public class GrepApplicationTest {
             String[] lines = fileContent.split(STRING_NEWLINE);
             for (String line : lines) {
                 if (line.contains(PATTERN1)) {
-                    stringBuilder.append(FILE1_PATH).append(": ").append(line).append(STRING_NEWLINE);
+                    stringBuilder.append(FILE1_PATH).append(":").append(line).append(STRING_NEWLINE);
                 }
             }
             assertEquals(stringBuilder.toString(), actualOutput);
@@ -195,14 +195,14 @@ public class GrepApplicationTest {
             String[] fileLines = fileContent.split(STRING_NEWLINE);
             for (String line : fileLines) {
                 if (line.contains(PATTERN1)) {
-                    stringBuilder.append(FILE1_PATH).append(": ").append(line).append(STRING_NEWLINE);
+                    stringBuilder.append(FILE1_PATH).append(":").append(line).append(STRING_NEWLINE);
                 }
             }
 
             String[] stdinLines = INPUT.split(STRING_NEWLINE);
             for (String line : stdinLines) {
                 if (line.contains(PATTERN1)) {
-                    stringBuilder.append("(standard input): ").append(line).append(STRING_NEWLINE);
+                    stringBuilder.append("(standard input):").append(line).append(STRING_NEWLINE);
                 }
             }
             assertEquals(stringBuilder.toString(), actualOutput);
