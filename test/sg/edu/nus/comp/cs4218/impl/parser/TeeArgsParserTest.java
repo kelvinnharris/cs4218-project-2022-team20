@@ -15,8 +15,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class TeeArgsParserTest {
-    private final String SRC_FILE = "src.txt";
-    private final String DEST_FILE = "dest.txt";
+    private static final String SRC_FILE = "src.txt";
+    private static final String DEST_FILE = "dest.txt";
     private TeeArgsParser teeArgsParser;
 
     @BeforeEach

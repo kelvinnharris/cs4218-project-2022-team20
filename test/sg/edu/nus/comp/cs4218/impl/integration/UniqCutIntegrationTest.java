@@ -39,6 +39,7 @@ public class UniqCutIntegrationTest {
     private static final String CUT_EXCEPTN_MSG = "Should throw CutException";
     private static final String UNIQ_EXCEPTN_MSG = "Should throw UniqException";
 
+    private static final String ALICE = "Alice";
     private static final String BOB = "Bob";
 
     @BeforeAll
@@ -47,10 +48,10 @@ public class UniqCutIntegrationTest {
         Files.createDirectories(Paths.get(TEST_PATH));
         String fileContent = "Hello World" + STRING_NEWLINE
                 + "Hello World" + STRING_NEWLINE
-                + "Alice" + STRING_NEWLINE
-                + "Alice" + STRING_NEWLINE
+                + ALICE + STRING_NEWLINE
+                + ALICE + STRING_NEWLINE
                 + BOB + STRING_NEWLINE
-                + "Alice" + STRING_NEWLINE
+                + ALICE + STRING_NEWLINE
                 + BOB + STRING_NEWLINE
                 + "bOb";
         TestUtils.createFile(FILE_PATH_1, fileContent);
@@ -95,9 +96,9 @@ public class UniqCutIntegrationTest {
         final String standardOutput = myOut.toString();
 
         String sbExpected = "Hello " + STRING_NEWLINE +
-                "Alice" + STRING_NEWLINE +
+                ALICE + STRING_NEWLINE +
                 "Bob" + STRING_NEWLINE +
-                "Alice" + STRING_NEWLINE +
+                ALICE + STRING_NEWLINE +
                 "Bob" + STRING_NEWLINE +
                 "bOb";
         assertEquals(sbExpected + STRING_NEWLINE, standardOutput);

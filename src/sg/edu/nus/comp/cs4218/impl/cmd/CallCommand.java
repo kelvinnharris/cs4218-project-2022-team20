@@ -43,8 +43,8 @@ public class CallCommand implements Command {
         IORedirectionHandler redirHandler = new IORedirectionHandler(argsList, stdin, stdout, argumentResolver);
         redirHandler.extractRedirOptions();
         List<String> noRedirArgsList = redirHandler.getNoRedirArgsList();
-        InputStream inputStream = redirHandler.getInputStream();
-        OutputStream outputStream = redirHandler.getOutputStream();
+        InputStream inputStream = redirHandler.getInputStream(); //NOPMD - suppressed CloseResource - inputStream is passed to runApp and should not be closed
+        OutputStream outputStream = redirHandler.getOutputStream(); //NOPMD - suppressed CloseResource - outputStream is passed to runApp should not be closed
 
         // Handle quoting + globing + command substitution
         List<String> parsedArgsList = argumentResolver.parseArguments(noRedirArgsList);

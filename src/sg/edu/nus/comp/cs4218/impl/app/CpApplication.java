@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
 
-public class CpApplication implements CpInterface {
+public class CpApplication implements CpInterface { //NOPMD - suppressed GodClass - Some of the methods are private to Cp and make more sense to put it inside the class
 
     /**
      * Runs application with specified input data and specified output stream.
@@ -56,28 +56,38 @@ public class CpApplication implements CpInterface {
             throw new CpException(String.format("missing destination file operand after '%s'", destFile));
         }
 
-        if (!Files.exists(destAbsPath)) {
-            if (srcFiles.length > 1) {
-                throw new CpException(ERR_TOO_MANY_ARGS);
-            }
+        if (Files.exists(destAbsPath)) {
+            cpToExistingFileOrFolder(isRecursive, srcFiles, destFile, destAbsPath);
+        } else {
+            cpCreateNewFileOrFolder(isRecursive, srcFiles, destFile, destAbsPath);
+        }
+    }
 
-            // create new file/dir and copy
-            if (Files.isRegularFile(Paths.get(srcFiles[0]))) {
-                try {
-                    Files.createFile(destAbsPath);
-                    cpSrcFileToDestFile(isRecursive, srcFiles[0], destFile);
-                } catch (IOException ioe) {
-                    throw new CpException(ioe.getMessage());
-                }
-            } else if (Files.isDirectory(Paths.get(srcFiles[0]))) {
-                try {
-                    Files.createDirectories(destAbsPath);
-                    cpFilesToFolder(isRecursive, destFile, srcFiles);
-                } catch (IOException ioe) {
-                    throw new CpException(ioe.getMessage());
-                }
+    private void cpCreateNewFileOrFolder(Boolean isRecursive, String[] srcFiles, String destFile, Path destAbsPath) throws CpException {
+        if (srcFiles.length > 1) {
+            throw new CpException(ERR_TOO_MANY_ARGS);
+        }
+
+        // create new file/dir and copy
+        if (Files.isRegularFile(Paths.get(srcFiles[0]))) {
+            try {
+                Files.createFile(destAbsPath);
+                cpSrcFileToDestFile(isRecursive, srcFiles[0], destFile);
+            } catch (IOException ioe) {
+                throw new CpException(ioe.getMessage()); //NOPMD - suppressed PreserveStackTrace - We expect Cp to output custom error message
             }
-        } else if (Files.isDirectory(destAbsPath)) {
+        } else if (Files.isDirectory(Paths.get(srcFiles[0]))) {
+            try {
+                Files.createDirectories(destAbsPath);
+                cpFilesToFolder(isRecursive, destFile, srcFiles);
+            } catch (IOException ioe) {
+                throw new CpException(ioe.getMessage()); //NOPMD - suppressed PreserveStackTrace - We expect Cp to output custom error message
+            }
+        }
+    }
+
+    private void cpToExistingFileOrFolder(Boolean isRecursive, String[] srcFiles, String destFile, Path destAbsPath) throws CpException {
+        if (Files.isDirectory(destAbsPath)) {
             cpFilesToFolder(isRecursive, destFile, srcFiles);
 
         } else {
@@ -179,7 +189,7 @@ public class CpApplication implements CpInterface {
                                 destFolderArg + "/" + srcFile));
                     }
 
-                    isCopiedOnce = true;
+                    Boolean isCopied = true;
 
                     // Copy the directory itself
                     if (!Files.exists(destAbsPath)) {
@@ -191,7 +201,7 @@ public class CpApplication implements CpInterface {
                     for (String fileName : fileNames) {
                         String nextDestCwd = Paths.get(destCwd, destFolder).toString();
                         String nextSrcCwd = Paths.get(srcCwd, srcFile).toString();
-                        cpFilesToFolderImpl(isRecursive, nextDestCwd, nextSrcCwd, srcFile, fileName, destFolderArg, srcFileArg, isCopiedOnce);
+                        cpFilesToFolderImpl(isRecursive, nextDestCwd, nextSrcCwd, srcFile, fileName, destFolderArg, srcFileArg, isCopied);
                     }
                 } else {
                     throw new CpException(String.format("-r not specified; omitting directory '%s'", srcFile));

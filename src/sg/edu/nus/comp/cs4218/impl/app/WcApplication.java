@@ -306,7 +306,7 @@ public class WcApplication implements WcInterface {
         return stringBuilder.append(' ').append(name).toString();
     }
 
-    static class Result {
+    static class Result { //NOPMD - suppressed DataClass - done as this is the most reasonable implementation
         long bytes = -1;
         long lines = -1;
         long words = -1;

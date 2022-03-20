@@ -54,7 +54,7 @@ public class SequenceCommand implements Command {
             try {
                 stdout.write(outputLine.getBytes());
             } catch (IOException e) {
-                throw new ShellException(e.getMessage());
+                throw new ShellException(e.getMessage()); //NOPMD - suppressed PreserveStackTrace - We expect this to error message to ShellException
             }
         }
 

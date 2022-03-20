@@ -31,7 +31,7 @@ public class PipeCommand implements Command {
         ShellException shellException = null;
 
         InputStream nextInputStream = stdin;
-        OutputStream nextOutputStream;
+        OutputStream nextOutputStream; //NOPMD - suppressed CloseResource - nextOutputStream is passed to CallCommand and may not be closed yet
 
         for (int i = 0; i < callCommands.size(); i++) {
             CallCommand callCommand = callCommands.get(i);
@@ -48,7 +48,7 @@ public class PipeCommand implements Command {
                 }
                 callCommand.evaluate(nextInputStream, nextOutputStream);
                 if (i != callCommands.size() - 1) {
-                    nextInputStream = new ByteArrayInputStream(((ByteArrayOutputStream) nextOutputStream).toByteArray());
+                    nextInputStream = new ByteArrayInputStream(((ByteArrayOutputStream) nextOutputStream).toByteArray()); //NOPMD - suppressed CloseResource - nextInputStream is passed to CallCommand and may not be closed yet
                 }
             } catch (AbstractApplicationException e) {
                 absAppException = e;

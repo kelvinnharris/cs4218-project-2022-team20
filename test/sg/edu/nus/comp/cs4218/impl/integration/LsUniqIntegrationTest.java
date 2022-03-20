@@ -30,8 +30,14 @@ public class LsUniqIntegrationTest {
     public static final String FILE3_NAME = "file3.txt";
     public static final String FOLDER1_NAME = "folder1";
     public static final String NE_FILE_NAME = "nonExistent.txt";
-    public static final String[] LINES1 = {"abc", "abc", "def", "abc", "abc", "abc"}; // NOPMD - duplicate literals are used once for definition
-    public static final String[] LINES2 = {"123", "123", "", ""};
+
+    public static final String ABC = "abc";
+    public static final String DEF = "def";
+    public static final String WORD123 = "123";
+    public static final String EMPTY_STRING = "";
+
+    public static final String[] LINES1 = {ABC, ABC, DEF, ABC, ABC, ABC};
+    public static final String[] LINES2 = {WORD123, WORD123, EMPTY_STRING, EMPTY_STRING};
     public static final String[] LINES3 = {FILE1_NAME, FILE1_NAME, FILE2_NAME, FILE1_NAME, FILE1_NAME};
 
     private static final String ROOT_PATH = Environment.currentDirectory;
@@ -81,7 +87,7 @@ public class LsUniqIntegrationTest {
         String commandString = String.format("uniq `ls %s`", FILE1_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         command.evaluate(inputStream, stdOut);
-        String uniqResult1 = "abc" + STRING_NEWLINE + "def" + STRING_NEWLINE + "abc" + STRING_NEWLINE;
+        String uniqResult1 = ABC + STRING_NEWLINE + DEF + STRING_NEWLINE + ABC + STRING_NEWLINE;
         assertEquals(uniqResult1, stdOut.toString());
     }
 
@@ -90,7 +96,7 @@ public class LsUniqIntegrationTest {
         String commandString = String.format("uniq -d `ls %s`", FILE1_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         command.evaluate(inputStream, stdOut);
-        String uniqResult1 = "abc" + STRING_NEWLINE + "abc" + STRING_NEWLINE;
+        String uniqResult1 = ABC + STRING_NEWLINE + ABC + STRING_NEWLINE;
         assertEquals(uniqResult1, stdOut.toString());
     }
 
@@ -99,7 +105,7 @@ public class LsUniqIntegrationTest {
         String commandString = String.format("ls %s | uniq -d", FILE1_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         command.evaluate(inputStream, stdOut);
-        assertEquals("", stdOut.toString());
+        assertEquals(EMPTY_STRING, stdOut.toString());
     }
 
     @Test
