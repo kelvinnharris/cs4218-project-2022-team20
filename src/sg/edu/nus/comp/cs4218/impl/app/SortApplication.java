@@ -96,9 +96,10 @@ public class SortApplication implements SortInterface {
                 String errorMessage = String.format("read failed: %s: %s", file, ERR_NO_PERM);
                 throw new Exception(errorMessage);
             }
-            InputStream input = IOUtils.openInputStream(file);//NOPMD - suppressed CloseResource - Resource has been closed at line 96
-            lines.addAll(IOUtils.getLinesFromInputStream(input));
-            IOUtils.closeInputStream(input);
+            try (InputStream input = IOUtils.openInputStream(file)) {
+                lines.addAll(IOUtils.getLinesFromInputStream(input));
+                IOUtils.closeInputStream(input);
+            }
         }
         sortInputString(isFirstWordNumber, isReverseOrder, isCaseIndependent, lines);
         return String.join(STRING_NEWLINE, lines);
