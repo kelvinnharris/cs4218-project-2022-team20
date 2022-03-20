@@ -81,11 +81,11 @@ public class SortApplication implements SortInterface {
         for (String file : fileNames) {
             File node = IOUtils.resolveFilePath(file).toFile();
             if ("".equals(file)) {
-                String errorMessage = String.format("read failed: '': %s", ERR_FILE_NOT_FOUND);
+                String errorMessage = String.format("cannot read: '': %s", ERR_FILE_NOT_FOUND);
                 throw new Exception(errorMessage);
             }
             if (!node.exists()) {
-                String errorMessage = String.format("read failed: %s: %s", file, ERR_FILE_NOT_FOUND);
+                String errorMessage = String.format("cannot read: %s: %s", file, ERR_FILE_NOT_FOUND);
                 throw new Exception(errorMessage);
             }
             if (node.isDirectory()) {
@@ -93,7 +93,7 @@ public class SortApplication implements SortInterface {
                 throw new Exception(errorMessage);
             }
             if (!node.canRead()) {
-                String errorMessage = String.format("read failed: %s: %s", file, ERR_NO_PERM);
+                String errorMessage = String.format("cannot read: %s: %s", file, ERR_NO_PERM);
                 throw new Exception(errorMessage);
             }
             try (InputStream input = IOUtils.openInputStream(file)) {
