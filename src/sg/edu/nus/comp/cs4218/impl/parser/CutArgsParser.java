@@ -85,6 +85,8 @@ public class CutArgsParser extends ArgsParser {
             }
         } catch (IndexOutOfBoundsException e) {
             throw e;
+        } catch (NumberFormatException e) {
+            throw new InvalidArgsException("invalid byte, character or field list"); //NOPMD - suppressed PreserveStackTrace - Exception message should be different
         } catch (Exception e) {
             throw new InvalidArgsException(e.getMessage());//NOPMD - suppressed PreserveStackTrace - No reason to preserve stackTrace as reason is contained in message
         }
