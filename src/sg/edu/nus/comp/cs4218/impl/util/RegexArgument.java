@@ -118,11 +118,14 @@ public final class RegexArgument {
         if (regexPattern == null || !node.canRead() || !node.isDirectory()) {
             return matches;
         }
+
+        int startIdx = IOUtils.resolveFilePath(Environment.currentDirectory).toString().length() + 1;
+
         for (String current : node.list()) {
             File nextNode = new File(node, current);
             String match = isAbsolute
                     ? nextNode.getPath()
-                    : nextNode.getPath().substring(Environment.currentDirectory.length() + 1);
+                    : nextNode.getPath().substring(startIdx);
             // TODO: Find a better way to handle this.
             if (onlyDirectories && nextNode.isDirectory()) {
                 match += File.separator;
