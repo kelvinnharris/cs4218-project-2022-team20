@@ -101,7 +101,7 @@ public class WcApplication implements WcInterface {
             Result res = new Result();
             res.setFileName(file);
             File node = IOUtils.resolveFilePath(file).toFile();
-            if (!node.exists()) {
+            if ("".equals(file) || !node.exists()) {
                 String error = (new StringBuilder()).append("wc: ").append(file).append(ERR_NOT_FOUND).toString();
                 res.setIsErroneous(error, 'n');
                 listRes.add(res);

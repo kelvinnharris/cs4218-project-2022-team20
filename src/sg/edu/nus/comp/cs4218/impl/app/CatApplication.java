@@ -85,7 +85,7 @@ public class CatApplication implements CatInterface {
 
         for (String file : fileName) {
             File node = IOUtils.resolveFilePath(file).toFile();
-            if (!node.exists()) {
+            if ("".equals(file) || !node.exists()) {
                 String error = (new StringBuilder()).append("cat: ").append(file).append(ERR_NOT_FOUND).toString();
                 listResult.add(error);
                 numOfErrors++;
