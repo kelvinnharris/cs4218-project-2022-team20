@@ -21,6 +21,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 class CallCommandTest {
 
@@ -32,6 +33,8 @@ class CallCommandTest {
     private static final String FILE_PATH_1 = TEST_PATH + FILE_NAME_1;
     private static final String FILE_NAME_2 = "test2.txt";
     private static final String FILE_PATH_2 = TEST_PATH + FILE_NAME_2;
+
+    private static final String FILE_CONTENT_1 = "This is WC Test file 1" + StringUtils.STRING_NEWLINE;
 
     private static final String NON_EXISTENT_FILE = "nofile.txt";
 
@@ -48,7 +51,7 @@ class CallCommandTest {
         TestUtils.deleteDir(new File(TEST_PATH));
         Files.createDirectories(Paths.get(TEST_PATH));
 
-        TestUtils.createFile(FILE_PATH_1, "This is WC Test file 1" + StringUtils.STRING_NEWLINE);
+        TestUtils.createFile(FILE_PATH_1, FILE_CONTENT_1);
     }
 
     @BeforeEach
@@ -80,7 +83,31 @@ class CallCommandTest {
     }
 
     @Test
-    void testCallCommand_WcApplicationGetArgsList_shouldReturnSameList() {
+    void testCallCommand_LsApplicationWithGlobbing_testPassed() throws FileNotFoundException, AbstractApplicationException, ShellException {
+        argsList.addAll(Arrays.asList("ls", "*.txt"));
+        callCommand = new CallCommand(argsList, appRunner, argResolver);
+        callCommand.evaluate(inputStream, outputStream);
+
+        final String standardOutput = outputStream.toString();
+
+        String expected = FILE_NAME_1;
+        assertEquals(expected + STRING_NEWLINE, standardOutput);
+    }
+
+    @Test
+    void testCallCommand_EchoApplicationWithSubCommand_testPassed() throws FileNotFoundException, AbstractApplicationException, ShellException {
+        argsList.addAll(Arrays.asList("echo", String.format("`cat %s`", FILE_NAME_1)));
+        callCommand = new CallCommand(argsList, appRunner, argResolver);
+        callCommand.evaluate(inputStream, outputStream);
+
+        final String standardOutput = outputStream.toString();
+
+        String expected = FILE_CONTENT_1;
+        assertEquals(expected, standardOutput);
+    }
+
+    @Test
+    void testCallCommand_WcApplicationWithInputRedirectionGetArgsList_shouldReturnSameList() {
         argsList.addAll(Arrays.asList("wc", "<", NON_EXISTENT_FILE));
         callCommand = new CallCommand(argsList, appRunner, argResolver);
         assertEquals(argsList, callCommand.getArgsList());
