@@ -81,19 +81,20 @@ public class SortApplication implements SortInterface {
         for (String file : fileNames) {
             File node = IOUtils.resolveFilePath(file).toFile();
             if ("".equals(file)) {
-                String errorMessage = "cannot read: '': " + ERR_FILE_NOT_FOUND;
+                String errorMessage = String.format("read failed: '': %s", ERR_FILE_NOT_FOUND);
                 throw new Exception(errorMessage);
             }
             if (!node.exists()) {
-                String errorMessage = "cannot read: " + file + ": " + ERR_FILE_NOT_FOUND;
+                String errorMessage = String.format("read failed: %s: %s", file, ERR_FILE_NOT_FOUND);
                 throw new Exception(errorMessage);
             }
             if (node.isDirectory()) {
-                String errorMessage = "read failed: " + file + ": " + ERR_IS_DIR;
+                String errorMessage = String.format("read failed: %s: %s", file, ERR_IS_DIR);
                 throw new Exception(errorMessage);
             }
             if (!node.canRead()) {
-                throw new Exception(ERR_NO_PERM);
+                String errorMessage = String.format("read failed: %s: %s", file, ERR_NO_PERM);
+                throw new Exception(errorMessage);
             }
             InputStream input = IOUtils.openInputStream(file);//NOPMD - suppressed CloseResource - Resource has been closed at line 96
             lines.addAll(IOUtils.getLinesFromInputStream(input));

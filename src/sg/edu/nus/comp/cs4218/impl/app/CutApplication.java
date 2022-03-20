@@ -104,16 +104,20 @@ public class CutApplication implements CutInterface { //NOPMD - suppressed GodCl
                 continue;
             }
             File node = IOUtils.resolveFilePath(file).toFile();
+            if ("".equals(file)) {
+                String errorMessage = String.format("'': %s", ERR_FILE_NOT_FOUND);
+                throw new Exception(errorMessage);
+            }
             if (!node.exists()) {
-                String errorMessage = file + "': " + ERR_FILE_NOT_FOUND;
+                String errorMessage = String.format("'%s': %s", file, ERR_FILE_NOT_FOUND);
                 throw new Exception(errorMessage);
             }
             if (node.isDirectory()) {
-                String errorMessage = file + "': " + ERR_IS_DIR;
+                String errorMessage = String.format("'%s': %s", file, ERR_IS_DIR);
                 throw new Exception(errorMessage);
             }
             if (!node.canRead()) {
-                String errorMessage = file + "': " + ERR_NO_PERM;
+                String errorMessage = String.format("'%s': %s", file, ERR_NO_PERM);
                 throw new Exception(errorMessage);
             }
             InputStream input = IOUtils.openInputStream(file);//NOPMD - suppressed CloseResource - Resource has been closed at line 123
