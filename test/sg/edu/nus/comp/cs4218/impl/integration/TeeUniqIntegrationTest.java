@@ -16,6 +16,7 @@ import java.nio.file.Paths;
 
 import static java.nio.file.Files.readString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 import static sg.edu.nus.comp.cs4218.impl.util.TestConstants.TEE_UNIQ_FOLDER;
@@ -24,8 +25,12 @@ import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
 
 public class TeeUniqIntegrationTest {
 
+
     public static final String WORD1 = "word1";
     public static final String WORD2 = "word2";
+    public static final String WORD3 = "abc";
+    public static final String WORD4 = "def";
+    public static final String WORD5 = "123";
     public static final String FILE1_NAME = "file1.txt";
     public static final String FILE2_NAME = "file2.txt";
     public static final String FILE3_NAME = "file3.txt";
@@ -33,8 +38,8 @@ public class TeeUniqIntegrationTest {
     public static final String UNWR_FILE_NAME = "unwritable.txt";
     public static final String FOLDER1_NAME = "folder1";
     public static final String NE_FILE_NAME = "nonExistent.txt";
-    public static final String[] LINES1 = {"abc", "abc", "def", "abc", "abc", "abc"}; // NOPMD - duplicate literals are used once for definition
-    public static final String[] LINES2 = {"123", "123", "", ""};
+    public static final String[] LINES1 = {WORD3, WORD3, WORD4, WORD3, WORD3, WORD3};
+    public static final String[] LINES2 = {WORD5, WORD5, "", ""};
     public static final String[] LINES3 = {FILE1_NAME, FILE1_NAME, FILE2_NAME};
 
     public static final String INPUT1 = WORD1 + STRING_NEWLINE + WORD1 + STRING_NEWLINE + WORD2 + STRING_NEWLINE
@@ -47,6 +52,7 @@ public class TeeUniqIntegrationTest {
     public static final String FILE2_PATH = TEST_PATH + CHAR_FILE_SEP + FILE2_NAME;
     public static final String FILE3_PATH = TEST_PATH + CHAR_FILE_SEP + FILE3_NAME;
     public static final String FILE4_PATH = TEST_PATH + CHAR_FILE_SEP + FILE4_NAME;
+    public static final String NE_FILE_PATH = TEST_PATH + CHAR_FILE_SEP + NE_FILE_NAME;
     public static final String FOLDER1_PATH = TEST_PATH + CHAR_FILE_SEP + FOLDER1_NAME;
     private static final String UNWR_FILE_PATH = TEST_PATH + CHAR_FILE_SEP + UNWR_FILE_NAME;
     private static ShellImpl shell;
@@ -144,5 +150,13 @@ public class TeeUniqIntegrationTest {
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         command.evaluate(inputStream, stdOut);
         assertEquals(String.format("%s: Permission denied", UNWR_FILE_NAME) + STRING_NEWLINE + INPUT2, stdOut.toString());
+    }
+
+    @Test
+    void testTeeUniqParseCommand_teeUniqOutputFileNotFound_shouldThrowException() throws Exception {
+        inputStream = new ByteArrayInputStream(INPUT2.getBytes());
+        String commandString = String.format("tee `uniq %s`", NE_FILE_PATH);
+        Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
+        assertThrows(Exception.class, () -> command.evaluate(inputStream, stdOut));
     }
 }
