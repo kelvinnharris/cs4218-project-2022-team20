@@ -63,7 +63,7 @@ public class TeeApplication implements TeeInterface {
      * @throws TeeException Exception related to tee
      */
     @Override
-    public String teeFromStdin(Boolean isAppend, InputStream stdin, String... files) throws TeeException {
+    public String teeFromStdin(Boolean isAppend, InputStream stdin, String... files) throws TeeException { // NOPMD - suppressed ExcessiveMethodLength - Part of functional requirements where Tee needs to handle
         StringBuilder errorMsgBuilder = new StringBuilder();
         StringBuilder resultBuilder = new StringBuilder();
         ArrayList<String> writableFiles = filterWritableFiles(errorMsgBuilder, files);
@@ -77,7 +77,7 @@ public class TeeApplication implements TeeInterface {
                 try {
                     input = reader.readLine();
                 } catch (IOException e) {
-                    throw new TeeException("Streams are closed"); // Streams are closed, terminate process
+                    throw new TeeException("Streams are closed"); //NOPMD - suppressed PreserveStackTrace - We expect Tee to output custom error message
                 }
 
                 if (StringUtils.isBlank(input)) {
@@ -94,7 +94,7 @@ public class TeeApplication implements TeeInterface {
                         try {
                             Files.write(filePath, toAppend.getBytes(), APPEND);
                         } catch (Exception e) {
-                            throw new TeeException(String.format("Cannot write to file '%s'.", filePath));
+                            throw new TeeException(String.format("Cannot write to file '%s'.", filePath)); //NOPMD - suppressed PreserveStackTrace - We expect Tee to output custom error message
                         }
                     }
                 }
@@ -110,7 +110,7 @@ public class TeeApplication implements TeeInterface {
                 try {
                     Files.write(filePath, resultBuilder.toString().getBytes());
                 } catch (Exception e) {
-                    throw new TeeException(String.format("Cannot write to file '%s'.", filePath));
+                    throw new TeeException(String.format("Cannot write to file '%s'.", filePath)); //NOPMD - suppressed PreserveStackTrace - We expect Tee to output custom error message
                 }
             }
         }
@@ -123,20 +123,22 @@ public class TeeApplication implements TeeInterface {
         ArrayList<String> writableFiles = new ArrayList<>();
         for (String file : files) {
             Path filePath = IOUtils.resolveFilePath(file);
-            if (!Files.exists(filePath)) {
+            if (Files.exists(filePath)) {
+                if (Files.isDirectory(filePath)) {
+                    stringBuilder.append(String.format("%s: Is a directory" + STRING_NEWLINE, file));
+                } else {
+                    if (Files.isWritable(filePath)) {
+                        writableFiles.add(file);
+                    } else {
+                        stringBuilder.append(String.format("%s: Permission denied" + STRING_NEWLINE, file));
+                    }
+                }
+            } else {
                 try {
                     Files.createFile(filePath);
                     writableFiles.add(file);
                 } catch (IOException ioe) {
                     throw new TeeException(ioe);
-                }
-            } else if (Files.isDirectory(filePath)) {
-                stringBuilder.append(String.format("%s: Is a directory" + STRING_NEWLINE, file));
-            } else {
-                if (Files.isWritable(filePath)) {
-                    writableFiles.add(file);
-                } else {
-                    stringBuilder.append(String.format("%s: Permission denied" + STRING_NEWLINE, file));
                 }
             }
         }

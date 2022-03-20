@@ -62,13 +62,13 @@ public class GrepApplication implements GrepInterface { //NOPMD - suppressed God
      * @param countRes    a StringJoiner of the grep line count results
      * @param files       a String Array of file names supplied by user
      */
-    private void grepResultsFromFiles(String pattern, Boolean isCaseInsen, Boolean isPrefix, // NOPMD - suppressed ExcessiveMethodLength - Part of functional requirements where Ls needs to handle
+    private void grepResultsFromFiles(String pattern, Boolean isCaseInsen, Boolean isPrefix, // NOPMD - suppressed ExcessiveMethodLength - Part of functional requirements where Grep needs to handle
                                       StringJoiner lineRes, StringJoiner countRes, String... files) throws Exception {
         int count;
         boolean isSingleFile = (files.length == 1);
         Boolean isPrefixCopy = isPrefix;
         if (!isSingleFile) {
-            isPrefixCopy = true; // NOPMD
+            isPrefixCopy = true;
         }
 
         for (String f : files) {

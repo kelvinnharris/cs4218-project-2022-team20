@@ -17,8 +17,7 @@ import java.util.regex.Pattern;
 import static java.nio.file.Files.readString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
-import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.*;
 import static sg.edu.nus.comp.cs4218.impl.util.TestConstants.GREP_FOLDER;
 import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.appendToFile;
 import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
@@ -27,13 +26,18 @@ import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
 public class GrepApplicationTest {
 
     private static final String ROOT_PATH = Environment.currentDirectory;
-    private static final String INPUT = "The first file" + STRING_NEWLINE + "The second line" + STRING_NEWLINE + "1000"
-            + STRING_NEWLINE; //NOPMD - suppressed AvoidDuplicateLiterals - String literals are file content
+
+    private static final String WORD1 = "The first file";
+    private static final String WORD2 = "The second line";
+    private static final String WORD3 = "1000";
+
+    private static final String INPUT = WORD1 + STRING_NEWLINE + WORD2 + STRING_NEWLINE + WORD3
+            + STRING_NEWLINE;
     private static final String FILE1_NAME = "file1.txt";
     private static final String FILE2_NAME = "file2.txt";
     private static final String NE_FILE_NAME = "nonExistent.txt";
-    private static final String[] LINES1 = {"The first file", "The second line", "1000"};
-    private static final String[] LINES2 = {"The second file", "The second line", "10"};
+    private static final String[] LINES1 = {WORD1, WORD2, WORD3};
+    private static final String[] LINES2 = {"The second file", WORD2, "10"};
     private static final String PATTERN1 = "The second";
     private static final String PATTERN1_INSEN = "THE SECoND";
     private static final String TEST_PATH = ROOT_PATH + CHAR_FILE_SEP + GREP_FOLDER;
@@ -97,14 +101,14 @@ public class GrepApplicationTest {
             String[] lines1 = fileContent1.split(STRING_NEWLINE);
             for (String line : lines1) {
                 if (line.contains(PATTERN1)) {
-                    stringBuilder.append(FILE1_PATH).append(":").append(line).append(STRING_NEWLINE);
+                    stringBuilder.append(FILE1_PATH).append(CHAR_COLON).append(line).append(STRING_NEWLINE);
                 }
             }
             String fileContent2 = readString(Paths.get(FILE2_PATH));
             String[] lines2 = fileContent2.split(STRING_NEWLINE);
             for (String line : lines2) {
                 if (line.contains(PATTERN1)) {
-                    stringBuilder.append(FILE2_PATH).append(":").append(line).append(STRING_NEWLINE);
+                    stringBuilder.append(FILE2_PATH).append(CHAR_COLON).append(line).append(STRING_NEWLINE);
                 }
             }
             String errorMsg = String.format("grep: %s: No such file or directory" + STRING_NEWLINE, NE_FILE_PATH);
@@ -155,7 +159,7 @@ public class GrepApplicationTest {
             String[] lines = fileContent.split(STRING_NEWLINE);
             for (String line : lines) {
                 if (line.contains(PATTERN1)) {
-                    stringBuilder.append(FILE1_PATH).append(":").append(line).append(STRING_NEWLINE);
+                    stringBuilder.append(FILE1_PATH).append(CHAR_COLON).append(line).append(STRING_NEWLINE);
                 }
             }
             assertEquals(stringBuilder.toString(), actualOutput);
@@ -202,7 +206,7 @@ public class GrepApplicationTest {
             String[] fileLines = fileContent.split(STRING_NEWLINE);
             for (String line : fileLines) {
                 if (line.contains(PATTERN1)) {
-                    stringBuilder.append(FILE1_PATH).append(":").append(line).append(STRING_NEWLINE);
+                    stringBuilder.append(FILE1_PATH).append(CHAR_COLON).append(line).append(STRING_NEWLINE);
                 }
             }
 
@@ -231,12 +235,12 @@ public class GrepApplicationTest {
     @Test
     void run_validGrepFromStdin_shouldReturnGrepOutput() throws Exception {
         grepApplication.run(new String[]{"The second", "-"}, inputStream, stdout);
-        assertEquals("The second line" + STRING_NEWLINE, stdout.toString());
+        assertEquals(WORD2 + STRING_NEWLINE, stdout.toString());
     }
 
     @Test
     void run_validGrepFromFiles_shouldReturnGrepOutput() throws Exception {
         grepApplication.run(new String[]{"The second", FILE1_PATH}, inputStream, stdout);
-        assertEquals("The second line" + STRING_NEWLINE, stdout.toString());
+        assertEquals(WORD2 + STRING_NEWLINE, stdout.toString());
     }
 }

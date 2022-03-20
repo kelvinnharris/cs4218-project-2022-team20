@@ -8,7 +8,6 @@ import sg.edu.nus.comp.cs4218.impl.parser.MvArgsParser;
 import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -18,12 +17,11 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static java.nio.file.StandardCopyOption.ATOMIC_MOVE;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
 import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
 
-public class MvApplication implements MvInterface { //NOPMD - suppressed GodClass - cannot refactor to smaller classes
+public class MvApplication implements MvInterface { //NOPMD - suppressed GodClass - Some of the methods are private to Mv and make more sense to put it inside the class
 
     /**
      * Run application with specified input data and specified output stream.
@@ -177,7 +175,7 @@ public class MvApplication implements MvInterface { //NOPMD - suppressed GodClas
                             destFolderArg + "/" + srcFile));
                 }
 
-                isCopiedOnce = true;
+                Boolean isCopied = true;
 
                 // Copy the directory itself
                 if (!Files.exists(destAbsPath)) {
@@ -189,7 +187,7 @@ public class MvApplication implements MvInterface { //NOPMD - suppressed GodClas
                 for (String fileName : fileNames) {
                     String nextDestCwd = Paths.get(destCwd, destFolder).toString();
                     String nextSrcCwd = Paths.get(srcCwd, srcFile).toString();
-                    cpFilesToFolderImpl(isOverwrite, nextDestCwd, nextSrcCwd, srcFile, fileName, destFolderArg, srcFileArg, isCopiedOnce);
+                    cpFilesToFolderImpl(isOverwrite, nextDestCwd, nextSrcCwd, srcFile, fileName, destFolderArg, srcFileArg, isCopied);
                 }
 
             } else if (Files.isRegularFile(srcAbsPath)) { // just copy if file type
