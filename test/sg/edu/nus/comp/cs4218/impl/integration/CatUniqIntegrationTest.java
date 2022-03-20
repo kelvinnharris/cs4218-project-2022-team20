@@ -42,13 +42,11 @@ public class CatUniqIntegrationTest {
     public static final String FILE3_PATH = TEST_PATH + CHAR_FILE_SEP + FILE3_NAME;
     public static final String FOLDER1_PATH = TEST_PATH + CHAR_FILE_SEP + FOLDER1_NAME;
 
-    private static ShellImpl shell;
     private static ByteArrayOutputStream stdOut;
     public final InputStream inputStream = new ByteArrayInputStream(INPUT.getBytes());
 
     @BeforeAll
     static void setUp() throws IOException {
-        shell = new ShellImpl();
         deleteDir(new File(TEST_PATH));
 
         Files.createDirectory(Paths.get(TEST_PATH));

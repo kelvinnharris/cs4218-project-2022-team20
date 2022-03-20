@@ -15,6 +15,7 @@ public class TestConstants {
     public static final String CAT_CUT_FOLDER = "tmpCatCutTestFolder";
     public static final String LS_SORT_FOLDER = "tmpLsSortTestFolder";
     public static final String CAT_UNIQ_FOLDER = "tmpCatUniqTestFolder";
+    public static final String GREP_PASTE_FOLDER = "tmpGrepPasteFolder";
 
     public static final String CP_FOLDER = "tmpCpTestFolder";
     public static final String GREP_FOLDER = "tmpGrepTestFolder";
