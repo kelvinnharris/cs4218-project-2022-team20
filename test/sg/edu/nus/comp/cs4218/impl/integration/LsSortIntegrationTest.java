@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.*;
 import static sg.edu.nus.comp.cs4218.impl.util.TestConstants.LS_SORT_FOLDER;
+import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
 
 public class LsSortIntegrationTest {
 
@@ -30,21 +31,20 @@ public class LsSortIntegrationTest {
     private static final String TEST_FOLDER_NAME = LS_SORT_FOLDER + CHAR_FILE_SEP;
     private static final String TEST_PATH = ROOT_PATH + CHAR_FILE_SEP + TEST_FOLDER_NAME;
 
-    private static final String FILE_NAME_1 = "a.txt"; // NOPMD - AvoidDuplicateLiterals - there are no duplicate literals
+    private static final String FILE_NAME_1 = "a.txt";
     private static final String FILE_PATH_1 = TEST_PATH + FILE_NAME_1;
-    private static final String FILE_NAME_2 = "b.txt"; // NOPMD - AvoidDuplicateLiterals - there are no duplicate literals
+    private static final String FILE_NAME_2 = "b.txt";
     private static final String FILE_PATH_2 = TEST_PATH + FILE_NAME_2;
     private static final String FILE_NAME_3 = "a";
     private static final String FILE_PATH_3 = TEST_PATH + FILE_NAME_3;
     private static final String FILE_NAME_4 = "b";
     private static final String FILE_PATH_4 = TEST_PATH + FILE_NAME_4;
-    private static final String FILE_NAME_5 = "AB.txt"; // NOPMD - AvoidDuplicateLiterals - there are no duplicate literals
+    private static final String FILE_NAME_5 = "AB.txt";
     private static final String FILE_PATH_5 = TEST_PATH + FILE_NAME_5;
-    private static final String FOLDER_NAME_1 = "folder1" + CHAR_FILE_SEP; // NOPMD - AvoidDuplicateLiterals - there are no duplicate literals
-    private static final String FILE_NAME_6 = FILE_NAME_1;
-    private static final String FILE_NAME_7 = FILE_NAME_2;
-    private static final String FILE_PATH_6 = TEST_PATH + FOLDER_NAME_1 + FILE_NAME_6;
-    private static final String FILE_PATH_7 = TEST_PATH + FOLDER_NAME_1 + FILE_NAME_7;
+    private static final String FOLDER_1 = "folder1";
+    private static final String FOLDER_NAME_1 = FOLDER_1 + CHAR_FILE_SEP;
+    private static final String FILE_PATH_6 = TEST_PATH + FOLDER_NAME_1 + FILE_NAME_1;
+    private static final String FILE_PATH_7 = TEST_PATH + FOLDER_NAME_1 + FILE_NAME_2;
 
     private static final String LS_EXCEPTION_MSG = "Should throw LsException";
 
@@ -73,7 +73,7 @@ public class LsSortIntegrationTest {
     @AfterAll
     static void tearDown() {
         Environment.currentDirectory = ROOT_PATH;
-        TestUtils.deleteDir(new File(TEST_PATH));
+        deleteDir(new File(TEST_PATH));
     }
 
     @Test
@@ -84,8 +84,8 @@ public class LsSortIntegrationTest {
         command.evaluate(System.in, myOut);
         final String standardOutput = myOut.toString();
 
-        String expected = "AB.txt" + STRING_NEWLINE + "a" + STRING_NEWLINE + "a.txt" + STRING_NEWLINE + "b" +
-                STRING_NEWLINE + "b.txt" + STRING_NEWLINE + "folder1";
+        String expected = FILE_NAME_5 + STRING_NEWLINE + FILE_NAME_3 + STRING_NEWLINE + FILE_NAME_1 + STRING_NEWLINE + FILE_NAME_4 +
+                STRING_NEWLINE + FILE_NAME_2 + STRING_NEWLINE + FOLDER_1;
         assertEquals(expected + STRING_NEWLINE, standardOutput);
     }
 
@@ -97,8 +97,8 @@ public class LsSortIntegrationTest {
         command.evaluate(System.in, myOut);
         final String standardOutput = myOut.toString();
 
-        String expected = "folder1" + STRING_NEWLINE + "b.txt" + STRING_NEWLINE + "b" + STRING_NEWLINE +
-                "a.txt" + STRING_NEWLINE + "a" + STRING_NEWLINE + "AB.txt";
+        String expected = FOLDER_1 + STRING_NEWLINE + FILE_NAME_2 + STRING_NEWLINE + FILE_NAME_4 + STRING_NEWLINE +
+                FILE_NAME_1 + STRING_NEWLINE + FILE_NAME_3 + STRING_NEWLINE + FILE_NAME_5;
         assertEquals(expected + STRING_NEWLINE, standardOutput);
     }
 
@@ -110,7 +110,7 @@ public class LsSortIntegrationTest {
         command.evaluate(System.in, myOut);
         final String standardOutput = myOut.toString();
 
-        String expected = "a.txt" + STRING_NEWLINE + "AB.txt" + STRING_NEWLINE + "b.txt";
+        String expected = FILE_NAME_1 + STRING_NEWLINE + FILE_NAME_5 + STRING_NEWLINE + FILE_NAME_2;
         assertEquals(expected + STRING_NEWLINE, standardOutput);
     }
 
@@ -122,9 +122,9 @@ public class LsSortIntegrationTest {
         command.evaluate(System.in, myOut);
         final String standardOutput = myOut.toString();
 
-        String expected = STRING_NEWLINE + "." + CHAR_FILE_SEP + ":" + STRING_NEWLINE + "AB.txt" + STRING_NEWLINE + "a" + STRING_NEWLINE +
-                "a.txt" + STRING_NEWLINE + "a.txt" + STRING_NEWLINE + "b" + STRING_NEWLINE + "b.txt" + STRING_NEWLINE +
-                "b.txt" + STRING_NEWLINE + "folder1" + STRING_NEWLINE + "folder1:";
+        String expected = STRING_NEWLINE + "." + CHAR_FILE_SEP + ":" + STRING_NEWLINE + FILE_NAME_5 + STRING_NEWLINE + FILE_NAME_3 + STRING_NEWLINE +
+                FILE_NAME_1 + STRING_NEWLINE + FILE_NAME_1 + STRING_NEWLINE + FILE_NAME_4 + STRING_NEWLINE + FILE_NAME_2 + STRING_NEWLINE +
+                FILE_NAME_2 + STRING_NEWLINE + FOLDER_1 + STRING_NEWLINE + "folder1:";
         assertEquals(expected + STRING_NEWLINE, standardOutput);
     }
 
@@ -136,7 +136,7 @@ public class LsSortIntegrationTest {
         command.evaluate(System.in, myOut);
         final String standardOutput = myOut.toString();
 
-        String expected = "a.txt" + STRING_NEWLINE + "b.txt";
+        String expected = FILE_NAME_1 + STRING_NEWLINE + FILE_NAME_2;
         assertEquals(expected + STRING_NEWLINE, standardOutput);
     }
 

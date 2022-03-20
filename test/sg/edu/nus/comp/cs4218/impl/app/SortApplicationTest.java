@@ -47,7 +47,8 @@ class SortApplicationTest {
 
 
     @AfterAll
-    static void tearDown() throws IOException {
+    static void tearDown() {
+        Environment.currentDirectory = ROOT_PATH;
         deleteDir(new File(TEST_PATH));
     }
 

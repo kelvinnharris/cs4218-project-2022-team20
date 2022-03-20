@@ -61,6 +61,7 @@ public class GrepPasteIntegrationTest {
 
     @AfterAll
     static void tearDown() {
+        Environment.currentDirectory = ROOT_PATH;
         deleteDir(new File(TEST_PATH));
     }
 

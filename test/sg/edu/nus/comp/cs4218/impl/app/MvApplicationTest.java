@@ -42,7 +42,9 @@ public class MvApplicationTest {
     private static final String DEST_FOLDER_NAME = "destFolder";
     private static final String NE_FILE_NAME = "nonExistent.txt";
     private static final String NE_FOLDER_NAME = "nonExistentFolder";
-    private static final String TEST_PATH = Environment.currentDirectory + CHAR_FILE_SEP + MV_FOLDER;
+
+    private static final String ROOT_PATH = Environment.currentDirectory;
+    private static final String TEST_PATH = ROOT_PATH + CHAR_FILE_SEP + MV_FOLDER;
     private static final String SRC_FOLDER_PATH = TEST_PATH + CHAR_FILE_SEP + SRC_FOLDER_NAME;
     private static final String SRC_FOLDER1_PATH = TEST_PATH + CHAR_FILE_SEP + SRC_FOLDER_NAME + CHAR_FILE_SEP + SRC_FOLDER1_NAME;
     private static final String SRC_FOLDER2_PATH = TEST_PATH + CHAR_FILE_SEP + SRC_FOLDER_NAME + CHAR_FILE_SEP + SRC_FOLDER1_NAME + CHAR_FILE_SEP + SRC_FOLDER2_NAME;
@@ -77,7 +79,8 @@ public class MvApplicationTest {
     }
 
     @AfterEach
-    void deleteAll() {
+    void tearDownEach() {
+        Environment.currentDirectory = ROOT_PATH;
         deleteDir(new File(TEST_PATH));
     }
 

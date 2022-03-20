@@ -64,6 +64,7 @@ class SemicolonCommandTest {
 
     @AfterAll
     static void tearDown() {
+        Environment.currentDirectory = ROOT_PATH;
         deleteDir(new File(TEST_PATH));
     }
 
@@ -224,7 +225,7 @@ class SemicolonCommandTest {
 
         command.evaluate(System.in, System.out);
         final String standardOutput = myOut.toString();
-        String expected = FIRST_OUTPUT + STRING_NEWLINE + FILE1_NAME + STRING_NEWLINE + FILE2_NAME + STRING_NEWLINE + FILE3_NAME + STRING_NEWLINE + FOLDER1_NAME + STRING_NEWLINE + OUTPUT1_NAME + STRING_NEWLINE +THIRD_OUTPUT + STRING_NEWLINE;
+        String expected = FIRST_OUTPUT + STRING_NEWLINE + FILE1_NAME + STRING_NEWLINE + FILE2_NAME + STRING_NEWLINE + FILE3_NAME + STRING_NEWLINE + FOLDER1_NAME + STRING_NEWLINE + OUTPUT1_NAME + STRING_NEWLINE + THIRD_OUTPUT + STRING_NEWLINE;
         assertEquals(expected, standardOutput);
     }
 

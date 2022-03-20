@@ -45,6 +45,7 @@ public class PipeCommandTest {
 
     @AfterAll
     static void tearDown() {
+        Environment.currentDirectory = ROOT_PATH;
         deleteDir(new File(TEST_PATH));
     }
 
@@ -116,7 +117,9 @@ public class PipeCommandTest {
         String expectedOutput = LSA_ERR;
         Exception exception = assertThrows(
                 ShellException.class,
-                () -> { shell.parseAndEvaluate(commandString, myOut); }
+                () -> {
+                    shell.parseAndEvaluate(commandString, myOut);
+                }
         );
         assertEquals(expectedOutput, exception.getMessage());
     }
@@ -128,7 +131,9 @@ public class PipeCommandTest {
         String expectedOutput = LSA_ERR;
         Exception exception = assertThrows(
                 ShellException.class,
-                () -> { shell.parseAndEvaluate(commandString, myOut); }
+                () -> {
+                    shell.parseAndEvaluate(commandString, myOut);
+                }
         );
         assertEquals(expectedOutput, exception.getMessage());
     }
@@ -140,7 +145,9 @@ public class PipeCommandTest {
         String expectedOutput = SHELL_ERR;
         Exception exception = assertThrows(
                 ShellException.class,
-                () -> { shell.parseAndEvaluate(commandString, myOut); }
+                () -> {
+                    shell.parseAndEvaluate(commandString, myOut);
+                }
         );
         assertEquals(expectedOutput, exception.getMessage());
     }
@@ -152,7 +159,9 @@ public class PipeCommandTest {
         String expectedOutput = SHELL_ERR;
         Exception exception = assertThrows(
                 ShellException.class,
-                () -> { shell.parseAndEvaluate(commandString, myOut); }
+                () -> {
+                    shell.parseAndEvaluate(commandString, myOut);
+                }
         );
         assertEquals(expectedOutput, exception.getMessage());
     }
@@ -164,7 +173,9 @@ public class PipeCommandTest {
         String expectedOutput = SHELL_ERR;
         Exception exception = assertThrows(
                 ShellException.class,
-                () -> { shell.parseAndEvaluate(commandString, myOut); }
+                () -> {
+                    shell.parseAndEvaluate(commandString, myOut);
+                }
         );
         assertEquals(expectedOutput, exception.getMessage());
     }
@@ -176,7 +187,9 @@ public class PipeCommandTest {
         String expectedOutput = SHELL_ERR;
         Exception exception = assertThrows(
                 ShellException.class,
-                () -> { shell.parseAndEvaluate(commandString, myOut); }
+                () -> {
+                    shell.parseAndEvaluate(commandString, myOut);
+                }
         );
         assertEquals(expectedOutput, exception.getMessage());
     }
@@ -188,7 +201,9 @@ public class PipeCommandTest {
         String expectedOutput = SHELL_ERR;
         Exception exception = assertThrows(
                 ShellException.class,
-                () -> { shell.parseAndEvaluate(commandString, myOut); }
+                () -> {
+                    shell.parseAndEvaluate(commandString, myOut);
+                }
         );
         assertEquals(expectedOutput, exception.getMessage());
     }
@@ -200,7 +215,9 @@ public class PipeCommandTest {
         String expectedOutput = SHELL_ERR;
         Exception exception = assertThrows(
                 ShellException.class,
-                () -> { shell.parseAndEvaluate(commandString, myOut); }
+                () -> {
+                    shell.parseAndEvaluate(commandString, myOut);
+                }
         );
         assertEquals(expectedOutput, exception.getMessage());
     }
@@ -212,7 +229,9 @@ public class PipeCommandTest {
         String expectedOutput = SHELL_ERR;
         Exception exception = assertThrows(
                 ShellException.class,
-                () -> { shell.parseAndEvaluate(commandString, myOut); }
+                () -> {
+                    shell.parseAndEvaluate(commandString, myOut);
+                }
         );
         assertEquals(expectedOutput, exception.getMessage());
     }
@@ -246,7 +265,9 @@ public class PipeCommandTest {
         String expectedOutput = LSA_ERR;
         Exception exception = assertThrows(
                 ShellException.class,
-                () -> { shell.parseAndEvaluate(commandString, myOut); }
+                () -> {
+                    shell.parseAndEvaluate(commandString, myOut);
+                }
         );
         assertEquals(expectedOutput, exception.getMessage());
     }
@@ -258,7 +279,9 @@ public class PipeCommandTest {
         String expectedOutput = LSA_ERR;
         Exception exception = assertThrows(
                 ShellException.class,
-                () -> { shell.parseAndEvaluate(commandString, myOut); }
+                () -> {
+                    shell.parseAndEvaluate(commandString, myOut);
+                }
         );
         assertEquals(expectedOutput, exception.getMessage());
     }

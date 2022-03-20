@@ -48,7 +48,7 @@ public class UniqApplicationTest {
     }
 
     @AfterEach
-    public void tearDownEach() {
+    void tearDownEach() {
         File file = new File(FILE_NAME2);
         if (file.exists()) {
             TestUtils.deleteDir(file);
@@ -57,6 +57,7 @@ public class UniqApplicationTest {
 
     @AfterAll
     static void tearDown() {
+        Environment.currentDirectory = ROOT_PATH;
         deleteDir(new File(TEST_PATH));
     }
 

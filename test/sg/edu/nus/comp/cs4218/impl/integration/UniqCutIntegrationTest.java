@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 import static sg.edu.nus.comp.cs4218.impl.util.TestConstants.UNIQ_CUT_FOLDER;
+import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
 
 public class UniqCutIntegrationTest {
     ByteArrayOutputStream myOut;
@@ -65,7 +66,7 @@ public class UniqCutIntegrationTest {
     @AfterAll
     static void tearDown() {
         Environment.currentDirectory = ROOT_PATH;
-        TestUtils.deleteDir(new File(TEST_PATH));
+        deleteDir(new File(TEST_PATH));
     }
 
     @Test

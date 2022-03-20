@@ -4,6 +4,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.exception.GrepException;
 
@@ -22,8 +23,10 @@ import static sg.edu.nus.comp.cs4218.impl.util.TestConstants.GREP_FOLDER;
 import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.appendToFile;
 import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
 
+@Isolated("ResourceSharing")
 public class GrepApplicationTest {
 
+    private static final String ROOT_PATH = Environment.currentDirectory;
     private static final String INPUT = "The first file" + STRING_NEWLINE + "The second line" + STRING_NEWLINE + "1000"
             + STRING_NEWLINE; //NOPMD - suppressed AvoidDuplicateLiterals - String literals are file content
     private static final String FILE1_NAME = "file1.txt";
@@ -33,7 +36,7 @@ public class GrepApplicationTest {
     private static final String[] LINES2 = {"The second file", "The second line", "10"};
     private static final String PATTERN1 = "The second";
     private static final String PATTERN1_INSEN = "THE SECoND";
-    private static final String TEST_PATH = Environment.currentDirectory + CHAR_FILE_SEP + GREP_FOLDER;
+    private static final String TEST_PATH = ROOT_PATH + CHAR_FILE_SEP + GREP_FOLDER;
     private static final String FILE1_PATH = TEST_PATH + CHAR_FILE_SEP + FILE1_NAME;
     private static final String FILE2_PATH = TEST_PATH + CHAR_FILE_SEP + FILE2_NAME;
     private static final String NE_FILE_PATH = TEST_PATH + CHAR_FILE_SEP + NE_FILE_NAME;
@@ -47,12 +50,16 @@ public class GrepApplicationTest {
     }
 
     @AfterEach
-    void tearDown() throws IOException {
+    void tearDownEach() {
+        Environment.currentDirectory = ROOT_PATH;
         deleteDir(new File(TEST_PATH));
     }
 
     @BeforeEach
     void setUpEach() throws IOException {
+        Environment.currentDirectory = ROOT_PATH;
+        deleteDir(new File(TEST_PATH));
+
         stdout = new ByteArrayOutputStream();
         Files.createDirectory(Paths.get(TEST_PATH));
         Files.createFile(Paths.get(FILE1_PATH));

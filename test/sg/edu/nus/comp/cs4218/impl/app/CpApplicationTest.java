@@ -80,7 +80,8 @@ public class CpApplicationTest {
     }
 
     @AfterEach
-    void tearDown() throws IOException {
+    void tearDownEach() {
+        Environment.currentDirectory = ROOT_PATH;
         deleteDir(new File(TEST_PATH));
     }
 
