@@ -20,25 +20,28 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 import static sg.edu.nus.comp.cs4218.impl.util.TestConstants.GLOBBING_FOLDER;
+import static sg.edu.nus.comp.cs4218.impl.util.TestUtils.deleteDir;
 
 class GlobbingCommandTest {
     ByteArrayOutputStream myOut;
     private static final String ROOT_PATH = Environment.currentDirectory;
-    private static final String TEST_FOLDER_NAME = GLOBBING_FOLDER + CHAR_FILE_SEP;
+    private static final String TEST_FOLDER_NAME = GLOBBING_FOLDER;
     private static final String TEST_PATH = ROOT_PATH + CHAR_FILE_SEP + TEST_FOLDER_NAME;
     private static final String FOLDER1 = "folder1";
     private static final String FILE1 = "file1.xml";
     private static final String FILE2 = "file2.xml";
     private static final String FILE3 = "file3.txt";
+    private static final String FILE4 = "file4.txt";
 
     @BeforeAll
     static void setUp() throws IOException {
-        Files.createDirectories(Paths.get(TEST_PATH + FOLDER1));
-        Files.createFile(Paths.get(TEST_PATH + FOLDER1 + CHAR_FILE_SEP + FILE1));
-        Files.createFile(Paths.get(TEST_PATH + FOLDER1 + CHAR_FILE_SEP + FILE2));
-        Files.createFile(Paths.get(TEST_PATH + FOLDER1 + CHAR_FILE_SEP + FILE3));
-        Files.createFile(Paths.get(TEST_PATH + "file4.txt"));
-        Files.createFile(Paths.get(TEST_PATH + "tmp_file1.txt"));
+        Files.createDirectories(Paths.get(TEST_PATH));
+        Files.createDirectories(Paths.get(TEST_PATH + CHAR_FILE_SEP + FOLDER1));
+        Files.createFile(Paths.get(TEST_PATH + CHAR_FILE_SEP + FOLDER1 + CHAR_FILE_SEP + FILE1));
+        Files.createFile(Paths.get(TEST_PATH + CHAR_FILE_SEP + FOLDER1 + CHAR_FILE_SEP + FILE2));
+        Files.createFile(Paths.get(TEST_PATH + CHAR_FILE_SEP + FOLDER1 + CHAR_FILE_SEP + FILE3));
+        Files.createFile(Paths.get(TEST_PATH + CHAR_FILE_SEP + FILE4));
+        Files.createFile(Paths.get(TEST_PATH + CHAR_FILE_SEP + "tmp_file1.txt"));
     }
 
     @AfterAll
@@ -47,20 +50,9 @@ class GlobbingCommandTest {
         deleteDir(new File(TEST_PATH));
     }
 
-    static void deleteDir(File file) {
-        File[] contents = file.listFiles();
-        if (contents != null) {
-            for (File f : contents) {
-                deleteDir(f);
-            }
-        }
-        file.delete();
-    }
-
     @BeforeEach
     void setUpEach() {
         Environment.currentDirectory = TEST_PATH;
-
         myOut = new ByteArrayOutputStream();
         System.setOut(new PrintStream(myOut));
     }
