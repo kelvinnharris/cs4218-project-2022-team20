@@ -177,7 +177,7 @@ public class MvApplication implements MvInterface { //NOPMD - suppressed GodClas
                             destFolderArg + "/" + srcFile));
                 }
 
-                isCopiedOnce = true; //NOPMD - suppressed AvoidReassigningParameters - parameter needed for recursion check
+                isCopiedOnce = true;
 
                 // Copy the directory itself
                 if (!Files.exists(destAbsPath)) {

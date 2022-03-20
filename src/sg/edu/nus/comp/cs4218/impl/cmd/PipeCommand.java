@@ -31,7 +31,7 @@ public class PipeCommand implements Command {
         ShellException shellException = null;
 
         InputStream nextInputStream = stdin;
-        OutputStream nextOutputStream; //NOPMD
+        OutputStream nextOutputStream;
 
         for (int i = 0; i < callCommands.size(); i++) {
             CallCommand callCommand = callCommands.get(i);
@@ -48,7 +48,7 @@ public class PipeCommand implements Command {
                 }
                 callCommand.evaluate(nextInputStream, nextOutputStream);
                 if (i != callCommands.size() - 1) {
-                    nextInputStream = new ByteArrayInputStream(((ByteArrayOutputStream) nextOutputStream).toByteArray()); //NOPMD
+                    nextInputStream = new ByteArrayInputStream(((ByteArrayOutputStream) nextOutputStream).toByteArray());
                 }
             } catch (AbstractApplicationException e) {
                 absAppException = e;

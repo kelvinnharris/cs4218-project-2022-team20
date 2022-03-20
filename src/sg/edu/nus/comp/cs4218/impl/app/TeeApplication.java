@@ -63,7 +63,7 @@ public class TeeApplication implements TeeInterface {
      * @throws TeeException Exception related to tee
      */
     @Override
-    public String teeFromStdin(Boolean isAppend, InputStream stdin, String... files) throws TeeException { //NOPMD
+    public String teeFromStdin(Boolean isAppend, InputStream stdin, String... files) throws TeeException {
         StringBuilder errorMsgBuilder = new StringBuilder();
         StringBuilder resultBuilder = new StringBuilder();
         ArrayList<String> writableFiles = filterWritableFiles(errorMsgBuilder, files);
@@ -77,7 +77,7 @@ public class TeeApplication implements TeeInterface {
                 try {
                     input = reader.readLine();
                 } catch (IOException e) {
-                    throw new TeeException("Streams are closed"); // Streams are closed, terminate process // NOPMD
+                    throw new TeeException("Streams are closed"); // Streams are closed, terminate process
                 }
 
                 if (StringUtils.isBlank(input)) {
@@ -94,7 +94,7 @@ public class TeeApplication implements TeeInterface {
                         try {
                             Files.write(filePath, toAppend.getBytes(), APPEND);
                         } catch (Exception e) {
-                            throw new TeeException(String.format("Cannot write to file '%s'.", filePath)); //NOPMD
+                            throw new TeeException(String.format("Cannot write to file '%s'.", filePath));
                         }
                     }
                 }
@@ -110,7 +110,7 @@ public class TeeApplication implements TeeInterface {
                 try {
                     Files.write(filePath, resultBuilder.toString().getBytes());
                 } catch (Exception e) {
-                    throw new TeeException(String.format("Cannot write to file '%s'.", filePath)); //NOPMD
+                    throw new TeeException(String.format("Cannot write to file '%s'.", filePath));
                 }
             }
         }
@@ -123,7 +123,7 @@ public class TeeApplication implements TeeInterface {
         ArrayList<String> writableFiles = new ArrayList<>();
         for (String file : files) {
             Path filePath = IOUtils.resolveFilePath(file);
-            if (!Files.exists(filePath)) { //NOPMD
+            if (!Files.exists(filePath)) {
                 try {
                     Files.createFile(filePath);
                     writableFiles.add(file);

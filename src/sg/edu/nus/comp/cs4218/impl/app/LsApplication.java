@@ -278,7 +278,7 @@ public class LsApplication implements LsInterface { // NOPMD - suppressed GodCla
                 try {
                     return Paths.get(Environment.currentDirectory, directory);
                 } catch (Exception e) {
-                    throw new LsException(String.format("cannot access '%s': %s", directory, ERR_FILE_NOT_FOUND));
+                    throw new LsException(String.format("cannot access '%s': %s", directory, ERR_FILE_NOT_FOUND)); // NOPMD - suppressed PreserveStackTrace - We expect Ls to output custom error message
                 }
             }
         } else {

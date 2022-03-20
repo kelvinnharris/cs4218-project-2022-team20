@@ -183,7 +183,7 @@ public class WcApplication implements WcInterface {
         }
         long[] count = getCountReport(stdin); // lines words bytes;
 
-        Result res = new Result(); //NOPMD
+        Result res = new Result();
         StringBuilder sBuilder = new StringBuilder();
         if (isLines) {
             sBuilder.append(String.format(NUMBER_FORMAT, count[0]));
@@ -306,7 +306,7 @@ public class WcApplication implements WcInterface {
         return stringBuilder.append(' ').append(name).toString();
     }
 
-    static class Result { //NOPMD - suppressed DataClass - done as this is the most reasonable implementation
+    static class Result {
         long bytes = -1;
         long lines = -1;
         long words = -1;
