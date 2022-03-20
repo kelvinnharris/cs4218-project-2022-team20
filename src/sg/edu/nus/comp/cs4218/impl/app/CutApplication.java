@@ -151,7 +151,7 @@ public class CutApplication implements CutInterface { //NOPMD - suppressed GodCl
     }
 
 
-    public String cutInputString(Boolean isCharPo, Boolean isBytePo, List<Pair<Integer, Integer>> ranges, List<String> input) {//NOPMD - suppressed ExcessiveMethodLength - from interface
+    public String cutInputString(Boolean isCharPo, Boolean isBytePo, List<Pair<Integer, Integer>> ranges, List<String> input) {//NOPMD - suppressed ExcessiveMethodLength - preserve readability
         String output = "";
         ArrayList<Integer> index = new ArrayList<>();
 
