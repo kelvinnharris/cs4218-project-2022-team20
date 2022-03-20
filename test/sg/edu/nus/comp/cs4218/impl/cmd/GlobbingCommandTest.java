@@ -168,7 +168,7 @@ class GlobbingCommandTest {
 
     @Test
     void testGlobbing_globMultipleDirectoryLevelsNoPattern_shouldReturnCorrectOutput() throws Exception {
-        String inputString = "ls *" + CHAR_FILE_SEP + "*";
+        String inputString = String.format("ls *%c*", CHAR_FILE_SEP);
         String resultPrefix = FOLDER1 + CHAR_FILE_SEP;
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -194,7 +194,7 @@ class GlobbingCommandTest {
 
     @Test
     void testGlobbing_globbingWithPipe_shouldReturnCorrectOutput() throws Exception {
-        String inputString = "ls *" + CHAR_FILE_SEP + "* | grep \"3\"";
+        String inputString = String.format("ls *%c* | grep \"3\"", CHAR_FILE_SEP);
         String resultPrefix = FOLDER1 + CHAR_FILE_SEP;
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -205,7 +205,7 @@ class GlobbingCommandTest {
 
     @Test
     void testGlobbing_globbingWithSemicolon_shouldReturnCorrectOutput() throws Exception {
-        String inputString = "ls *" + CHAR_FILE_SEP + "*; sort *.txt";
+        String inputString = String.format("ls *%c*; sort *.txt", CHAR_FILE_SEP);
         String resultPrefix = FOLDER1 + CHAR_FILE_SEP;
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
