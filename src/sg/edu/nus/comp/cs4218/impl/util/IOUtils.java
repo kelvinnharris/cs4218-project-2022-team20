@@ -46,6 +46,11 @@ public final class IOUtils {
     public static OutputStream openOutputStream(String fileName) throws ShellException, FileNotFoundException {
         String resolvedFileName = resolveFilePath(fileName).toString();
 
+        File node = IOUtils.resolveFilePath(resolvedFileName).toFile();
+        if (node.isDirectory()) {
+            throw new ShellException(fileName + ": Is a directory");
+        }
+
         FileOutputStream fileOutputStream;
 
         fileOutputStream = new FileOutputStream(new File(resolvedFileName));

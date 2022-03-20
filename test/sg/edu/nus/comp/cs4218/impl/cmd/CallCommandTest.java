@@ -20,8 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_FILE_NOT_FOUND;
-import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_SYNTAX;
+import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
 
 class CallCommandTest {
 
@@ -98,7 +97,7 @@ class CallCommandTest {
     void testCallCommand_CatApplicationInvalidFileForOutStream_shouldThrowFileNotFoundException() {
         argsList.addAll(Arrays.asList("cat", FILE_PATH_1, ">", TEST_PATH));
         callCommand = new CallCommand(argsList, appRunner, argResolver);
-        assertThrows(FileNotFoundException.class, () -> callCommand.evaluate(inputStream, outputStream), ERR_FILE_NOT_FOUND);
+        assertThrows(ShellException.class, () -> callCommand.evaluate(inputStream, outputStream), ERR_IS_DIR);
     }
 
     @Test
