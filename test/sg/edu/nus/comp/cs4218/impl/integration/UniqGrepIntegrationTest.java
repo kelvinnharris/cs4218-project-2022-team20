@@ -39,17 +39,19 @@ public class UniqGrepIntegrationTest {
     private static final String GREP_EXCEPTN_MSG = "Should throw GrepException";
 
     private static final String BOB = "Bob";
+    private static final String HELLO_WORLD = "Hello World";
+    private static final String ALICE = "Alice";
 
     @BeforeAll
     static void setUp() throws IOException {
         TestUtils.deleteDir(new File(TEST_PATH));
         Files.createDirectories(Paths.get(TEST_PATH));
-        String fileContent = "Hello World" + STRING_NEWLINE
-                + "Hello World" + STRING_NEWLINE
-                + "Alice" + STRING_NEWLINE
-                + "Alice" + STRING_NEWLINE
+        String fileContent = HELLO_WORLD + STRING_NEWLINE
+                + HELLO_WORLD + STRING_NEWLINE
+                + ALICE + STRING_NEWLINE
+                + ALICE + STRING_NEWLINE
                 + BOB + STRING_NEWLINE
-                + "Alice" + STRING_NEWLINE
+                + ALICE + STRING_NEWLINE
                 + BOB + STRING_NEWLINE
                 + "bOb";
         TestUtils.createFile(FILE_PATH_1, fileContent);
