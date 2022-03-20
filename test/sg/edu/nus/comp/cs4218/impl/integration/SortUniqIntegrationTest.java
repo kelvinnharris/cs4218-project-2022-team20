@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Command;
 import sg.edu.nus.comp.cs4218.Environment;
+import sg.edu.nus.comp.cs4218.exception.SortException;
 import sg.edu.nus.comp.cs4218.exception.UniqException;
 import sg.edu.nus.comp.cs4218.impl.util.ApplicationRunner;
 import sg.edu.nus.comp.cs4218.impl.util.CommandBuilder;
@@ -118,14 +119,21 @@ public class SortUniqIntegrationTest {
     }
 
     @Test
-    void testSortUniq_UniqDirOutputOfSort_shouldThrowUniqException() throws Exception {
+    void testSortUniqParseCommand_sortUniqInvalidFlag_shouldThrowSortException() throws Exception {
+        String commandString = String.format("sort -m `uniq %s`", FILE1_NAME);
+        Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
+        assertThrows(SortException.class, () -> command.evaluate(inputStream, stdOut));
+    }
+
+    @Test
+    void testSortUniqParseCommand_UniqDirOutputOfSort_shouldThrowUniqException() throws Exception {
         String commandString = String.format("sort `uniq %s`", FOLDER1_PATH);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         assertThrows(UniqException.class, () -> command.evaluate(inputStream, stdOut));
     }
 
     @Test
-    void testSortUniq_UniqDirInvalidPathOutputOfSort_shouldThrowUniqException() throws Exception {
+    void testSortUniqParseCommand_UniqDirInvalidPathOutputOfSort_shouldThrowUniqException() throws Exception {
         String commandString = String.format("sort `uniq %s`", NE_FILE_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         assertThrows(UniqException.class, () -> command.evaluate(inputStream, stdOut));

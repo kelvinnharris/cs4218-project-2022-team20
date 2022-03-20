@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Environment;
+import sg.edu.nus.comp.cs4218.exception.GrepException;
 import sg.edu.nus.comp.cs4218.exception.PasteException;
 import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 
@@ -101,6 +102,12 @@ public class GrepPasteIntegrationTest {
         String commandString = String.format("paste \"`grep \"file4.txt\" %s`\"", FILE1_PATH);
         shell.parseAndEvaluate(commandString, stdOut);
         assertEquals("paste: '': No such file or directory", stdOut.toString());
+    }
+
+    @Test
+    void testGrepPasteParseAndEvaluate_grepInvalidFlag_shouldThrowGrepException() {
+        String commandString = String.format("paste \"`grep \"??!\" %s`\"", FILE1_PATH);
+        assertThrows(GrepException.class, () -> shell.parseAndEvaluate(commandString, stdOut));
     }
 
     @Test

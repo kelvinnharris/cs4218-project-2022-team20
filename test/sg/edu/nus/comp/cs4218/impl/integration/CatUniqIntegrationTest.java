@@ -3,6 +3,7 @@ package sg.edu.nus.comp.cs4218.impl.integration;
 import org.junit.jupiter.api.*;
 import sg.edu.nus.comp.cs4218.Command;
 import sg.edu.nus.comp.cs4218.Environment;
+import sg.edu.nus.comp.cs4218.exception.CatException;
 import sg.edu.nus.comp.cs4218.exception.UniqException;
 import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 import sg.edu.nus.comp.cs4218.impl.util.ApplicationRunner;
@@ -122,14 +123,21 @@ public class CatUniqIntegrationTest {
     }
 
     @Test
-    void testCatUniq_UniqDirOutputOfCat_shouldThrowUniqException() throws Exception {
+    void testCatUniqParseCommand_invalidCatFlagFromUniqParameter_shouldThrowCatException() throws Exception {
+        String commandString = String.format("cat -p `uniq %s`", FILE1_NAME);
+        Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
+        assertThrows(CatException.class, () -> command.evaluate(inputStream, stdOut));
+    }
+
+    @Test
+    void testCatUniqParseCommand_UniqDirOutputOfCat_shouldThrowUniqException() throws Exception {
         String commandString = String.format("cat `uniq %s`", FOLDER1_PATH);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         assertThrows(UniqException.class, () -> command.evaluate(inputStream, stdOut));
     }
 
     @Test
-    void testCatUniq_UniqDirInvalidPathOutputOfCat_shouldThrowUniqException() throws Exception {
+    void testCatUniqParseCommand_UniqDirInvalidPathOutputOfCat_shouldThrowUniqException() throws Exception {
         String commandString = String.format("cat `uniq %s`", NE_FILE_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         assertThrows(UniqException.class, () -> command.evaluate(inputStream, stdOut));
