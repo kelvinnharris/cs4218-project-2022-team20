@@ -11,9 +11,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class GrepArgsParserTest {
-    private final String PATTERN = "abc";
-    private final String SRC_FILE1 = "src1.txt";
-    private final String SRC_FILE2 = "src2.txt";
+    private static final String PATTERN = "abc";
+    private static final String SRC_FILE1 = "src1.txt";
+    private static final String SRC_FILE2 = "src2.txt";
     private GrepArgsParser grepArgsParser;
 
     @BeforeEach
