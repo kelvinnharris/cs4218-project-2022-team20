@@ -56,9 +56,9 @@ class QuotingCommandTest {
     }
 
     @Test
-    void testQuoting_doubleQuoteInvalid_testFailedWithException() throws Exception {
+    void testQuoting_doubleQuoteInvalid_testFailedWithException() {
         String commandString = "echo \"hello world";
-        assertThrows(Exception.class, () -> CommandBuilder.parseCommand(commandString, new ApplicationRunner()));
+        assertThrows(ShellException.class, () -> CommandBuilder.parseCommand(commandString, new ApplicationRunner()));
     }
 
     @Test
@@ -71,9 +71,9 @@ class QuotingCommandTest {
     }
 
     @Test
-    void testQuoting_singleQuoteInvalid_testFailedWithException() throws Exception {
+    void testQuoting_singleQuoteInvalid_testFailedWithException() {
         String commandString = "echo hello world'";
-        assertThrows(Exception.class, () -> CommandBuilder.parseCommand(commandString, new ApplicationRunner()));
+        assertThrows(ShellException.class, () -> CommandBuilder.parseCommand(commandString, new ApplicationRunner()));
     }
 
     @Test
@@ -86,9 +86,9 @@ class QuotingCommandTest {
     }
 
     @Test
-    void testQuoting_backQuoteInvalid_testFailedWithException() throws Exception {
+    void testQuoting_backQuoteInvalid_testFailedWithException() {
         String commandString = "echo `echo hello world";
-        assertThrows(Exception.class, () -> CommandBuilder.parseCommand(commandString, new ApplicationRunner()));
+        assertThrows(ShellException.class, () -> CommandBuilder.parseCommand(commandString, new ApplicationRunner()));
     }
 
     @Test
@@ -171,6 +171,6 @@ class QuotingCommandTest {
     @Test
     void testQuoting_multipleNestingInvalid_testFailedWithException() {
         String commandString = "`echo \"echo\"` '\"`hello`\" \"`'echo wor`'ld'\"";
-        assertThrows(Exception.class, () -> CommandBuilder.parseCommand(commandString, new ApplicationRunner()));
+        assertThrows(ShellException.class, () -> CommandBuilder.parseCommand(commandString, new ApplicationRunner()));
     }
 }
