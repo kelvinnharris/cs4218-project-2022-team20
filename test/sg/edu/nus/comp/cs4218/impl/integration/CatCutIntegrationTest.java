@@ -207,8 +207,6 @@ public class CatCutIntegrationTest {
         assertThrows(CutException.class, () -> command.evaluate(System.in, myOut), CUT_EXCEPTION_MSG);
     }
 
-    // TODO: Put in assumption when file not exist cat will not throw exception but return with error message
-    //  to STDOUT
     @Test
     void testCatCutParseCommand_forwardCatWithNonExistentFileToCut_testThrowsException() throws Exception {
         String inputString = "cat blabla.txt | cut -c 1-42";

@@ -74,7 +74,6 @@ public class CutPasteIntegrationTest {
         assertEquals(expectedOutput, stdOut.toString());
     }
 
-    // TODO - Paste serial output
     @Test
     void testCutPasteParseAndEvaluate_cutPasteWithSerialFlag_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("cut -c 1 %s > %s; cut -c 2 %s > %s; paste -s %s %s > %s; cut -c 1-3 %s;",
@@ -127,7 +126,6 @@ public class CutPasteIntegrationTest {
         assertThrows(CutException.class, () -> shell.parseAndEvaluate(commandString, stdOut));
     }
 
-    // TODO - Investigate Paste
     @Test
     void testCutPasteParseAndEvaluate_cutPasteUsingPipeInvalidPasteCommand_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("cut -c 1 %s > %s | paste %s %s > %s | cut -c 1-3 %s",

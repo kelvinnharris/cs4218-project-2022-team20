@@ -30,7 +30,6 @@ public class GrepApplication implements GrepInterface { //NOPMD - suppressed God
 
     @Override
     public String grepFromFiles(String pattern, Boolean isCaseInsensitive, Boolean isCountLines, Boolean isPrefixFileName, String... fileNames) throws Exception {
-        // TODO: To implement -H flag print file name with output lines
         if (fileNames == null || pattern == null) {
             throw new GrepException(NULL_POINTER);
         }
@@ -131,7 +130,6 @@ public class GrepApplication implements GrepInterface { //NOPMD - suppressed God
 
     @Override
     public String grepFromStdin(String pattern, Boolean isCaseInsensitive, Boolean isCountLines, Boolean isPrefixFileName, InputStream stdin) throws Exception {
-        // TODO: To implement -H flag print file name with output lines
         int count = 0;
         StringJoiner lineResults = new StringJoiner(STRING_NEWLINE);
         StringJoiner countResults = new StringJoiner(STRING_NEWLINE);
@@ -233,7 +231,6 @@ public class GrepApplication implements GrepInterface { //NOPMD - suppressed God
     public String grepFromFileAndStdin(String pattern, Boolean isCaseInsensitive, Boolean isCountLines,
                                        Boolean isPrefixFileName, InputStream stdin, String... fileNames)
             throws Exception {
-        // TODO: To implement
         String resultFromFile = grepFromFiles(pattern, isCaseInsensitive, isCountLines, true, fileNames);
         String resultFromStdin = grepFromStdin(pattern, isCaseInsensitive, isCountLines, true, stdin);
         return resultFromFile.concat(resultFromStdin);

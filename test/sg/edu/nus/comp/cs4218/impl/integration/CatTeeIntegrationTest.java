@@ -82,7 +82,6 @@ public class CatTeeIntegrationTest {
         assertEquals(expectedOutput, stdOut.toString());
     }
 
-    // TODO - Investigate semicolon
     @Test
     void testCatTeeParseAndEvaluate_catMultipleFilesAndTee_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("cat %s %s | tee %s; cat %s", FILE1_PATH, FILE2_PATH, TMP_OUTPUT_FILE, TMP_OUTPUT_FILE);

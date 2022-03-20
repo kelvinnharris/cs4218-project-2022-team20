@@ -270,7 +270,6 @@ public class WcCatIntegrationTest {
         assertThrows(CatException.class, () -> command.evaluate(System.in, myOut), CAT_EXCEPTION_MSG);
     }
 
-    // TODO: Put this behavior in Assumption ??
     @Test
     void testWcCatParseCommand_forwardCatWithNonExistentFileToWc_testThrowsException() throws Exception {
         String inputString = "cat blabla.txt | wc";

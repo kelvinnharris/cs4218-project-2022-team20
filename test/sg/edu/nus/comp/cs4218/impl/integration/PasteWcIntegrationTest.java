@@ -312,7 +312,6 @@ public class PasteWcIntegrationTest {
         assertThrows(PasteException.class, () -> command.evaluate(System.in, myOut), PASTE_EXCPTN_MSG);
     }
 
-    // TODO: Put this behavior in Assumption
     @Test
     void testPasteWcParseCommand_forwardPasteWithNonExistentFileToWc_testThrowsException() throws Exception {
         String inputString = "paste blabla.txt | wc";

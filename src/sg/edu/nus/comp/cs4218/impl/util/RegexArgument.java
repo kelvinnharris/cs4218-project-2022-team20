@@ -126,7 +126,7 @@ public final class RegexArgument {
             String match = isAbsolute
                     ? nextNode.getPath()
                     : nextNode.getPath().substring(startIdx);
-            // TODO: Find a better way to handle this.
+
             if (onlyDirectories && nextNode.isDirectory()) {
                 match += File.separator;
             }
