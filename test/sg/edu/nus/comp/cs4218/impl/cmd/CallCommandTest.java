@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Environment;
+import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.impl.util.TestUtils;
 import sg.edu.nus.comp.cs4218.impl.util.ApplicationRunner;
@@ -19,8 +20,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_FILE_NOT_FOUND;
-import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_SYNTAX;
+import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 class CallCommandTest {
 
@@ -33,6 +34,8 @@ class CallCommandTest {
     private static final String FILE_NAME_2 = "test2.txt";
     private static final String FILE_PATH_2 = TEST_PATH + FILE_NAME_2;
 
+    private static final String FILE_CONTENT_1 = "This is WC Test file 1" + StringUtils.STRING_NEWLINE;
+
     private static final String NON_EXISTENT_FILE = "nofile.txt";
 
     CallCommand callCommand;
@@ -44,10 +47,11 @@ class CallCommandTest {
 
     @BeforeAll
     static void setUp() throws IOException {
+        Environment.currentDirectory = TEST_PATH;
         TestUtils.deleteDir(new File(TEST_PATH));
         Files.createDirectories(Paths.get(TEST_PATH));
 
-        TestUtils.createFile(FILE_PATH_1, "This is WC Test file 1" + StringUtils.STRING_NEWLINE);
+        TestUtils.createFile(FILE_PATH_1, FILE_CONTENT_1);
     }
 
     @BeforeEach
@@ -55,17 +59,8 @@ class CallCommandTest {
         argsList = new ArrayList<>();
         appRunner = new ApplicationRunner();
         argResolver = new ArgumentResolver();
-        inputStream = new InputStream() {
-            @Override
-            public int read() throws IOException {
-                return 0;
-            }
-        };
-        outputStream = new OutputStream() {
-            @Override
-            public void write(int num) throws IOException { // NOPMD
-            }
-        };
+        inputStream = System.in;
+        outputStream = new ByteArrayOutputStream();
     }
 
     @AfterAll
@@ -76,34 +71,94 @@ class CallCommandTest {
     }
 
     @Test
-    void testCallCommand_getArgsList_shouldReturnSameList() {
+    void testCallCommand_CatApplicationGetArgsList_shouldReturnSameList() throws FileNotFoundException, AbstractApplicationException, ShellException {
+        argsList.addAll(Arrays.asList("cat", "-n", FILE_PATH_1));
+        callCommand = new CallCommand(argsList, appRunner, argResolver);
+        callCommand.evaluate(inputStream, outputStream);
+
+        String numberFormat = "%6d ";
+
+        final String standardOutput = outputStream.toString();
+        assertEquals(standardOutput, String.format(numberFormat, 1) + "This is WC Test file 1" + StringUtils.STRING_NEWLINE);
+    }
+
+    @Test
+    void testCallCommand_LsApplicationWithGlobbing_testPassed() throws FileNotFoundException, AbstractApplicationException, ShellException {
+        argsList.addAll(Arrays.asList("ls", "*.txt"));
+        callCommand = new CallCommand(argsList, appRunner, argResolver);
+        callCommand.evaluate(inputStream, outputStream);
+
+        final String standardOutput = outputStream.toString();
+
+        String expected = FILE_NAME_1;
+        assertEquals(expected + STRING_NEWLINE, standardOutput);
+    }
+
+    @Test
+    void testCallCommand_EchoApplicationWithSubCommand_testPassed() throws FileNotFoundException, AbstractApplicationException, ShellException {
+        argsList.addAll(Arrays.asList("echo", String.format("`cat %s`", FILE_NAME_1)));
+        callCommand = new CallCommand(argsList, appRunner, argResolver);
+        callCommand.evaluate(inputStream, outputStream);
+
+        final String standardOutput = outputStream.toString();
+
+        String expected = FILE_CONTENT_1;
+        assertEquals(expected, standardOutput);
+    }
+
+    @Test
+    void testCallCommand_EchoApplicationWithEchoDoubleQuoting_testPassed() throws FileNotFoundException, AbstractApplicationException, ShellException {
+        argsList.addAll(Arrays.asList("echo", String.format("\" hello world \"", FILE_NAME_1)));
+        callCommand = new CallCommand(argsList, appRunner, argResolver);
+        callCommand.evaluate(inputStream, outputStream);
+
+        final String standardOutput = outputStream.toString();
+
+        String expected = " hello world ";
+        assertEquals(expected + STRING_NEWLINE, standardOutput);
+    }
+
+    @Test
+    void testCallCommand_EchoApplicationWithEchSingleQuoting_testPassed() throws FileNotFoundException, AbstractApplicationException, ShellException {
+        argsList.addAll(Arrays.asList("echo", String.format("\' hello world \'", FILE_NAME_1)));
+        callCommand = new CallCommand(argsList, appRunner, argResolver);
+        callCommand.evaluate(inputStream, outputStream);
+
+        final String standardOutput = outputStream.toString();
+
+        String expected = " hello world ";
+        assertEquals(expected + STRING_NEWLINE, standardOutput);
+    }
+
+    @Test
+    void testCallCommand_WcApplicationWithInputRedirectionGetArgsList_shouldReturnSameList() {
         argsList.addAll(Arrays.asList("wc", "<", NON_EXISTENT_FILE));
         callCommand = new CallCommand(argsList, appRunner, argResolver);
         assertEquals(argsList, callCommand.getArgsList());
     }
 
     @Test
-    void testCallCommand_invalidFileForInStream_shouldThrowShellException() {
+    void testCallCommand_WcApplicationInvalidFileForInStream_shouldThrowShellException() {
         argsList.addAll(Arrays.asList("wc", "<", NON_EXISTENT_FILE));
         callCommand = new CallCommand(argsList, appRunner, argResolver);
         assertThrows(ShellException.class, () -> callCommand.evaluate(inputStream, outputStream), ERR_FILE_NOT_FOUND);
     }
 
     @Test
-    void testCallCommand_invalidFileForOutStream_shouldThrowFileNotFoundException() {
-        argsList.addAll(Arrays.asList("wc", ">", TEST_FOLDER_NAME));
+    void testCallCommand_CatApplicationInvalidFileForOutStream_shouldThrowFileNotFoundException() {
+        argsList.addAll(Arrays.asList("cat", FILE_PATH_1, ">", TEST_PATH));
         callCommand = new CallCommand(argsList, appRunner, argResolver);
-        assertThrows(FileNotFoundException.class, () -> callCommand.evaluate(inputStream, outputStream), ERR_FILE_NOT_FOUND);
+        assertThrows(ShellException.class, () -> callCommand.evaluate(inputStream, outputStream), ERR_IS_DIR);
     }
 
     @Test
-    void testCallCommand_nullArgsList_shouldThrowShellException() {
+    void testCallCommand_NullArgsList_shouldThrowShellException() {
         callCommand = new CallCommand(null, appRunner, argResolver);
         assertThrows(ShellException.class, () -> callCommand.evaluate(inputStream, outputStream), ERR_SYNTAX);
     }
 
     @Test
-    void testCallCommand_emptyArgsList_shouldThrowShellException() {
+    void testCallCommand_EmptyArgsList_shouldThrowShellException() {
         callCommand = new CallCommand(argsList, appRunner, argResolver);
         assertThrows(ShellException.class, () -> callCommand.evaluate(inputStream, outputStream), ERR_SYNTAX);
     }
