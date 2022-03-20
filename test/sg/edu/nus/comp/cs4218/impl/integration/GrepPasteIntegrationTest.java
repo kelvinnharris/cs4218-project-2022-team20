@@ -100,8 +100,7 @@ public class GrepPasteIntegrationTest {
     @Test
     void testGrepPasteParseAndEvaluate_pasteOutputOfGrepNoSuchFile_shouldReturnNoSuchFileOrDirectory() throws Exception {
         String commandString = String.format("paste \"`grep \"file4.txt\" %s`\"", FILE1_PATH);
-        shell.parseAndEvaluate(commandString, stdOut);
-        assertEquals("paste: '': No such file or directory", stdOut.toString());
+        assertThrows(PasteException.class, () -> shell.parseAndEvaluate(commandString, stdOut));
     }
 
     @Test
