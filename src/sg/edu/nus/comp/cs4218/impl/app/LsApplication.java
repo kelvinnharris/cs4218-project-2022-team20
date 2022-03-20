@@ -270,19 +270,25 @@ public class LsApplication implements LsInterface { // NOPMD - suppressed GodCla
      * @param directory - directory
      * @return Path
      */
-    private Path resolvePath(String directory) {
+    private Path resolvePath(String directory) throws LsException {
         if (System.getProperty("os.name").toLowerCase(Locale.ENGLISH).contains("win")) {
             if (directory.length() > 2 && directory.charAt(1) == ':' && directory.charAt(2) == '\\') {
                 return Paths.get(directory);
+            } else {
+                try {
+                    return Paths.get(Environment.currentDirectory, directory);
+                } catch (Exception e) {
+                    throw new LsException(String.format("cannot access '%s': %s", directory, ERR_FILE_NOT_FOUND));
+                }
             }
         } else {
             if (directory.charAt(0) == '/') {
                 // This is an absolute path
                 return Paths.get(directory);
+            } else {
+                return Paths.get(Environment.currentDirectory, directory);
             }
         }
-
-        return Paths.get(Environment.currentDirectory, directory);
     }
 
     /**

@@ -187,8 +187,8 @@ class GlobbingCommandTest {
 
         command.evaluate(System.in, System.out);
         final String standardOutput = myOut.toString();
-        assertEquals(resultPrefix + FILE1 + CHAR_SPACE
-                + resultPrefix + FILE2 + CHAR_SPACE
+        assertEquals(resultPrefix + FILE1 + STRING_NEWLINE
+                + resultPrefix + FILE2 + STRING_NEWLINE
                 + resultPrefix + FILE3 + STRING_NEWLINE, standardOutput);
     }
 
