@@ -64,7 +64,6 @@ public class GrepPasteIntegrationTest {
     }
 
 
-
     @Test
     void testGrepPasteParseAndEvaluate_grepFileNamePipeToPaste_shouldReturnCorrectOutput() throws Exception {
         String commandString = String.format("grep \"file1\" %s | paste", FILE1_PATH);
@@ -97,16 +96,15 @@ public class GrepPasteIntegrationTest {
         assertEquals(expectedOutput, stdOut.toString());
     }
 
-    // TODO: Investigate Paste
     @Test
-    void testGrepPasteParseAndEvaluate_pasteOutputOfGrepNoSuchFile_shouldReturnCorrectOutput() throws Exception {
+    void testGrepPasteParseAndEvaluate_pasteOutputOfGrepNoSuchFile_shouldReturnNoSuchFileOrDirectory() throws Exception {
         String commandString = String.format("paste \"`grep \"file4.txt\" %s`\"", FILE1_PATH);
         shell.parseAndEvaluate(commandString, stdOut);
         assertEquals("paste: '': No such file or directory", stdOut.toString());
     }
 
     @Test
-    void testGrepPasteParseAndEvaluate_pasteOutputOfGrepNonExistent_shouldReturnCorrectOutput() {
+    void testGrepPasteParseAndEvaluate_pasteOutputOfGrepNonExistent_shouldThrowPasteException() {
         String commandString = String.format("paste \"`grep \"nonexistent.txt\" %s`\"", FILE1_PATH);
         assertThrows(PasteException.class, () -> shell.parseAndEvaluate(commandString, stdOut));
     }

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Command;
 import sg.edu.nus.comp.cs4218.Environment;
+import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.impl.util.ApplicationRunner;
 import sg.edu.nus.comp.cs4218.impl.util.CommandBuilder;
 
@@ -54,7 +55,7 @@ class CommandSubstitutionTest {
     }
 
     @Test
-    void testCommandSubstitutionParseCommand_backSingleQuote_testPassed() throws Exception {
+    void testCommandSubstitutionParseCommand_backSingleQuote_shouldReturnCorrectOutput() throws Exception {
         String inputString = "echo `echo 'quote is interpreted as special character'`";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -64,7 +65,7 @@ class CommandSubstitutionTest {
     }
 
     @Test
-    void testCommandSubstitutionParseCommand_backDoubleQuote_testPassed() throws Exception {
+    void testCommandSubstitutionParseCommand_backDoubleQuote_shouldReturnCorrectOutput() throws Exception {
         String inputString = "echo `echo \"quote is interpreted as special character\"`";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -74,7 +75,7 @@ class CommandSubstitutionTest {
     }
 
     @Test
-    void testCommandSubstitutionParseCommand_backDoubleSingleQuote_testPassed() throws Exception {
+    void testCommandSubstitutionParseCommand_backDoubleSingleQuote_shouldReturnCorrectOutput() throws Exception {
         String inputString = "echo `echo \"'quote is not interpreted as special character'\"`";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -84,7 +85,7 @@ class CommandSubstitutionTest {
     }
 
     @Test
-    void testCommandSubstitutionParseCommand_backSingleDoubleQuote_testPassed() throws Exception {
+    void testCommandSubstitutionParseCommand_backSingleDoubleQuote_shouldReturnCorrectOutput() throws Exception {
         String inputString = "echo `echo '\"quote is not interpreted as special character\"'`";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -94,7 +95,7 @@ class CommandSubstitutionTest {
     }
 
     @Test
-    void testCommandSubstitutionParseCommand_doubleBackSingleQuote_testPassed() throws Exception {
+    void testCommandSubstitutionParseCommand_doubleBackSingleQuote_shouldReturnCorrectOutput() throws Exception {
         String inputString = "echo \"`echo 'quote is interpreted as special character'`\"";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -104,7 +105,7 @@ class CommandSubstitutionTest {
     }
 
     @Test
-    void testCommandSubstitutionParseCommand_doubleSingleBackQuote_testPassed() throws Exception {
+    void testCommandSubstitutionParseCommand_doubleSingleBackQuote_shouldReturnCorrectOutput() throws Exception {
         String inputString = "echo \"'`echo quote`'\"";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -114,7 +115,7 @@ class CommandSubstitutionTest {
     }
 
     @Test
-    void testCommandSubstitutionParseCommand_singleBackDoubleQuote_testPassed() throws Exception {
+    void testCommandSubstitutionParseCommand_singleBackDoubleQuote_shouldReturnCorrectOutput() throws Exception {
         String inputString = "echo '`\"echo quote\"`'";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -124,7 +125,7 @@ class CommandSubstitutionTest {
     }
 
     @Test
-    void testCommandSubstitutionParseCommand_singleDoubleBackQuote_testPassed() throws Exception {
+    void testCommandSubstitutionParseCommand_singleDoubleBackQuote_shouldReturnCorrectOutput() throws Exception {
         String inputString = "echo '\"`echo quote`\"'";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -135,7 +136,7 @@ class CommandSubstitutionTest {
 
 
     @Test
-    void testCommandSubstitutionParseCommand_echoOnRealSubstitutable_testPassed() throws Exception {
+    void testCommandSubstitutionParseCommand_echoOnRealSubstitutable_shouldReturnCorrectOutput() throws Exception {
         String inputString = "echo `ls -X .`";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -145,8 +146,8 @@ class CommandSubstitutionTest {
     }
 
     @Test
-    void testCommandSubstitutionParseCommand_cutFromValidWcOutputAsArgument_shouldReturnCorrectOutput() throws Exception {
-        String commandString = String.format("cut -b 2,4 `wc %s | cut -b 26-34`", FILE1_NAME);
+    void testCommandSubstitutionParseCommand_cutFromValidEchoOutputAsArgument_shouldReturnCorrectCutOutput() throws Exception {
+        String commandString = String.format("cut -b 2,4 `echo \"%s\"`", FILE1_NAME);
         Command command = CommandBuilder.parseCommand(commandString, new ApplicationRunner());
         command.evaluate(System.in, System.out);
         String expectedOutput = "11" + STRING_NEWLINE + "12" + STRING_NEWLINE + "21" + STRING_NEWLINE + "22" + STRING_NEWLINE;
@@ -154,7 +155,7 @@ class CommandSubstitutionTest {
     }
 
     @Test
-    void testCommandSubstitutionParseCommand_catOnTwoBackQuotes_testPassed() throws Exception {
+    void testCommandSubstitutionParseCommand_catOnTwoBackQuotes_shouldReturnCorrectCatOutput() throws Exception {
         String inputString = "cat `echo \"file1.xml\"` `echo file2.xml`";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -164,7 +165,7 @@ class CommandSubstitutionTest {
     }
 
     @Test
-    void testCommandSubstitutionParseCommand_backBackSingleQuote_testPassed() throws Exception {
+    void testCommandSubstitutionParseCommand_backBackSingleQuote_shouldReturnCorrectOutput() throws Exception {
         String inputString = "echo `echo `echo 'quote'``";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -174,7 +175,7 @@ class CommandSubstitutionTest {
     }
 
     @Test
-    void testCommandSubstitutionParseCommand_doubleBackBackQuote_testPassed() throws Exception {
+    void testCommandSubstitutionParseCommand_doubleBackBackQuote_shouldReturnCorrectOutput() throws Exception {
         String inputString = "echo \"`echo `echo quote``\"";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -184,7 +185,7 @@ class CommandSubstitutionTest {
     }
 
     @Test
-    void testCommandSubstitutionParseCommand_singleBackBackQuote_testPassed() throws Exception {
+    void testCommandSubstitutionParseCommand_singleBackBackQuote_shouldReturnCorrectOutput() throws Exception {
         String inputString = "echo '`echo `echo quote``'";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
@@ -194,12 +195,20 @@ class CommandSubstitutionTest {
     }
 
     @Test
-    void testCommandSubstitutionParseCommand_singleBackSingleBackQuote_testPassed() throws Exception {
+    void testCommandSubstitutionParseCommand_singleBackSingleBackQuote_shouldReturnCorrectOutput() throws Exception {
         String inputString = "echo '`echo '`echo quote`'`'";
         Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
 
         command.evaluate(System.in, System.out);
         final String standardOutput = myOut.toString();
         assertEquals("`echo quote`" + STRING_NEWLINE, standardOutput);
+    }
+
+
+    @Test
+    void testCommandSubstitutionParseCommand_singlseBackSingleBackQuote_shouldThrowShellExceptionInvalidSyntax() throws Exception {
+        String inputString = "echo `echo \"`echo quote`\"`";
+        Command command = CommandBuilder.parseCommand(inputString, new ApplicationRunner());
+        assertThrows(ShellException.class, () -> command.evaluate(System.in, System.out));
     }
 }
