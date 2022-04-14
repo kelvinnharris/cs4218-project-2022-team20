@@ -234,7 +234,7 @@ public class UniqApplicationTest {
         uniqApplication.run(args, stdin, outputStream);
         String actual = Files.readString(Paths.get(FILE_NAME2));
         assertEquals(expected, actual);
-        assertEquals(STRING_NEWLINE, outputStream.toString());
+        assertEquals("", outputStream.toString());
     }
 
     @Test
@@ -249,7 +249,7 @@ public class UniqApplicationTest {
         uniqApplication.run(args, stdin, outputStream);
         String actual = Files.readString(Paths.get(FILE_NAME3));
         assertEquals(expected, actual);
-        assertEquals(STRING_NEWLINE, outputStream.toString());
+        assertEquals("", outputStream.toString());
     }
 
     @Test

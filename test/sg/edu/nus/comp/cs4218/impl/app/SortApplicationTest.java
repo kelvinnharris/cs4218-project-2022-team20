@@ -55,42 +55,42 @@ class SortApplicationTest {
     @Test
     void sortFromFiles_firstWordNumberNotReverseOrderNotCaseIndependent_returnsLines() throws Exception {
         String output = sortApplication.sortFromFiles(true, false, false, path);
-        assertEquals("1" + STRING_NEWLINE + "2" + STRING_NEWLINE + "10", output);
+        assertEquals("1" + STRING_NEWLINE + "2" + STRING_NEWLINE + "10" + STRING_NEWLINE, output);
 
     }
 
     @Test
     void sortFromFiles_notFirstWordNumberReverseOrderNotCaseIndependent_returnsLines() throws Exception {
         String output = sortApplication.sortFromFiles(false, true, false, path);
-        assertEquals("2" + STRING_NEWLINE + "10" + STRING_NEWLINE + "1", output);
+        assertEquals("2" + STRING_NEWLINE + "10" + STRING_NEWLINE + "1" + STRING_NEWLINE, output);
 
     }
 
     @Test
     void sortFromFiles_notFirstWordNumberNotReverseOrderCaseIndependent_returnsLines() throws Exception {
         String output = sortApplication.sortFromFiles(false, false, true, path);
-        assertEquals("1" + STRING_NEWLINE + "10" + STRING_NEWLINE + "2", output);
+        assertEquals("1" + STRING_NEWLINE + "10" + STRING_NEWLINE + "2" + STRING_NEWLINE, output);
 
     }
 
     @Test
     void sortFromFiles_firstWordNumberReverseOrderCaseIndependent_returnsLines() throws Exception {
         String output = sortApplication.sortFromFiles(true, true, true, path);
-        assertEquals("10" + STRING_NEWLINE + "2" + STRING_NEWLINE + "1", output);
+        assertEquals("10" + STRING_NEWLINE + "2" + STRING_NEWLINE + "1" + STRING_NEWLINE, output);
 
     }
 
     @Test
     void sortFromFiles_notFirstWordNumberNotReverseOrderNotCaseIndependent_returnsLines() throws Exception {
         String output = sortApplication.sortFromFiles(false, false, false, path);
-        assertEquals("1" + STRING_NEWLINE + "10" + STRING_NEWLINE + "2", output);
+        assertEquals("1" + STRING_NEWLINE + "10" + STRING_NEWLINE + "2" + STRING_NEWLINE, output);
 
     }
 
     @Test
     void sortFromFiles_firstWordNumberReverseOrderCaseIndependentMultipleFiles_returnsLines() throws Exception {
         String output = sortApplication.sortFromFiles(true, true, true, new String[]{path, path2});
-        assertEquals("AB" + STRING_NEWLINE + "ab" + STRING_NEWLINE + "A" + STRING_NEWLINE + "a" + STRING_NEWLINE + "10" + STRING_NEWLINE + "2" + STRING_NEWLINE + "1", output);
+        assertEquals("AB" + STRING_NEWLINE + "ab" + STRING_NEWLINE + "A" + STRING_NEWLINE + "a" + STRING_NEWLINE + "10" + STRING_NEWLINE + "2" + STRING_NEWLINE + "1" + STRING_NEWLINE, output);
 
     }
 
@@ -99,7 +99,7 @@ class SortApplicationTest {
         String inputString = "10" + STRING_NEWLINE + "1" + STRING_NEWLINE + "2";
         InputStream input = new ByteArrayInputStream(inputString.getBytes());
         String output = sortApplication.sortFromStdin(true, false, false, input);
-        assertEquals("1" + STRING_NEWLINE + "2" + STRING_NEWLINE + "10", output);
+        assertEquals("1" + STRING_NEWLINE + "2" + STRING_NEWLINE + "10" + STRING_NEWLINE, output);
     }
 
     @Test
@@ -107,7 +107,7 @@ class SortApplicationTest {
         String inputString = "10" + STRING_NEWLINE + "1" + STRING_NEWLINE + "2";
         InputStream input = new ByteArrayInputStream(inputString.getBytes());
         String output = sortApplication.sortFromStdin(false, true, false, input);
-        assertEquals("2" + STRING_NEWLINE + "10" + STRING_NEWLINE + "1", output);
+        assertEquals("2" + STRING_NEWLINE + "10" + STRING_NEWLINE + "1" + STRING_NEWLINE, output);
     }
 
     @Test
@@ -115,7 +115,7 @@ class SortApplicationTest {
         String inputString = "10" + STRING_NEWLINE + "1" + STRING_NEWLINE + "2";
         InputStream input = new ByteArrayInputStream(inputString.getBytes());
         String output = sortApplication.sortFromStdin(false, false, true, input);
-        assertEquals("1" + STRING_NEWLINE + "10" + STRING_NEWLINE + "2", output);
+        assertEquals("1" + STRING_NEWLINE + "10" + STRING_NEWLINE + "2" + STRING_NEWLINE, output);
     }
 
     @Test
@@ -123,7 +123,7 @@ class SortApplicationTest {
         String inputString = "10" + STRING_NEWLINE + "1" + STRING_NEWLINE + "2";
         InputStream input = new ByteArrayInputStream(inputString.getBytes());
         String output = sortApplication.sortFromStdin(true, true, true, input);
-        assertEquals("10" + STRING_NEWLINE + "2" + STRING_NEWLINE + "1", output);
+        assertEquals("10" + STRING_NEWLINE + "2" + STRING_NEWLINE + "1" + STRING_NEWLINE, output);
     }
 
     @Test
@@ -131,7 +131,7 @@ class SortApplicationTest {
         String inputString = "10" + STRING_NEWLINE + "1" + STRING_NEWLINE + "2";
         InputStream input = new ByteArrayInputStream(inputString.getBytes());
         String output = sortApplication.sortFromStdin(false, false, false, input);
-        assertEquals("1" + STRING_NEWLINE + "10" + STRING_NEWLINE + "2", output);
+        assertEquals("1" + STRING_NEWLINE + "10" + STRING_NEWLINE + "2" + STRING_NEWLINE, output);
     }
 
     @Test
@@ -139,7 +139,7 @@ class SortApplicationTest {
         String inputString = "ab" + STRING_NEWLINE + "A" + STRING_NEWLINE + "a" + STRING_NEWLINE + "AB";
         InputStream input = new ByteArrayInputStream(inputString.getBytes());
         String output = sortApplication.sortFromStdin(false, false, true, input);
-        assertEquals("A" + STRING_NEWLINE + "a" + STRING_NEWLINE + "ab" + STRING_NEWLINE + "AB", output);
+        assertEquals("A" + STRING_NEWLINE + "a" + STRING_NEWLINE + "ab" + STRING_NEWLINE + "AB" + STRING_NEWLINE, output);
 
     }
 
@@ -148,7 +148,7 @@ class SortApplicationTest {
         String inputString = "ab" + STRING_NEWLINE + "A" + STRING_NEWLINE + "a" + STRING_NEWLINE + "AB";
         InputStream input = new ByteArrayInputStream(inputString.getBytes());
         String output = sortApplication.sortFromStdin(false, false, false, input);
-        assertEquals("A" + STRING_NEWLINE + "AB" + STRING_NEWLINE + "a" + STRING_NEWLINE + "ab", output);
+        assertEquals("A" + STRING_NEWLINE + "AB" + STRING_NEWLINE + "a" + STRING_NEWLINE + "ab" + STRING_NEWLINE, output);
     }
 
     @Test
