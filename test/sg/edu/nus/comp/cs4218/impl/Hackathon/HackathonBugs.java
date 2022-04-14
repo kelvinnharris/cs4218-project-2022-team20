@@ -1,8 +1,5 @@
 package sg.edu.nus.comp.cs4218.impl.Hackathon;
 
-// P: 6, 7, 15, 43
-// S: 11, 12, 13, 14, 15, 16
-
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,6 +30,7 @@ public class HackathonBugs {
     private static final String FILE_4 = "file4.txt";
     private static final String FILE_5 = "file5.txt";
     private static final String FILE_6 = "file6.txt";
+    private static final String FILE_7 = "file7.txt";
 
     public static final String[] LINES = {"Alice", "Alice"};
     public static final String[] LINES4 = {"", ""};
@@ -43,13 +41,8 @@ public class HackathonBugs {
     private static ByteArrayOutputStream stdOut;
 
     @BeforeEach
-    void setUpEach() {
+    void setUpEach() throws IOException {
         stdOut = new ByteArrayOutputStream();
-    }
-
-    @BeforeAll
-    static void setUp() throws IOException {
-        shell = new ShellImpl();
 
         Environment.currentDirectory = ROOT_PATH;
         deleteDir(new File(TEST_PATH));
@@ -64,6 +57,11 @@ public class HackathonBugs {
         Environment.currentDirectory = TEST_PATH;
     }
 
+    @BeforeAll
+    static void setUp() {
+        shell = new ShellImpl();
+    }
+
     @AfterAll
     static void tearDown() {
         Environment.currentDirectory = ROOT_PATH;
@@ -71,7 +69,7 @@ public class HackathonBugs {
     }
 
     @Test
-    void testHackathonParseAndEvaluate_uniqOutputFileNoLineBreak_shouldReturnNoLineBreakInStdOut() {
+    void testUniqParseAndEvaluateFromP6_uniqOutputFileNoLineBreak_shouldReturnNoLineBreakInStdOut() {
         String commandString = "uniq " + FILE_1 + CHAR_SPACE + FILE_2;
         assertDoesNotThrow(() -> shell.parseAndEvaluate(commandString, stdOut));
         File outputFile = new File(TEST_PATH + FILE_2);
@@ -80,7 +78,7 @@ public class HackathonBugs {
     }
 
     @Test
-    void testHackathonParseAndEvaluate_uniqOutputFileRelativePath_shouldCreateOutputFile() {
+    void testCdUniqParseAndEvaluateFromP7_uniqOutputFileRelativePath_shouldCreateOutputFile() {
         String commandString = "cd " + FOLDER_1 + CHAR_SEMICOLON + " uniq " + FILE_2 + CHAR_SPACE + FILE_3;
         assertDoesNotThrow(() -> shell.parseAndEvaluate(commandString, stdOut));
         File outputFile = new File(TEST_PATH + FOLDER_1 + CHAR_FILE_SEP + FILE_3);
@@ -88,27 +86,27 @@ public class HackathonBugs {
     }
 
     @Test
-    void testHackathonParseAndEvaluate_cutWithoutExplicitEndIndex_shouldCutUntilEnd() {
+    void testCutParseAndEvaluateFromP15_cutWithoutExplicitEndIndex_shouldCutUntilEnd() {
         String commandString = "cut -b 1- " + FILE_1;
         assertDoesNotThrow(() -> shell.parseAndEvaluate(commandString, stdOut));
         assertEquals("Alice" + STRING_NEWLINE + "Alice" + STRING_NEWLINE, stdOut.toString());
     }
 
     @Test
-    void testHackathonParseAndEvaluate_uniqThreeOrMoreArgs_shouldThrowError() {
+    void testUniqParseAndEvaluateFromP43_uniqThreeOrMoreArgs_shouldThrowError() {
         String commandString = "uniq - - - -";
         assertThrows(UniqException.class, () -> shell.parseAndEvaluate(commandString, stdOut));
     }
 
     @Test
-    void testHackathonParseAndEvaluate_sortFromFileWithNewline_shouldReturnNewline() {
+    void testSortParseAndEvaluateFromS11_sortFromFileWithNewline_shouldReturnNewline() {
         String commandString = "sort " + FILE_4;
         assertDoesNotThrow(() -> shell.parseAndEvaluate(commandString, stdOut));
         assertEquals(STRING_NEWLINE + STRING_NEWLINE, stdOut.toString());
     }
 
     @Test
-    void testHackathonParseAndEvaluate_rmInvalidFileThenValidFile_shouldRemoveValidFile() throws Exception {
+    void testRmParseAndEvaluateFromS12_rmInvalidFileThenValidFile_shouldRemoveValidFile() throws Exception {
         String commandString = "rm " + FILE_5 + CHAR_SPACE + FILE_6;
         shell.parseAndEvaluate(commandString, stdOut);
         File outputFile = new File(TEST_PATH + FILE_6);
@@ -116,7 +114,30 @@ public class HackathonBugs {
     }
 
     @Test
-    void testHackathonParseAndEvaluate_uniqOutputFile_shouldReturnNoExtraNewLine() throws IOException {
+    void testUniqParseAndEvaluateFromS13_uniqOutputFileNoLineBreak_shouldReturnNoLineBreakInStdOut() {
+        String commandString = "uniq " + FILE_1 + CHAR_SPACE + FILE_7;
+        assertDoesNotThrow(() -> shell.parseAndEvaluate(commandString, stdOut));
+        File outputFile = new File(TEST_PATH + FILE_7);
+        assertTrue(outputFile.exists());
+        assertEquals("", stdOut.toString());
+    }
+
+    @Test
+    void testCdUniqParseAndEvaluateFromS14_uniqOutputFileRelativePath_shouldCreateOutputFile() {
+        String commandString = "cd " + FOLDER_1 + CHAR_SEMICOLON + " uniq " + FILE_2 + CHAR_SPACE + FILE_4;
+        assertDoesNotThrow(() -> shell.parseAndEvaluate(commandString, stdOut));
+        File outputFile = new File(TEST_PATH + FOLDER_1 + CHAR_FILE_SEP + FILE_4);
+        assertTrue(outputFile.exists());
+    }
+
+    @Test
+    void testUniqParseAndEvaluateFromS15_uniqThreeOrMoreArgs_shouldThrowError() {
+        String commandString = "uniq - - - -";
+        assertThrows(UniqException.class, () -> shell.parseAndEvaluate(commandString, stdOut));
+    }
+
+    @Test
+    void testUniqParseAndEvaluateFromS16_uniqOutputFile_shouldReturnNoExtraNewLine() throws IOException {
         String commandString = "uniq " + FILE_1 + CHAR_SPACE + FILE_3;
         assertDoesNotThrow(() -> shell.parseAndEvaluate(commandString, stdOut));
         File outputFile = new File(TEST_PATH + FILE_3);
