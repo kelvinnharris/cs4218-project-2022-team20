@@ -72,8 +72,10 @@ public class CpApplication implements CpInterface { //NOPMD - suppressed GodClas
             throw new CpException(String.format("cannot stat '%s': No such file or directory", srcFiles[0]));
         }
 
+        Path srcFileAbsPath = IOUtils.resolveFilePath(srcFiles[0]);
+
         // create new file/dir and copy
-        if (Files.isRegularFile(Paths.get(srcFiles[0]))) {
+        if (srcFileAbsPath.toFile().isFile()) {
             try {
                 Files.createFile(destAbsPath);
                 cpSrcFileToDestFile(isRecursive, srcFiles[0], destFile);
@@ -83,8 +85,6 @@ public class CpApplication implements CpInterface { //NOPMD - suppressed GodClas
         } else {
             try {
                 Files.createDirectories(destAbsPath);
-                Path srcFileAbsPath = IOUtils.resolveFilePath(srcFiles[0]);
-
                 String[] listOfFiles = Arrays.stream(srcFileAbsPath.toFile().listFiles()).map(File::toString).toArray(String[]::new);
                 cpFilesToFolder(isRecursive, destFile, listOfFiles);
             } catch (IOException ioe) {

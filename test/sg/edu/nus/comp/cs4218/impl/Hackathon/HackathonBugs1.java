@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Command;
 import sg.edu.nus.comp.cs4218.Environment;
+import sg.edu.nus.comp.cs4218.exception.CpException;
 import sg.edu.nus.comp.cs4218.exception.MvException;
 import sg.edu.nus.comp.cs4218.impl.util.ApplicationRunner;
 import sg.edu.nus.comp.cs4218.impl.util.CommandBuilder;
@@ -208,14 +209,30 @@ public class HackathonBugs1 {
     }
 
     @Test
-    void evaluate_MvWithTooManyArguments_shouldThrowError() throws Exception {
-        String commandString = String.format("mv %s %s %s", FILE_NAMES[0], FILE_NAMES[1], FILE_NAMES[2]);
+    void evaluateFromP11_CpSrcFileWithNoDestFile_shouldCpToNewFile() throws Exception {
+        String newFileName = "file";
+        Path newFilePath = Paths.get(testRoot.toString(), newFileName);
+        String commandString = String.format("cp %s %s", FILE_NAMES[2], newFileName);
+        String expected = "";
+        String expectedContent = Files.readString(filePaths[2]);
         command = CommandBuilder.parseCommand(commandString, appCreator);
-        assertThrows(MvException.class, () -> command.evaluate(istream, ostream));
+
+        assertFalse(newFilePath.toFile().exists());
+        Path fileName2 = Paths.get(FILE_NAMES[2]);
+
+        command.evaluate(istream, ostream);
+
+        assertTrue(newFilePath.toFile().exists());
+
+        String actual = ostream.toString();
+        String actualContent = Files.readString(newFilePath);
+
+        assertEquals(expectedContent, actualContent);
+        assertEquals(expected, actual);
     }
 
     @Test
-    void evaluate_CpAbsoluteSrcDirWithNoDestDir_Success() throws Exception {
+    void evaluateFromP13AndS19_CpAbsoluteSrcDirWithNoDestDir_shouldCpToNewDir() throws Exception {
         String newDirName = "dir";
         Path newDirPath = Paths.get(testRoot.toString(), newDirName);
         Path newFilePath = Paths.get(testRoot.toString(), newDirName, FILE_NAMES[5]);
@@ -240,7 +257,7 @@ public class HackathonBugs1 {
     }
 
     @Test
-    void evaluate_CpSrcDirWithNoDestDir_Success() throws Exception {
+    void evaluateFromP13AndS19_CpSrcDirWithNoDestDir_shouldCpToNewDir() throws Exception {
         String newDirName = "dir";
         Path newDirPath = Paths.get(testRoot.toString(), newDirName);
         Path newFilePath = Paths.get(testRoot.toString(), newDirName, FILE_NAMES[5]);
@@ -262,5 +279,25 @@ public class HackathonBugs1 {
 
         assertEquals(expectedContent, actualContent);
         assertEquals(expected, actual);
+    }
+
+    @Test
+    void evaluateFromS10_MvWithTooManyArguments_shouldThrowError() throws Exception {
+        String commandString = String.format("mv %s %s %s", FILE_NAMES[0], FILE_NAMES[1], FILE_NAMES[2]);
+        command = CommandBuilder.parseCommand(commandString, appCreator);
+        assertThrows(MvException.class, () -> command.evaluate(istream, ostream));
+    }
+
+    @Test
+    void evaluateFromS20_CpNoSrcFileWithNoDestFile_shouldThrowError() throws Exception {
+        String newFileName = "file";
+        Path newFilePath = Paths.get(testRoot.toString(), newFileName);
+        String commandString = String.format("cp %s %s", "nonExistent.txt", newFileName);
+        String expected = "";
+        String expectedContent = Files.readString(filePaths[2]);
+        command = CommandBuilder.parseCommand(commandString, appCreator);
+
+        assertFalse(newFilePath.toFile().exists());
+        assertThrows(CpException.class, () -> command.evaluate(istream, ostream));
     }
 }
