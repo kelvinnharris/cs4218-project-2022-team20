@@ -61,7 +61,7 @@ public class MvApplication implements MvInterface { //NOPMD - suppressed GodClas
 
         } else {
             if (srcFiles.length > 1) {
-                throw new MvException(ERR_TOO_MANY_ARGS);
+                throw new MvException(String.format("target '%s' is not a directory" , destFile));
             }
             mvSrcFileToDestFile(isOverwrite, srcFiles[0], destFile);
         }
