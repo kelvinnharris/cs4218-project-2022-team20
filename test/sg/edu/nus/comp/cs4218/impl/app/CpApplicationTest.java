@@ -260,8 +260,8 @@ public class CpApplicationTest {
         cpApplication.run(new String[]{"-r", SRC_FOLDER2_PATH, NEW_FOLDER_PATH}, System.in, System.out);
         assertTrue(Files.exists(Paths.get(SRC_FOLDER2_PATH)));
         assertTrue(Files.exists(Paths.get(NEW_FOLDER_PATH)));
-        assertTrue(Files.exists(Paths.get(NEW_FOLDER_PATH, SRC_FOLDER2_NAME)));
-        assertTrue(Files.exists(Paths.get(NEW_FOLDER_PATH, SRC_FOLDER2_NAME, FILE3_NAME)));
+        assertTrue(Files.exists(Paths.get(NEW_FOLDER_PATH)));
+        assertTrue(Files.exists(Paths.get(NEW_FOLDER_PATH, FILE3_NAME)));
         deleteDir(Paths.get(NEW_FOLDER_PATH).toFile());
     }
 }

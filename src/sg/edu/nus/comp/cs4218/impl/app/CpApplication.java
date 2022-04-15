@@ -1,5 +1,6 @@
 package sg.edu.nus.comp.cs4218.impl.app;
 
+import org.mockito.internal.util.io.IOUtil;
 import sg.edu.nus.comp.cs4218.app.CpInterface;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.CpException;
@@ -67,6 +68,9 @@ public class CpApplication implements CpInterface { //NOPMD - suppressed GodClas
         if (srcFiles.length > 1) {
             throw new CpException(ERR_TOO_MANY_ARGS);
         }
+        if (!Files.exists(IOUtils.resolveFilePath(srcFiles[0])))  {
+            throw new CpException(String.format("cannot stat '%s': No such file or directory", srcFiles[0]));
+        }
 
         // create new file/dir and copy
         if (Files.isRegularFile(Paths.get(srcFiles[0]))) {
@@ -76,10 +80,13 @@ public class CpApplication implements CpInterface { //NOPMD - suppressed GodClas
             } catch (IOException ioe) {
                 throw new CpException(ioe.getMessage()); //NOPMD - suppressed PreserveStackTrace - We expect Cp to output custom error message
             }
-        } else if (Files.isDirectory(Paths.get(srcFiles[0]))) {
+        } else {
             try {
                 Files.createDirectories(destAbsPath);
-                cpFilesToFolder(isRecursive, destFile, srcFiles);
+                Path srcFileAbsPath = IOUtils.resolveFilePath(srcFiles[0]);
+
+                String[] listOfFiles = Arrays.stream(srcFileAbsPath.toFile().listFiles()).map(File::toString).toArray(String[]::new);
+                cpFilesToFolder(isRecursive, destFile, listOfFiles);
             } catch (IOException ioe) {
                 throw new CpException(ioe.getMessage()); //NOPMD - suppressed PreserveStackTrace - We expect Cp to output custom error message
             }
