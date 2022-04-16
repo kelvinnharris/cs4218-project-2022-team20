@@ -4,10 +4,14 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 import sg.edu.nus.comp.cs4218.Command;
 import sg.edu.nus.comp.cs4218.Environment;
+import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.CpException;
 import sg.edu.nus.comp.cs4218.exception.MvException;
+import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.impl.util.ApplicationRunner;
 import sg.edu.nus.comp.cs4218.impl.util.CommandBuilder;
 
@@ -18,10 +22,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 public class HackathonBugs1 {
 
@@ -87,6 +94,7 @@ public class HackathonBugs1 {
     private static Path testRoot;
     private static Path[] directoryPaths;
     private static Path[] filePaths;
+    private static List<String> args;
 
     private ApplicationRunner appCreator;
     private Command command;
@@ -95,6 +103,7 @@ public class HackathonBugs1 {
 
     @BeforeAll
     static void setUpBeforeAll() {
+        args = new ArrayList<>();
         testRoot = Paths.get(INITIAL_DIR, TEMP);
         directoryPaths = new Path[]{
                 Paths.get(testRoot.toString(), DIRECTORY_NAMES[0]),
@@ -218,7 +227,6 @@ public class HackathonBugs1 {
         command = CommandBuilder.parseCommand(commandString, appCreator);
 
         assertFalse(newFilePath.toFile().exists());
-        Path fileName2 = Paths.get(FILE_NAMES[2]);
 
         command.evaluate(istream, ostream);
 
@@ -257,6 +265,75 @@ public class HackathonBugs1 {
     }
 
     @Test
+    @DisabledOnOs(OS.WINDOWS)
+    void evaluateFromP36_MvNestedDirToParentDIr_ThrowsMvException() throws Exception {
+        String commandString = String.format("mv %s %s",
+                DIRECTORY_NAMES[0] + File.separator + DIRECTORY_NAMES[3], DIRECTORY_NAMES[0]);
+        String expected = "mv: '" + DIRECTORY_NAMES[0] + File.separator + DIRECTORY_NAMES[3] + "' and '" +
+                DIRECTORY_NAMES[0] + File.separator + DIRECTORY_NAMES[3] + "' are the same file";
+        command = CommandBuilder.parseCommand(commandString, appCreator);
+
+        Throwable thrown = assertThrows(MvException.class, () ->
+                command.evaluate(istream, ostream));
+
+        String actual = thrown.getMessage();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void evaluateFromP37_GrepCommandWithTeeCommandInBackQuotes_Success() throws IOException, AbstractApplicationException, ShellException {
+        String commandString = "grep `tee " + filePaths[4] + " < " + filePaths[0] + "`";
+        command = CommandBuilder.parseCommand(commandString, appCreator);
+        assertEquals(FILE_CONTENTS[0] + STRING_NEWLINE, Files.readString(filePaths[0]));
+    }
+
+    @Test
+    void evaluateFromS8_LsGlobbingWithSlash_shouldListAllFiles() throws Exception {
+        String commandString = "ls */";
+        String expectedContent = "byte-file.a\n" +
+                "dir-1:\n" +
+                "dir-1-1\n" +
+                "dir-1-2\n" +
+                "file-1-1.c\n" +
+                "file-1-2.d\n" +
+                "\n" +
+                "dir-2:\n" +
+                "file-2-1.e\n" +
+                "\n" +
+                "dir-3:\n" +
+                "\n" +
+                "file-1.a\n" +
+                "file-2.b\n" +
+                "file-3.a\n";
+        command = CommandBuilder.parseCommand(commandString, appCreator);
+        command.evaluate(istream, ostream);
+        assertEquals(expectedContent, ostream.toString());
+    }
+
+    @Test
+    void evaluateFromS10_MvWithTooManyArguments_shouldThrowError() throws Exception {
+        String commandString = String.format("mv %s %s %s", FILE_NAMES[0], FILE_NAMES[1], FILE_NAMES[2]);
+        command = CommandBuilder.parseCommand(commandString, appCreator);
+        assertThrows(MvException.class, () -> command.evaluate(istream, ostream));
+    }
+
+    @Test
+    void evaluateFromS17_CpAfterCd_shouldCpSuccess() throws Exception {
+        String commandString = String.format("cd %s; cp -r %s %s", DIRECTORY_NAMES[0], DIRECTORY_NAMES[3], DIRECTORY_NAMES[4]);
+        Path newDirPath = Paths.get(testRoot.toString(), DIRECTORY_NAMES[0], DIRECTORY_NAMES[3], DIRECTORY_NAMES[3]);
+        command = CommandBuilder.parseCommand(commandString, appCreator);
+        command.evaluate(istream, ostream);
+        assertTrue(newDirPath.toFile().exists());
+    }
+
+    @Test
+    void evaluateFromS18_CpMultipleSrcFilesWithNoDestDir_shouldThrowException() throws Exception {
+        String commandString = String.format("cp %s %s %s", FILE_NAMES[0], FILE_NAMES[1], "newDir1");
+        command = CommandBuilder.parseCommand(commandString, appCreator);
+        assertThrows(CpException.class, () -> command.evaluate(istream, ostream));
+    }
+
+    @Test
     void evaluateFromS19_CpSrcDirWithNoDestDir_shouldCpToNewDir() throws Exception {
         String newDirName = "dir";
         Path newDirPath = Paths.get(testRoot.toString(), newDirName);
@@ -282,13 +359,6 @@ public class HackathonBugs1 {
     }
 
     @Test
-    void evaluateFromS10_MvWithTooManyArguments_shouldThrowError() throws Exception {
-        String commandString = String.format("mv %s %s %s", FILE_NAMES[0], FILE_NAMES[1], FILE_NAMES[2]);
-        command = CommandBuilder.parseCommand(commandString, appCreator);
-        assertThrows(MvException.class, () -> command.evaluate(istream, ostream));
-    }
-
-    @Test
     void evaluateFromS20_CpNoSrcFileWithNoDestFile_shouldThrowError() throws Exception {
         String newFileName = "file";
         Path newFilePath = Paths.get(testRoot.toString(), newFileName);
@@ -299,5 +369,13 @@ public class HackathonBugs1 {
 
         assertFalse(newFilePath.toFile().exists());
         assertThrows(CpException.class, () -> command.evaluate(istream, ostream));
+    }
+
+    @Test
+    void evaluateFromS21_CpMultipleSrcFilesWithInvalidFiles_shouldCopyValidFiles() throws Exception {
+        String commandString = String.format("cp %s %s %s", "invalidFile", FILE_NAMES[1], DIRECTORY_NAMES[0]);
+        Path newFilePath = Paths.get(testRoot.toString(), DIRECTORY_NAMES[0], FILE_NAMES[1]);
+        command = CommandBuilder.parseCommand(commandString, appCreator);
+        assertTrue(newFilePath.toFile().exists());
     }
 }
