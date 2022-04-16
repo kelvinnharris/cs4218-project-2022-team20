@@ -232,7 +232,7 @@ public class HackathonBugs1 {
     }
 
     @Test
-    void evaluateFromP13AndS19_CpAbsoluteSrcDirWithNoDestDir_shouldCpToNewDir() throws Exception {
+    void evaluateFromP13_CpAbsoluteSrcDirWithNoDestDir_shouldCpToNewDir() throws Exception {
         String newDirName = "dir";
         Path newDirPath = Paths.get(testRoot.toString(), newDirName);
         Path newFilePath = Paths.get(testRoot.toString(), newDirName, FILE_NAMES[5]);
@@ -257,7 +257,7 @@ public class HackathonBugs1 {
     }
 
     @Test
-    void evaluateFromP13AndS19_CpSrcDirWithNoDestDir_shouldCpToNewDir() throws Exception {
+    void evaluateFromS19_CpSrcDirWithNoDestDir_shouldCpToNewDir() throws Exception {
         String newDirName = "dir";
         Path newDirPath = Paths.get(testRoot.toString(), newDirName);
         Path newFilePath = Paths.get(testRoot.toString(), newDirName, FILE_NAMES[5]);
