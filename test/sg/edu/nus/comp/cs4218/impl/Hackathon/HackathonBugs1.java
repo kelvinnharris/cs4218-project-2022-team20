@@ -266,7 +266,7 @@ public class HackathonBugs1 {
 
     @Test
     @DisabledOnOs(OS.WINDOWS)
-    void evaluateFromP36_MvNestedDirToParentDIr_ThrowsMvException() throws Exception {
+    void evaluateFromP36_MvNestedDirToParentDir_ThrowsMvException() throws Exception {
         String commandString = String.format("mv %s %s",
                 DIRECTORY_NAMES[0] + File.separator + DIRECTORY_NAMES[3], DIRECTORY_NAMES[0]);
         String expected = "mv: '" + DIRECTORY_NAMES[0] + File.separator + DIRECTORY_NAMES[3] + "' and '" +
