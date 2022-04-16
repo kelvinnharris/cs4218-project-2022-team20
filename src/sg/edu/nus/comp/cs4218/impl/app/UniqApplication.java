@@ -32,6 +32,9 @@ public class UniqApplication implements UniqInterface {
         UniqArgsParser parser = new UniqArgsParser();
         try {
             parser.parse(args);
+            if (parser.getFiles().size() > 2) {
+                throw new UniqException("extra operand '" + parser.getFiles().get(2) + "'");
+            }
         } catch (InvalidArgsException e) {
             throw new UniqException(e.getMessage());//NOPMD - suppressed PreserveStackTrace - No reason to preserve stackTrace as reason is contained in message
         }
@@ -50,8 +53,8 @@ public class UniqApplication implements UniqInterface {
                 if (parser.getOutputFile() == null) {
                     stdout.write(output.toString().getBytes());
                 } else {
-                    stdout.write(STRING_NEWLINE.getBytes());
-                    Files.write(Path.of(parser.getOutputFile()), output.toString().getBytes());
+                    Path outputPath = IOUtils.resolveFilePath(parser.getOutputFile());
+                    Files.write(outputPath, output.toString().getBytes());
                 }
             }
         } catch (IOException e) {

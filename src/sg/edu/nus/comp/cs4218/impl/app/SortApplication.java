@@ -55,7 +55,6 @@ public class SortApplication implements SortInterface {
         try {
             if (!output.toString().isEmpty()) {
                 stdout.write(output.toString().getBytes());
-                stdout.write(STRING_NEWLINE.getBytes());
             }
         } catch (IOException e) {
             throw new SortException(ERR_WRITE_STREAM);//NOPMD - suppressed PreserveStackTrace - No reason to preserve stackTrace as reason is contained in message
@@ -102,7 +101,10 @@ public class SortApplication implements SortInterface {
             }
         }
         sortInputString(isFirstWordNumber, isReverseOrder, isCaseIndependent, lines);
-        return String.join(STRING_NEWLINE, lines);
+        if (lines.size() == 0) {
+            return "";
+        }
+        return String.join(STRING_NEWLINE, lines) + STRING_NEWLINE;
     }
 
     /**
@@ -122,7 +124,10 @@ public class SortApplication implements SortInterface {
         }
         List<String> lines = IOUtils.getLinesFromInputStream(stdin);
         sortInputString(isFirstWordNumber, isReverseOrder, isCaseIndependent, lines);
-        return String.join(STRING_NEWLINE, lines);
+        if (lines.size() == 0) {
+            return "";
+        }
+        return String.join(STRING_NEWLINE, lines) + STRING_NEWLINE;
     }
 
     /**
