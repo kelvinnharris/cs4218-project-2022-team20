@@ -35,7 +35,6 @@ public class HackathonBugs3 {
 
     @BeforeEach
     void setUpEach() {
-        // Instantiate here because every time there is a call command, a new instance of the application is created
         catApplication = new CatApplication();
         Environment.currentDirectory = ROOT_PATH;
     }
@@ -46,9 +45,16 @@ public class HackathonBugs3 {
         deleteDir(new File(TEST_PATH));
     }
 
-    // command: cat tmpCatTestFolder/test1.txt tmpCatTestFolder/test2.txt
     @Test
-    void testCatFiles_emptyFileInputWithoutFlag_shouldShowEmptyStringWithNoNewLine() throws Exception {
+    void runCatFilesFromS3_emptyFileInputWithoutFlag_shouldShowEmptyStringWithNoNewLine() throws Exception {
+        OutputStream outputStream = new ByteArrayOutputStream();
+        catApplication.run(new String[]{FILE_PATH_3}, System.in, outputStream);
+
+        assertEquals("", outputStream.toString());
+    }
+
+    @Test
+    void runCatFilesFromP3_emptyFileInputWithoutFlag_shouldShowEmptyStringWithNoNewLine() throws Exception {
         OutputStream outputStream = new ByteArrayOutputStream();
         catApplication.run(new String[]{FILE_PATH_3}, System.in, outputStream);
 
