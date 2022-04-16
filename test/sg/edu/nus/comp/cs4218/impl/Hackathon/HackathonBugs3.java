@@ -95,7 +95,7 @@ public class HackathonBugs3 {
     }
 
     @Test
-    void testPasteRun_PasteMultipleDashes_Success() throws Exception {
+    void testPasteRunP10_PasteMultipleDashes_Success() throws Exception {
         OutputStream outputStream = new ByteArrayOutputStream();
         String input = "a" + STRING_NEWLINE + "b" + STRING_NEWLINE + "c" + STRING_NEWLINE;
         ByteArrayInputStream inputStream = new ByteArrayInputStream(input.getBytes());
