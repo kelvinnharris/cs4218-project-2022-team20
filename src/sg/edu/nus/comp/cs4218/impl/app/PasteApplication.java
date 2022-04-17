@@ -176,10 +176,9 @@ public class PasteApplication implements PasteInterface {
         }
 
         if (numOfStdin != 0) {
-            if (stdInData.size()%numOfStdin != 0){
+            maxFileLength = Math.max(maxFileLength, (int) (stdInData.size() / numOfStdin));
+            if (stdInData.size()%numOfStdin != 0) {
                 maxFileLength = Math.max(maxFileLength, (int) (stdInData.size() / numOfStdin) + 1);
-            } else {
-                maxFileLength = Math.max(maxFileLength, (int) (stdInData.size() / numOfStdin));
             }
         }
 

@@ -9,7 +9,6 @@ import sg.edu.nus.comp.cs4218.impl.app.CatApplication;
 import sg.edu.nus.comp.cs4218.impl.app.PasteApplication;
 import sg.edu.nus.comp.cs4218.impl.app.WcApplication;
 import sg.edu.nus.comp.cs4218.impl.util.StringUtils;
-import sg.edu.nus.comp.cs4218.impl.util.TestUtils;
 
 import java.io.*;
 import java.nio.file.Files;

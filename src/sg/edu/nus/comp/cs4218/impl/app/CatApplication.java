@@ -72,9 +72,7 @@ public class CatApplication implements CatInterface {
 
         try {
             stdout.write(result.getBytes());
-            if (result.getBytes().length > 0) {
-                stdout.write(STRING_NEWLINE.getBytes());
-            }
+            stdout.write(STRING_NEWLINE.getBytes());
         } catch (IOException e) {
             throw new CatException(ERR_WRITE_STREAM);  // NOPMD - suppressed PreserveStackTrace - No reason to preserve stackTrace as reason is contained in message
         }
