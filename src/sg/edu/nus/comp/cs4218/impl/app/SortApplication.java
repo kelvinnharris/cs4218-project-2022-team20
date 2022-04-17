@@ -101,7 +101,7 @@ public class SortApplication implements SortInterface {
             }
         }
         sortInputString(isFirstWordNumber, isReverseOrder, isCaseIndependent, lines);
-        if (lines.size() == 0) {
+        if (lines.isEmpty()) {
             return "";
         }
         return String.join(STRING_NEWLINE, lines) + STRING_NEWLINE;
@@ -124,7 +124,7 @@ public class SortApplication implements SortInterface {
         }
         List<String> lines = IOUtils.getLinesFromInputStream(stdin);
         sortInputString(isFirstWordNumber, isReverseOrder, isCaseIndependent, lines);
-        if (lines.size() == 0) {
+        if (lines.isEmpty()) {
             return "";
         }
         return String.join(STRING_NEWLINE, lines) + STRING_NEWLINE;

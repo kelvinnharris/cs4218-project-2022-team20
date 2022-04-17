@@ -169,17 +169,19 @@ public class HackathonBugs1 {
             Path filePath = filePaths[i];
             Files.createFile(filePath);
 
-            FileOutputStream fileOutputStream =
-                    new FileOutputStream(filePath.toFile());
-            fileOutputStream.write(FILE_CONTENTS[i].getBytes(StandardCharsets.UTF_8));
-            fileOutputStream.close();
+            try (FileOutputStream fileOutputStream = new FileOutputStream(filePath.toFile())) {
+                fileOutputStream.write(FILE_CONTENTS[i].getBytes(StandardCharsets.UTF_8));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         Path byteFilePath = Paths.get(testRoot.toString(), BYTE_FILENAME);
         Files.createFile(byteFilePath);
-        FileOutputStream fileOutputStream =
-                new FileOutputStream(byteFilePath.toFile());
-        fileOutputStream.write(BYTE_FILE_CONTENT);
-        fileOutputStream.close();
+        try (FileOutputStream fileOutputStream = new FileOutputStream(byteFilePath.toFile())) {
+            fileOutputStream.write(BYTE_FILE_CONTENT);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         setUpPerms();
     }

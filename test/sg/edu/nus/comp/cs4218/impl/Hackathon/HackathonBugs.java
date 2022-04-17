@@ -31,8 +31,9 @@ public class HackathonBugs {
     private static final String FILE_5 = "file5.txt";
     private static final String FILE_6 = "file6.txt";
     private static final String FILE_7 = "file7.txt";
+    public static final String ALICE = "Alice";
 
-    public static final String[] LINES = {"Alice", "Alice"};
+    public static final String[] LINES = {ALICE, ALICE};
     public static final String[] LINES4 = {"", ""};
 
 
@@ -89,7 +90,7 @@ public class HackathonBugs {
     void testCutParseAndEvaluateFromP15_cutWithoutExplicitEndIndex_shouldCutUntilEnd() {
         String commandString = "cut -b 1- " + FILE_1;
         assertDoesNotThrow(() -> shell.parseAndEvaluate(commandString, stdOut));
-        assertEquals("Alice" + STRING_NEWLINE + "Alice" + STRING_NEWLINE, stdOut.toString());
+        assertEquals(ALICE + STRING_NEWLINE + ALICE + STRING_NEWLINE, stdOut.toString());
     }
 
     @Test
@@ -143,7 +144,7 @@ public class HackathonBugs {
         File outputFile = new File(TEST_PATH + FILE_3);
         assertTrue(outputFile.exists());
         String actual = Files.readString(Paths.get(TEST_PATH + FILE_3));
-        assertEquals("Alice" + STRING_NEWLINE, actual);
+        assertEquals(ALICE + STRING_NEWLINE, actual);
     }
 
 
