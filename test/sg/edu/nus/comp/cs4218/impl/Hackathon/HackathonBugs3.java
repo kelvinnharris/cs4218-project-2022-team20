@@ -77,7 +77,7 @@ public class HackathonBugs3 {
 
     // command: wc tmpWcTestFolder/test1.txt
     @Test
-    void testWcCountFromFilesP2_fileInputWithoutFlag_shouldShowWordsLinesBytesWithFilename() throws Exception {
+    void countFromFilesFromP2_fileInputWithoutFlag_shouldShowWordsLinesBytesWithFilename() throws Exception {
         String result = wcApplication.countFromFiles(true, true, true, FILE_PATH_1);
 
         StringBuilder sbExpected = new StringBuilder();
@@ -94,7 +94,7 @@ public class HackathonBugs3 {
     }
 
     @Test
-    void testPasteRunP10_PasteMultipleDashes_Success() throws Exception {
+    void runPasteFilesFromP10_PasteMultipleDashes_Success() throws Exception {
         OutputStream outputStream = new ByteArrayOutputStream();
         String input = "a" + STRING_NEWLINE + "b" + STRING_NEWLINE + "c" + STRING_NEWLINE;
         ByteArrayInputStream inputStream = new ByteArrayInputStream(input.getBytes());
